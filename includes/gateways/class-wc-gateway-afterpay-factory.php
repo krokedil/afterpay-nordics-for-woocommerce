@@ -127,6 +127,14 @@ function init_wc_gateway_afterpay_factory_class() {
 					'desc_tip'    => true,
 					'description' => __( 'This controls the description which the user sees during checkout.', 'woocommerce-gateway-afterpay' ),
 				),
+				'x_auth_key' => array(
+					'title'       => __( 'AfterPay X-Auth-Key', 'woocommerce-gateway-afterpay' ),
+					'type'        => 'text',
+					'description' => __(
+						'Please enter your AfterPay X-Auth-Key; this is needed in order to take payment',
+						'woocommerce-gateway-afterpay'
+					),
+				),
 				'customer_type' => array(
 				'title'       => __( 'Customer type', 'woocommerce-gateway-afterpay' ),
 				'type'        => 'select',
@@ -144,14 +152,7 @@ function init_wc_gateway_afterpay_factory_class() {
 					'label'   => __( 'Enable separate shipping address for companies', 'woocommerce-gateway-afterpay' ),
 					'default' => 'no',
 				),
-				'x_auth_key' => array(
-					'title'       => __( 'AfterPay X-Auth-Key', 'woocommerce-gateway-afterpay' ),
-					'type'        => 'text',
-					'description' => __(
-						'Please enter your AfterPay X-Auth-Key; this is needed in order to take payment',
-						'woocommerce-gateway-afterpay'
-					),
-				),
+				
 			);
 			// Invoice fee for AfterPay Invoice.
 			if ( 'afterpay_invoice' === $this->id ) {
