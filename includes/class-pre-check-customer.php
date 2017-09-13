@@ -163,7 +163,7 @@ class WC_AfterPay_Pre_Check_Customer {
                 $customer_type = $afterpay_settings['customer_type'];
                 $separate_shipping_companies = $afterpay_settings['separate_shipping_companies'];
                 if ( $customer_type === 'both' ) {
-            ?>
+            	?>
                     <p>
                         <input type="radio" class="input-radio" value="Person" name="afterpay_customer_category"
                                id="afterpay-customer-category-person" checked/>
@@ -190,17 +190,19 @@ class WC_AfterPay_Pre_Check_Customer {
                         <?php $label = __( 'Organization number', 'woocommerce-gateway-afterpay' ); ?>
                     </p>
                 <?php } ?>
-            <br>
-			<p class="form-row form-row-wide validate-required">
-                <label for="afterpay-pre-check-customer-number"><?php echo $label; ?> <span class="required">*</span></label><br/>
+			<p class="form-row form-row-first validate-required">
+                <label for="afterpay-pre-check-customer-number"><?php echo $label; ?> <span class="required">*</span></label>
                 <input type="text" name="afterpay-pre-check-customer-number" id="afterpay-pre-check-customer-number"
 				       class="afterpay-pre-check-customer-number"
 				       placeholder="<?php _e( 'YYMMDDNNNN', 'woocommerce-gateway-afterpay' ); ?>"
 				       value="<?php echo $personal_number; ?>"/>
+			</p>
+			<p class="form-row form-row-last validate-required">
                 <label for="afterpay_customer_email"><?php _e( 'Email', 'woocommerce-gateway-afterpay' ); ?> <span class="required">*</span></label>
                 <input type="email" id="afterpay-customer-email" name="afterpay_customer_email" >
-				<button type="button" style="margin-top:0.5em"
-				        class="afterpay-get-address-button button"><?php _e( 'Get address', 'woocommerce-gateway-afterpay' ); ?></button>
+			</p>
+			<p class="form-row form-row-wide afterpay-get-address-button-row">
+				<button type="button" style="margin-top:0.5em" class="afterpay-get-address-button button"><?php _e( 'Get address', 'woocommerce-gateway-afterpay' ); ?></button>
 			</p>
 		</div>
 		<?php
