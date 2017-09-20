@@ -62,11 +62,13 @@ jQuery(function ($) {
             if ('yes' == do_focus) {
                 $('#afterpay-pre-check-customer-number').focus();
             }
+            $( '#billing_email_field' ).hide();
         } else {
             // Hide pno
             $('#afterpay-pre-check-customer').slideUp(250);
             // Show ship to different address checkbox
             $( '#ship-to-different-address' ).show();
+            $( '#billing_email_field' ).show();
         }
 	}
 
@@ -127,7 +129,6 @@ jQuery(function ($) {
 	$(document).on('init_checkout', function (event) {
 		var do_focus = 'yes';
 		maybe_show_pre_checkout_form(do_focus);
-		$('#billing_email_field').hide();
 	});
 	$(document).on('updated_checkout', function (event) {
 		var do_focus = 'no';
