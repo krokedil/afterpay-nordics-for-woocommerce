@@ -127,11 +127,19 @@ function init_wc_gateway_afterpay_factory_class() {
 					'desc_tip'    => true,
 					'description' => __( 'This controls the description which the user sees during checkout.', 'woocommerce-gateway-afterpay' ),
 				),
-				'x_auth_key' => array(
-					'title'       => __( 'AfterPay X-Auth-Key', 'woocommerce-gateway-afterpay' ),
+				'x_auth_key_se' => array(
+					'title'       => __( 'AfterPay X-Auth-Key Sweden', 'woocommerce-gateway-afterpay' ),
 					'type'        => 'text',
 					'description' => __(
-						'Please enter your AfterPay X-Auth-Key; this is needed in order to take payment',
+						'Please enter your AfterPay X-Auth-Key for Sweden; this is needed in order to take payment',
+						'woocommerce-gateway-afterpay'
+					),
+				),
+				'x_auth_key_no' => array(
+					'title'       => __( 'AfterPay X-Auth-Key Norway', 'woocommerce-gateway-afterpay' ),
+					'type'        => 'text',
+					'description' => __(
+						'Please enter your AfterPay X-Auth-Key for Norway; this is needed in order to take payment',
 						'woocommerce-gateway-afterpay'
 					),
 				),

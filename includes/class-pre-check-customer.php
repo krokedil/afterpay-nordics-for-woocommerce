@@ -23,8 +23,19 @@ class WC_AfterPay_Pre_Check_Customer {
 	public function __construct() {
 		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 		$this->testmode    = 'yes' == $afterpay_settings['testmode'] ? true : false;
-		$this->x_auth_key		= $afterpay_settings['x_auth_key'];
-		error_log( 'precheck xauth ' . $this->x_auth_key );
+		
+		switch ( get_woocommerce_currency() ) {
+			case 'SEK' :
+				$this->x_auth_key		= $afterpay_settings['x_auth_key_se'];
+				break;
+			case 'NOK' :
+				$this->x_auth_key		= $afterpay_settings['x_auth_key_no'];
+				break;
+			default :
+				$this->x_auth_key		= $afterpay_settings['x_auth_key_se'];
+				break;
+		}
+		
 
 		// Enqueue JS file
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -302,7 +313,6 @@ class WC_AfterPay_Pre_Check_Customer {
 		$request  = new WC_AfterPay_Request_Available_Payment_Methods( $this->x_auth_key, $this->testmode );
 		$response = $request->response( $personal_number, $email, $customer_category );
 		$response  = json_decode( $response );
-		error_log( var_export( $response, true ) );
 
 		if ( ! is_wp_error( $response ) ) {
 		    //@TODO - check if we actually get an address. Otherwise throw an error.

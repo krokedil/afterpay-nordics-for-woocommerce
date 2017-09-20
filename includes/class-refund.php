@@ -40,15 +40,15 @@ class WC_AfterPay_Refund {
 	 * @return boolean
 	 */
 	public function refund_invoice( $order_id, $amount = null, $reason = '' ) {
-		$order = wc_get_order( $order_id );
-		$payment_method = $order->payment_method;
+		$order 						= wc_get_order( $order_id );
+		$payment_method 			= $order->payment_method;
 		$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );
-		$this->x_auth_key = $payment_method_settings['x_auth_key'];
-		$this->testmode = $payment_method_settings['testmode'];
+		$country  					= strtolower( $order->get_billing_country() );
+		$this->x_auth_key 			= $afterpay_settings['x_auth_key_' . $country];
+		$this->testmode 			= $payment_method_settings['testmode'];
 
-		error_log( 'refunding full order' );
-		$order_number = $order->get_order_number();
-		$request      = new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );
+		$order_number 				= $order->get_order_number();
+		$request      				= new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );
 		$request->response( $order_number );
 	}
 
