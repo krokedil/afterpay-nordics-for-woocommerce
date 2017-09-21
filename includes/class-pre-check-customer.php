@@ -23,19 +23,6 @@ class WC_AfterPay_Pre_Check_Customer {
 	public function __construct() {
 		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 		$this->testmode    = 'yes' == $afterpay_settings['testmode'] ? true : false;
-		
-		switch ( get_woocommerce_currency() ) {
-			case 'SEK' :
-				$this->x_auth_key		= $afterpay_settings['x_auth_key_se'];
-				break;
-			case 'NOK' :
-				$this->x_auth_key		= $afterpay_settings['x_auth_key_no'];
-				break;
-			default :
-				$this->x_auth_key		= $afterpay_settings['x_auth_key_se'];
-				break;
-		}
-		
 
 		// Enqueue JS file
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -252,7 +239,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		}
 		$pre_check_customer_response = $this->pre_check_customer_request( $personal_number, $email, $payment_method, $customer_category, $billing_country );
 		$data['response']            = $pre_check_customer_response;
-
+		error_log('$pre_check_customer_response ' . var_export($pre_check_customer_response, true));
 		if ( ! is_wp_error( $pre_check_customer_response ) ) {
 			$data['message'] = __(
 				'Address found and added to checkout form.',
@@ -310,6 +297,19 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * @return bool
 	 */
 	public function pre_check_customer_request( $personal_number, $email, $payment_method, $customer_category, $billing_country, $order = false ) {
+		
+		switch ( get_woocommerce_currency() ) {
+			case 'SEK' :
+				$this->x_auth_key		= $afterpay_settings['x_auth_key_se'];
+				break;
+			case 'NOK' :
+				$this->x_auth_key		= $afterpay_settings['x_auth_key_no'];
+				break;
+			default :
+				$this->x_auth_key		= $afterpay_settings['x_auth_key_se'];
+				break;
+		}
+		
 		$request  = new WC_AfterPay_Request_Available_Payment_Methods( $this->x_auth_key, $this->testmode );
 		$response = $request->response( $personal_number, $email, $customer_category );
 		$response  = json_decode( $response );
