@@ -23,6 +23,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 	public function response( $order_id, $payment_method_name, $profile_no = false ) {
 		$request_url = $this->base_url . $this->request_path;
 		$request     = wp_remote_request( $request_url, $this->get_request_args( $order_id, $payment_method_name, $profile_no ) );
+		WC_Gateway_AfterPay_Factory::log( 'Authorize payment response: ' . var_export( $request, true ) );
 		if( ! is_wp_error( $request ) && 200 == $request['response']['code'] ) {
 			return wp_remote_retrieve_body( $request );
 		} else {
@@ -40,6 +41,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 			'body'    => $this->get_request_body( $order_id, $payment_method_name, $profile_no ),
 			'method'  => $this->request_method
 		);
+		WC_Gateway_AfterPay_Factory::log( 'Authorize payment request args: ' . var_export( $request_args, true ) );
 		return $request_args;
 	}
 	/**
@@ -60,6 +62,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 		if ( 'Installment' === $payment_method_name	) {
 			$payment_method_name = 'Account';
 		}
+		
 		$formatted_request_body = array(
 			'payment'       	=> array( 'type' => $payment_method_name ),
 			'customer'       	=> array(
@@ -67,6 +70,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 				'firstName' 		=> $order->get_billing_first_name(),
 				'lastName' 			=> $order->get_billing_last_name(),
 				'email' 			=> $order->get_billing_email(),
+				'mobilePhone' 		=> $order->get_billing_phone(),
 				'identificationNumber' => WC()->session->get( 'afterpay_personal_no' ),
 				'address' 			=> array(
 					'street' => $order->get_billing_address_1(),
@@ -92,7 +96,6 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 				'profileNo' => $profile_no,
 			);
 		}
-
 		return wp_json_encode( $formatted_request_body );
 	}
 }
