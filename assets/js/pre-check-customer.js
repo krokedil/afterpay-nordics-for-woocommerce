@@ -27,14 +27,25 @@ jQuery(function ($) {
 
 	function maybe_show_pre_checkout_form(do_focus) {
 		//console.log(do_focus);
-        check_separate_shipping_address(do_focus);
-
-		// Only display the Get Address button if Sweden is the selected country
-		var selected_customer_country = $("#billing_country").val();
-		if (selected_customer_country == 'SE') {
-			jQuery('.afterpay-get-address-button').fadeIn();
-		} else {
-			jQuery('.afterpay-get-address-button').fadeOut();
+		var selected_payment_method = $('input[name="payment_method"]:checked').val();
+        if (selected_payment_method.indexOf('afterpay') >= 0) {
+	        check_separate_shipping_address(do_focus);
+	
+			// Only display the Get Address button if Sweden is the selected country
+			var selected_customer_country = $("#billing_country").val();
+			if (selected_customer_country == 'SE') {
+				jQuery('.afterpay-pre-check-se').fadeIn();
+				jQuery('.afterpay-pre-check-no').fadeOut();
+				jQuery( '#billing_email_field' ).fadeOut();
+				jQuery( '.personal-number-norway' ).hide();
+				//jQuery('.afterpay-get-address-button').fadeIn();
+			} else {
+				jQuery( '.afterpay-pre-check-no' ).fadeIn();
+				jQuery( '.afterpay-pre-check-se' ).fadeOut();
+				jQuery( '#billing_email_field' ).fadeIn();
+				jQuery( '.personal-number-norway' ).show();
+				//jQuery('.afterpay-get-address-button').fadeOut();
+			}
 		}
 	}
 
@@ -62,13 +73,13 @@ jQuery(function ($) {
             if ('yes' == do_focus) {
                 $('#afterpay-pre-check-customer-number').focus();
             }
-            $( '#billing_email_field' ).hide();
+            //$( '#billing_email_field' ).hide();
         } else {
             // Hide pno
             $('#afterpay-pre-check-customer').slideUp(250);
             // Show ship to different address checkbox
             $( '#ship-to-different-address' ).show();
-            $( '#billing_email_field' ).show();
+            //$( '#billing_email_field' ).show();
         }
 	}
 
@@ -87,7 +98,7 @@ jQuery(function ($) {
 			$('#billing_company').val(mask_form_field(customer_last_name)).prop('readonly', true);
 		}
 		$('#billing_address_1').val(mask_form_field(customer_address_1)).prop('readonly', true);
-		$('#billing_address_2').val(mask_form_field(customer_address_2)).prop('readonly', true);
+		//$('#billing_address_2').val(mask_form_field(customer_address_2)).prop('readonly', true);
 		$('#billing_postcode').val(mask_form_field(customer_postcode)).prop('readonly', true);
 		$('#billing_city').val(mask_form_field(customer_city)).prop('readonly', true);
 
@@ -103,7 +114,7 @@ jQuery(function ($) {
 			$('#shipping_company').val(mask_form_field(customer_last_name));
 		}
 		$('#shipping_address_1').val(mask_form_field(customer_address_1));
-		$('#shipping_address_2').val(mask_form_field(customer_address_2));
+		//$('#shipping_address_2').val(mask_form_field(customer_address_2));
 		$('#shipping_postcode').val(mask_form_field(customer_postcode));
 		$('#shipping_city').val(mask_form_field(customer_city));
 	}
@@ -113,7 +124,7 @@ jQuery(function ($) {
 		$('#billing_last_name').val('').prop('readonly', false);
 		$('#billing_company').val('').prop('readonly', false);
 		$('#billing_address_1').val('').prop('readonly', false);
-		$('#billing_address_2').val('').prop('readonly', false);
+		//$('#billing_address_2').val('').prop('readonly', false);
 		$('#billing_postcode').val('').prop('readonly', false);
 		$('#billing_city').val('').prop('readonly', false);
 
@@ -121,7 +132,7 @@ jQuery(function ($) {
 		$('#shipping_last_name').val('').prop('readonly', false);
 		$('#shipping_company').val('').prop('readonly', false);
 		$('#shipping_address_1').val('').prop('readonly', false);
-		$('#shipping_address_2').val('').prop('readonly', false);
+		//$('#shipping_address_2').val('').prop('readonly', false);
 		$('#shipping_postcode').val('').prop('readonly', false);
 		$('#shipping_city').val('').prop('readonly', false);
 	}
@@ -195,6 +206,84 @@ jQuery(function ($) {
 						action: 'afterpay_pre_check_customer',
 						personal_number: entered_personal_number,
 						email: entered_email,
+						payment_method: selected_payment_method,
+						customer_category: selected_customer_category,
+						billing_country: selected_billing_country,
+						nonce: WC_AfterPay.afterpay_pre_check_customer_nonce
+					},
+					success: function (response) {
+						if (response.success) { // wp_send_json_success
+							console.log(response.data);
+
+							$('body').trigger('update_checkout');
+
+							customer_data = response.data.response;
+
+							customer_info_fetched = true;
+							customer_first_name   = customer_data.first_name;
+							customer_last_name    = customer_data.last_name;
+							customer_address_1    = customer_data.address_1;
+							customer_postcode     = customer_data.postcode;
+							customer_city         = customer_data.city;
+
+							populate_afterpay_fields();
+
+                            $('.afterpay-get-address-button').removeClass('disabled');
+							$('#afterpay-pre-check-customer').append('<div id="afterpay-pre-check-customer-response" class="woocommerce-message">' + response.data.message + '</div>');
+
+						} else { // wp_send_json_error
+							console.log('ERROR:');
+							console.log(response.data);
+
+							$('body').trigger('update_checkout');
+
+							$('#afterpay-pre-check-customer').append('<div id="afterpay-pre-check-customer-response" class="woocommerce-error">' + response.data.message + '</div>');
+						}
+					},
+					error: function (response) {
+						console.log('AJAX error');
+						console.log(response);
+					}
+				}
+			);
+		} else { // If the field is empty show notification
+
+		}
+	}
+	
+	// Norway
+	// Fire PreCheckCustomer when the button is clicked
+	$(document).on('click', '.afterpay-customer-lookup-button', function (event) {
+		
+		// Prevent the form from actually submitting
+		event.preventDefault();
+
+		trigger_ajax_customer_lookup();
+	});
+	
+	function trigger_ajax_customer_lookup() {
+		// Remove success note, in case it's already there
+		$('#afterpay-pre-check-customer-response').remove();
+
+		var selected_payment_method = $('input[name="payment_method"]:checked').val();
+		var selected_customer_category = $('input[name="afterpay_customer_category"]:checked').val();
+		//var entered_personal_number = $('#afterpay-pre-check-customer .afterpay-pre-check-customer-number').val();
+		var entered_mobile_number = $('#afterpay-pre-check-mobile-number').val();
+		var selected_billing_country = $("#billing_country").val();
+		//$('.afterpay-pre-check-customer-number').val(entered_personal_number);
+
+		if ('' != entered_mobile_number) { // Check if the field is empty
+
+			$('.afterpay-customer-lookup-button').addClass('disabled');
+
+			$.ajax(
+				WC_AfterPay.ajaxurl,
+				{
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						action: 'afterpay_customer_lookup',
+						mobile_number: entered_mobile_number,
 						payment_method: selected_payment_method,
 						customer_category: selected_customer_category,
 						billing_country: selected_billing_country,

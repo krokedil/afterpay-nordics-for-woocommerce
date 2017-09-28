@@ -214,6 +214,12 @@ function init_wc_gateway_afterpay_factory_class() {
 		 * @throws Exception
 		 */
 		public function process_payment( $order_id ) {
+			// @Todo - check if this is needed (for Norway) since we don't do Available payment methods there
+			
+			if ( isset( $_POST['afterpay-pre-check-customer-number-norway'] ) ) {
+				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number-norway'] );
+				WC()->session->set( 'afterpay_personal_no', $personal_number );
+			}
 			$order = wc_get_order( $order_id );
 			// Fetch installment plan selected by custiner in checkout
 			if ( isset( $_POST['afterpay_installment_plan'] ) ) {
@@ -223,6 +229,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			}
 
 			// If needed, run PreCheckCustomer.
+			/*
 			if ( ! WC()->session->get( 'afterpay_checkout_id' ) ) {
 				// Check available payment methods
 				$request  = new WC_AfterPay_Request_Available_Payment_Methods( $this->x_auth_key, $this->testmode );
@@ -241,6 +248,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				WC()->session->set( 'afterpay_allowed_payment_methods', $response->paymentMethods );
 				WC()->session->set( 'afterpay_checkout_id', $response->checkoutId );
 			}
+			*/
 			$request  = new WC_AfterPay_Request_Authorize_Payment( $this->x_auth_key, $this->testmode );
 			$response = $request->response( $order_id, $this->get_formatted_payment_method_name(), $profile_no );
 
@@ -264,6 +272,9 @@ function init_wc_gateway_afterpay_factory_class() {
 							$response->reservationId
 						)
 					);
+				} else {
+					wc_add_notice( sprintf(__( 'The payment was %s.', 'woocommerce-gateway-afterpay' ), $response->outcome ), 'error' );
+					return false;
 				}
 
 				// Remove cart.
@@ -286,9 +297,34 @@ function init_wc_gateway_afterpay_factory_class() {
 			if ( $this->description ) {
 				echo wpautop( wptexturize( $this->description ) );
 			}
+			echo $this->get_afterpay_dob_field();
 			echo $this->get_afterpay_info();
 		}
 
+		/**
+		 * Clear sessions on finalized purchase
+		 */
+		public function get_afterpay_dob_field() {
+			$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
+			$customer_type = $afterpay_settings['customer_type'];
+			if ( $customer_type === 'both' ) {
+            		$label = __( 'Personal/organization number', 'woocommerce-gateway-afterpay' );
+            	} else if ( $customer_type === 'private' ) {
+                    $label = __( 'Personal number', 'woocommerce-gateway-afterpay' );
+                } else if ( $customer_type === 'company' ) {
+	            	$label = __( 'Organization number', 'woocommerce-gateway-afterpay' );
+	            }
+			?>
+			<p class="personal-number-norway">
+				<label for="afterpay-pre-check-customer-number-norway"><?php echo $label; ?> <span class="required">*</span></label>
+		            <input type="text" name="afterpay-pre-check-customer-number-norway" id="afterpay-pre-check-customer-number-norway"
+					       class="afterpay-pre-check-customer-number norway"
+					       placeholder="<?php _e( 'YYMMDDNNNN', 'woocommerce-gateway-afterpay' ); ?>"/>
+			</p>
+			<?php
+
+		}
+		
 		/**
 		 * Clear sessions on finalized purchase
 		 */
@@ -302,7 +338,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			WC()->session->__unset( 'afterpay_cart_total' );
 
 		}
-
+		
 		/**
 		 * Process a refund if supported.
 		 *
