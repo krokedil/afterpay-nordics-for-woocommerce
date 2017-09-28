@@ -22,6 +22,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 	 */
 	public function response( $order_id, $payment_method_name, $profile_no = false ) {
 		$request_url = $this->base_url . $this->request_path;
+		WC_Gateway_AfterPay_Factory::log( 'Authorize payment request sent to: ' . $request_url );
 		$request     = wp_remote_request( $request_url, $this->get_request_args( $order_id, $payment_method_name, $profile_no ) );
 		WC_Gateway_AfterPay_Factory::log( 'Authorize payment response: ' . var_export( $request, true ) );
 		if( ! is_wp_error( $request ) && 200 == $request['response']['code'] ) {
