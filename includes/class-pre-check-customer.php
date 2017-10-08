@@ -104,8 +104,10 @@ class WC_AfterPay_Pre_Check_Customer {
 			return;
 		}
 
-		// Only perform PreCheckCustomer on checkout_init for Swedish customers
-		if ( 'SE' != WC()->customer->get_billing_country() ) {
+		// Only perform PreCheckCustomer on checkout_init for Swedish customers in live environment
+		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
+		$testmode = $afterpay_settings['testmode'];
+		if ( 'SE' != WC()->customer->get_billing_country() || 'yes' == $testmode ) {
 			return;
 		}
 
@@ -253,7 +255,8 @@ class WC_AfterPay_Pre_Check_Customer {
 					       class="afterpay-pre-check-mobile-number"/>
 			</p>
 			<p class="form-row form-row-last afterpay-get-address-button-row">
-				<button type="button" style="margin-top:0.5em" class="afterpay-customer-lookup-button button"><?php _e( 'Get address', 'woocommerce-gateway-afterpay' ); ?></button>
+				<label for="afterpay-customer-lookup-button button"> &nbsp;</label>
+				<button type="button" class="afterpay-customer-lookup-button button"><?php _e( 'Get address', 'woocommerce-gateway-afterpay' ); ?></button>
 			</p>
 		</div>
         <?php
