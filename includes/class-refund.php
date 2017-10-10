@@ -44,12 +44,23 @@ class WC_AfterPay_Refund {
 		$payment_method 			= $order->payment_method;
 		$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );
 		$country  					= strtolower( $order->get_billing_country() );
-		$this->x_auth_key 			= $afterpay_settings['x_auth_key_' . $country];
-		$this->testmode 			= $payment_method_settings['testmode'];
+		$this->x_auth_key 			= $payment_method_settings['x_auth_key_' . $country];
 
 		$order_number 				= $order->get_order_number();
 		$request      				= new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );
-		$request->response( $order_number );
+		$response 					= $request->response( $order_number );
+		$response 					= json_decode( $response );
+		
+		if ( $response->totalCapturedAmount ) {
+			// Add time stamp, used to prevent duplicate cancellations for the same order.
+			update_post_meta( $this->order_id, '_afterpay_invoice_refunded', current_time( 'mysql' ) );
+			$order->add_order_note( __( 'AfterPay refund was successfully processed.', 'woocommerce-gateway-afterpay' ) );
+			return $response;
+		} else {
+			$order->add_order_note( __( 'AfterPay refund could not be processed.', 'woocommerce-gateway-afterpay' ) );
+			return new WP_Error( 'afterpay-refund', __( 'Refund failed.', 'woocommerce-gateway-afterpay' ) );
+		}
+			
 	}
 
 }

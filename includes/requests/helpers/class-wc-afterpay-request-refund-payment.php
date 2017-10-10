@@ -25,7 +25,10 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 		$this->request_path = '/api/v3/orders/' . $order_number . '/refunds';
 
 		$request_url = $this->base_url . $this->request_path;
+		WC_Gateway_AfterPay_Factory::log( 'Refund payment request sent to: ' . $request_url );
 		$request     = wp_remote_request( $request_url, $this->get_request_args( ) );
+		WC_Gateway_AfterPay_Factory::log( 'Refund payment response: ' . var_export( $request, true ) );
+		
 		if ( ! is_wp_error( $request ) && 200 == $request['response']['code'] ) {
 			return wp_remote_retrieve_body( $request );
 		} else {
@@ -42,6 +45,7 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 			'headers' => $this->request_header(),
 			'method'  => $this->request_method,
 		);
+		WC_Gateway_AfterPay_Factory::log( 'Refund payment request args: ' . var_export( $request_args, true ) );
 		return $request_args;
 	}
 }
