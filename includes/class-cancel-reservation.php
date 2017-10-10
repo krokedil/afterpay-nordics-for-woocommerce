@@ -24,6 +24,10 @@ class WC_AfterPay_Cancel_Reservation {
 	 * WC_AfterPay_Cancel_Reservation constructor.
 	 */
 	public function __construct() {
+		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
+		$this->order_management = 'yes' == $afterpay_settings['order_management'] ? true : false;
+		
+		
 		add_action( 'woocommerce_order_status_cancelled', array( $this, 'cancel_reservation' ) );
 	}
 
@@ -34,15 +38,57 @@ class WC_AfterPay_Cancel_Reservation {
 	 */
 	public function cancel_reservation( $order_id ) {
 		$order = wc_get_order( $order_id );
-
-		$payment_method = $order->get_payment_method();
+		
+		// If this order wasn't created using an AfterPay payment method, bail.
+		if ( ! $this->check_if_afterpay_order( $order_id ) ) {
+			return;
+		}
+		
+		// If payment method is set to not cancel orders automatically, bail.
+		if ( ! $this->order_management ) {
+			return;
+		}
+		
+		// If this reservation was already cancelled, do nothing.
+		if ( get_post_meta( $order_id, '_afterpay_reservation_cancelled', true ) ) {
+			$order->add_order_note(
+				__( 'Could not cancel AfterPay reservation, AfterPay reservation is already cancelled.', 'woocommerce-gateway-afterpay' )
+			);
+			return;
+		}
+		
+		$payment_method 			= $order->get_payment_method();
 		$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );
-		$this->x_auth_key = $payment_method_settings['x_auth_key'];
-		$this->testmode = $payment_method_settings['testmode'];
+		$country  					= strtolower( $order->get_billing_country() );
+		$this->x_auth_key 			= $payment_method_settings['x_auth_key_' . $country];
+		$this->testmode 			= $payment_method_settings['testmode'];
 
-		$order_number = $order->get_order_number();
-		$request  = new WC_AfterPay_Request_Cancel_Payment( $this->x_auth_key, $this->testmode );
-		$request->response( $order_number );
+		$order_number 				= $order->get_order_number();
+		$request  					= new WC_AfterPay_Request_Cancel_Payment( $this->x_auth_key, $this->testmode );
+		$response					= $request->response( $order_number );
+		$response 					= json_decode( $response );
+		
+		if ( 0 == $response->totalCapturedAmount ) {
+			// Add time stamp, used to prevent duplicate cancellations for the same order.
+			update_post_meta( $order_id, '_afterpay_reservation_cancelled', current_time( 'mysql' ) );
+			$order->add_order_note( __( 'AfterPay reservation was successfully cancelled.', 'woocommerce-gateway-afterpay' ) );
+		} else {
+			$order->add_order_note( __( 'AfterPay reservation could not be cancelled.', 'woocommerce-gateway-afterpay' ) );
+		}
+	}
+	
+	/**
+	 * Check if order was created using one of AfterPay's payment options.
+	 *
+	 * @return boolean
+	 */
+	public function check_if_afterpay_order( $order_id ) {
+		$order                = wc_get_order( $order_id );
+		$order_payment_method = $order->payment_method;
+		if ( strpos( $order_payment_method, 'afterpay' ) !== false ) {
+			return true;
+		}
+		return false;
 	}
 }
 $wc_afterpay_cancel_reservation = new WC_AfterPay_Cancel_Reservation;

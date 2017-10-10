@@ -23,9 +23,11 @@ class WC_AfterPay_Request_Cancel_Payment extends WC_AfterPay_Request {
 	public function response( $order_number ) {
 
 		$this->request_path = '/api/v3/orders/' . $order_number . '/voids';
-
+		
 		$request_url = $this->base_url . $this->request_path;
+		WC_Gateway_AfterPay_Factory::log( 'Cancel payment request sent to: ' . $request_url );
 		$request     = wp_remote_request( $request_url, $this->get_request_args( ) );
+		WC_Gateway_AfterPay_Factory::log( 'Cancel payment response: ' . var_export( $request, true ) );
 		if ( ! is_wp_error( $request ) && 200 == $request['response']['code'] ) {
 			return wp_remote_retrieve_body( $request );
 		} else {
