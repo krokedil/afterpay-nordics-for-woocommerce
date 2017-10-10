@@ -28,20 +28,64 @@ class WC_AfterPay_Capture {
 
 		add_action( 'woocommerce_order_status_completed', array( $this, 'capture_full' ) );
 	}
-
+	
+	/**
+	 * Process reservation capture.
+	 *
+	 * @param $order_id
+	 */
+	 
 	public function capture_full( $order_id ) {
 		$order = wc_get_order( $order_id );
+		
+		// If this order wasn't created using an AfterPay payment method, bail.
+		if ( ! $this->check_if_afterpay_order( $order_id ) ) {
+			return;
+		}
+		
+		// If payment method is set to not capture orders automatically, bail.
+		if ( ! $this->order_management ) {
+			return;
+		}
+		
+		// If this reservation was already captured, do nothing.
+		if ( get_post_meta( $order_id, '_afterpay_reservation_captured', true ) ) {
+			$order->add_order_note(
+				__( 'Could not capture AfterPar reservation, AfterPay reservation is already captured.', 'woocommerce-gateway-afterpay' )
+			);
+			return;
+		}
+		
 		$country  = strtolower( $order->get_billing_country() );
+		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 		$this->x_auth_key = $afterpay_settings['x_auth_key_' . $country];
 		
 		$request  = new WC_AfterPay_Request_Capture_Payment( $this->x_auth_key, $this->testmode );
 		$response = $request->response( $order_id );
 		$response = json_decode( $response );
 		if ( $response->captureNumber ) {
+			// Add time stamp, used to prevent duplicate cancellations for the same order.
+			update_post_meta( $order_id, '_afterpay_reservation_captured', current_time( 'mysql' ) );
+			update_post_meta( $order_id, '_transaction_id', $response->captureNumber );
+				
 			$order->add_order_note( sprintf( __( 'Payment captured with AfterPay with capture number %s', 'woocommerce-gateway-afterpay' ), $response->captureNumber ) );
 		} else {
 			$order->add_order_note( sprintf( __( 'Payment failed to be captured by AfterPay', 'woocommerce-gateway-afterpay' ) ) );
 		}
+	}
+	
+	/**
+	 * Check if order was created using one of AfterPay's payment options.
+	 *
+	 * @return boolean
+	 */
+	public function check_if_afterpay_order( $order_id ) {
+		$order                = wc_get_order( $order_id );
+		$order_payment_method = $order->payment_method;
+		if ( strpos( $order_payment_method, 'afterpay' ) !== false ) {
+			return true;
+		}
+		return false;
 	}
 }
 $wc_afterpay_capture = new WC_AfterPay_Capture;

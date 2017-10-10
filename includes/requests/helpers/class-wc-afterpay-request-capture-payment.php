@@ -18,7 +18,9 @@ class WC_AfterPay_Request_Capture_Payment extends WC_AfterPay_Request {
 		$wc_order = wc_get_order( $order_id );
 		$order_number = $wc_order->get_order_number();
 		$request_url = $this->base_url . '/api/v3/orders/' . $order_number . '/captures';
+		WC_Gateway_AfterPay_Factory::log( 'Capture payment request sent to: ' . $request_url );
 		$request     = wp_remote_retrieve_body( wp_remote_request( $request_url, $this->get_request_args( $order_id ) ) );
+		WC_Gateway_AfterPay_Factory::log( 'Capture payment response: ' . var_export( $request, true ) );
 		return $request;
 	}
 	private function get_request_args( $order_id ) {
@@ -27,6 +29,7 @@ class WC_AfterPay_Request_Capture_Payment extends WC_AfterPay_Request {
 			'body'    => $this->get_request_body( $order_id ),
 			'method'  => $this->request_method,
 		);
+		WC_Gateway_AfterPay_Factory::log( 'Capture payment request args: ' . var_export( $request_args, true ) );
 		return $request_args;
 	}
 
