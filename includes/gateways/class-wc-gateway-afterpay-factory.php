@@ -220,7 +220,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number-norway'] );
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
-			$order = wc_get_order( $order_id );
+			
 			// Fetch installment plan selected by custiner in checkout
 			if ( isset( $_POST['afterpay_installment_plan'] ) ) {
 				$profile_no = wc_clean( $_POST['afterpay_installment_plan'] );
@@ -251,12 +251,18 @@ function init_wc_gateway_afterpay_factory_class() {
 			*/
 			$request  = new WC_AfterPay_Request_Authorize_Payment( $this->x_auth_key, $this->testmode );
 			$response = $request->response( $order_id, $this->get_formatted_payment_method_name(), $profile_no );
-
+			
+			// Compare the received address (from AfterPay) with the one entered by the customer in checkout.
+			// Change it if they don't match
+			$this->check_used_address( $response, $order_id );
+				
+			$order = wc_get_order( $order_id );
+			
 			if ( ! is_wp_error( $response ) ) {
 				$response  = json_decode( $response );
 
 				if( 'Accepted' == $response->outcome ) {
-
+					
 					// Mark payment complete on success.
 					$order->payment_complete();
 
@@ -323,6 +329,59 @@ function init_wc_gateway_afterpay_factory_class() {
 			</p>
 			<?php
 
+		}
+		
+		/**
+		 * Check used address
+		 * Compare the address entered in the checkout with the registered address (returned from AfterPay)
+		 **/
+		public function check_used_address( $response, $order_id ) {
+			$response  = json_decode( $response );
+			$order = wc_get_order( $order_id );
+			$changed_fields = array();
+		
+			// Shipping address.
+			if ( $response->customer->addressList[0]->street != $order->shipping_address_1 ) {
+				$changed_fields['shipping_&_billing_address_1'] = $response->customer->addressList[0]->street;
+				//update_post_meta( $order->id, '_shipping_address_1', $response['address_1'] );
+				//update_post_meta( $order->id, '_billing_address_1', $response['address_1'] );
+			}
+			// Post number.
+			if ( $response->customer->addressList[0]->postalCode != $order->shipping_postcode ) {
+				$changed_fields['shipping_&_billing_postcode'] = $response->customer->addressList[0]->postalCode;
+				//update_post_meta( $order->id, '_shipping_postcode', $response['postcode'] );
+				//update_post_meta( $order->id, '_billing_postcode', $response['postcode'] );
+			}
+			// City.
+			if ( $response->customer->addressList[0]->postalPlace != $order->shipping_city ) {
+				$changed_fields['shipping_&_billing_city'] = $response->customer->addressList[0]->postalPlace;
+				//update_post_meta( $order->id, '_shipping_city', $response['city'] );
+				//update_post_meta( $order->id, '_billing_city', $response['city'] );
+			}
+			// First name.
+			if ( $response->customer->firstName != $order->shipping_first_name ) {
+				$changed_fields['shipping_&_billing_first_name'] = $response->customer->firstName;
+				//update_post_meta( $order->id, '_shipping_first_name', $response['first_name'] );
+				//update_post_meta( $order->id, '_billing_first_name', $response['first_name'] );
+			}
+			// Last name.
+			if ( $response->customer->lastName != $order->shipping_last_name ) {
+				$changed_fields['shipping_&_billing_last_name'] = $response->customer->lastName;
+				//update_post_meta( $order->id, '_shipping_last_name', $response['last_name'] );
+				//update_post_meta( $order->id, '_billing_last_name', $response['last_name'] );
+			}
+			if ( count( $changed_fields ) > 0 ) {
+				// Add order note about the changes.
+				$order->add_order_note(
+					sprintf(
+						__(
+							'The registered address did not match the one specified in WooCommerce. The order has been updated. The following fields was changed: %s.',
+							'woocommerce'
+						),
+						var_export( $changed_fields, true )
+					)
+				);
+			}
 		}
 		
 		/**
@@ -415,65 +474,6 @@ function init_wc_gateway_afterpay_factory_class() {
 						'error'
 					);
 				}
-			}
-		}
-
-		/**
-		 * Check used address
-		 * Compare the address entered in the checkout with the registered address (returned from AfterPay)
-		 **/
-		public function check_used_address( $posted, $order ) {
-			$changed_fields = array();
-			// Shipping address.
-			if ( $posted['address_1'] !== $order->shipping_address_1 ) {
-				$changed_fields['shipping_&_billing_address_1'] = $posted['address_1'];
-				update_post_meta( $order->id, '_shipping_address_1', $posted['address_1'] );
-				update_post_meta( $order->id, '_billing_address_1', $posted['address_1'] );
-			}
-			if ( $posted['address_2'] !== $order->shipping_address_2 ) {
-				$changed_fields['shipping_&_billing_address_2'] = $posted['address_2'];
-				update_post_meta( $order->id, '_shipping_address_2', $posted['address_2'] );
-				update_post_meta( $order->id, '_billing_address_2', $posted['address_2'] );
-			}
-			// Post number.
-			if ( $posted['postcode'] !== $order->shipping_postcode ) {
-				$changed_fields['shipping_&_billing_postcode'] = $posted['postcode'];
-				update_post_meta( $order->id, '_shipping_postcode', $posted['postcode'] );
-				update_post_meta( $order->id, '_billing_postcode', $posted['postcode'] );
-			}
-			// City.
-			if ( $posted['city'] !== $order->shipping_city ) {
-				$changed_fields['shipping_&_billing_city'] = $posted['city'];
-				update_post_meta( $order->id, '_shipping_city', $posted['city'] );
-				update_post_meta( $order->id, '_billing_city', $posted['city'] );
-			}
-			// First name.
-			if ( $posted['first_name'] !== $order->shipping_first_name ) {
-				$changed_fields['shipping_&_billing_first_name'] = $posted['first_name'];
-				update_post_meta( $order->id, '_shipping_first_name', $posted['first_name'] );
-				update_post_meta( $order->id, '_billing_first_name', $posted['first_name'] );
-			}
-			// Last name.
-			if ( $posted['last_name'] !== $order->shipping_last_name ) {
-				$changed_fields['shipping_&_billing_last_name'] = $posted['last_name'];
-				update_post_meta( $order->id, '_shipping_last_name', $posted['last_name'] );
-				update_post_meta( $order->id, '_billing_last_name', $posted['last_name'] );
-			}
-			if ( ! empty( $changed_fields ) ) {
-				$changed_fields_in_string = '';
-				foreach ( $changed_fields as $key => $value ) {
-					$changed_fields_in_string .= $key . ': ' . $value . ', ';
-				}
-				// Add order note about the changes.
-				$order->add_order_note(
-					sprintf(
-						__(
-							'The registered address did not match the one specified in WooCommerce. The order has been updated. The following fields was changed: %s.',
-							'woocommerce'
-						),
-						$changed_fields_in_string
-					)
-				);
 			}
 		}
 
