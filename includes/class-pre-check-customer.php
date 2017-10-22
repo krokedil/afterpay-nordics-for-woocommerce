@@ -278,12 +278,9 @@ class WC_AfterPay_Pre_Check_Customer {
 					       placeholder="<?php _e( 'YYMMDDNNNN', 'woocommerce-gateway-afterpay' ); ?>"
 					       value="<?php echo $personal_number; ?>"/>
 			</p>
-			<p class="form-row form-row-last validate-required">
-	            <label for="afterpay_customer_email"><?php _e( 'Email', 'woocommerce-gateway-afterpay' ); ?> <span class="required">*</span></label>
-	            <input type="email" id="afterpay-customer-email" name="afterpay_customer_email" >
-			</p>
-			<p class="form-row form-row-wide afterpay-get-address-button-row">
-				<button type="button" style="margin-top:0.5em" class="afterpay-get-address-button button"><?php _e( 'Get address', 'woocommerce-gateway-afterpay' ); ?></button>
+			<p class="form-row form-row-last afterpay-get-address-button-row">
+				<label for="afterpay-customer-lookup-button button"> &nbsp;</label>
+				<button type="button" class="afterpay-customer-lookup-button button"><?php _e( 'Get address', 'woocommerce-gateway-afterpay' ); ?></button>
 			</p>
 		</div>
         <?php

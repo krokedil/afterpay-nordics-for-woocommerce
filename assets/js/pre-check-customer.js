@@ -36,13 +36,13 @@ jQuery(function ($) {
 			if (selected_customer_country == 'SE') {
 				jQuery('.afterpay-pre-check-se').fadeIn();
 				jQuery('.afterpay-pre-check-no').fadeOut();
-				jQuery( '#billing_email_field' ).fadeOut();
+				//jQuery( '#billing_email_field' ).fadeOut();
 				jQuery( '.personal-number-norway' ).hide();
 				//jQuery('.afterpay-get-address-button').fadeIn();
 			} else {
 				jQuery( '.afterpay-pre-check-no' ).fadeIn();
 				jQuery( '.afterpay-pre-check-se' ).fadeOut();
-				jQuery( '#billing_email_field' ).fadeIn();
+				//jQuery( '#billing_email_field' ).fadeIn();
 				jQuery( '.personal-number-norway' ).show();
 				//jQuery('.afterpay-get-address-button').fadeOut();
 			}
