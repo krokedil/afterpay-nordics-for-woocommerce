@@ -66,7 +66,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );
 				// Don't display part payment and Account for Norwegian customers
 				if ( WC()->customer->get_billing_country() == true && 'NO' == WC()->customer->get_billing_country() && ( 'afterpay_part_payment' == $this->id || 'afterpay_account' == $this->id ) ) {
-					return false;
+					//return false;
 				}
 			}
 
@@ -220,6 +220,11 @@ function init_wc_gateway_afterpay_factory_class() {
 				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number-norway'] );
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
+			if ( isset( $_POST['afterpay-pre-check-customer-number'] ) ) {
+				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number'] );
+				WC()->session->set( 'afterpay_personal_no', $personal_number );
+			}
+			
 			
 			// Fetch installment plan selected by custiner in checkout
 			if ( isset( $_POST['afterpay_installment_plan'] ) ) {

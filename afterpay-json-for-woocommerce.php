@@ -63,6 +63,7 @@ include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-requ
 include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-cancel-payment.php' );
 include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-refund-payment.php' );
 include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-customer-lookup.php' );
+include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-available-installment-plans.php' );
 
 // Define server endpoints
 define(

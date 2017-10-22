@@ -35,7 +35,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		add_action( 'wp_ajax_nopriv_afterpay_customer_lookup', array( $this, 'customer_lookup' ) );
 
 		add_action( 'woocommerce_before_checkout_billing_form', array( $this, 'display_pre_check_form' ) );
-		add_action( 'woocommerce_checkout_init', array( $this, 'maybe_pre_check_customer' ) );
+		//add_action( 'woocommerce_checkout_init', array( $this, 'maybe_pre_check_customer' ) );
 
 		// Check if PreCheckCustomer was performed and successful
 		add_action( 'woocommerce_before_checkout_process', array( $this, 'confirm_pre_check_customer' ) );
@@ -141,10 +141,12 @@ class WC_AfterPay_Pre_Check_Customer {
 				wc_add_notice( __( 'Personal/organization number is a required field.', 'woocommerce-gateway-afterpay' ), 'error' );
 			}
             // Check if PreCheckCustomer was performed
+			/*
 			elseif ( ! WC()->session->get( 'afterpay_allowed_payment_methods' ) && 'SE' == WC()->customer->get_billing_country() ) {
 				error_log('afterpay_allowed_payment_methods ' . var_export(WC()->session->get( 'afterpay_allowed_payment_methods' ), true));
 				wc_add_notice( __( 'Please use get address feature first, before using one of AfterPay payment methods.', 'woocommerce-gateway-afterpay' ), 'error' );
 			}
+			*/
 		}
 	}
 
@@ -491,16 +493,24 @@ class WC_AfterPay_Pre_Check_Customer {
 		}
 
 		$data = array();
-
-		$mobile_number   	= $_REQUEST['mobile_number'];
+		$mobile_number = '';
+		$personal_number = '';
 		$payment_method    	= $_REQUEST['payment_method'];
 		$customer_category 	= $_REQUEST['customer_category'];
 		$billing_country   	= $_REQUEST['billing_country'];
-
+		
+		if( 'NO' == $billing_country ) {
+			$mobile_number   	= $_REQUEST['mobile_number'];
+		}
+		if( 'SE' == $billing_country ) {
+			$personal_number   	= $_REQUEST['personal_number'];
+			WC()->session->set( 'afterpay_personal_no', $personal_number );
+		}
+		
 		if ( $customer_category != 'Company' ) {
 			$customer_category = 'Person';
 		}
-		$customer_lookup_response = $this->customer_lookup_request( $mobile_number, $payment_method, $customer_category, $billing_country );
+		$customer_lookup_response = $this->customer_lookup_request( $mobile_number, $personal_number, $payment_method, $customer_category, $billing_country );
 		$data['response']            = $customer_lookup_response;
 		
 		if ( ! is_wp_error( $customer_lookup_response ) ) {
@@ -525,7 +535,7 @@ class WC_AfterPay_Pre_Check_Customer {
 	 *
 	 * @return bool
 	 */
-	public function customer_lookup_request( $mobile_number, $payment_method, $customer_category, $billing_country, $order = false ) {
+	public function customer_lookup_request( $mobile_number, $personal_number, $payment_method, $customer_category, $billing_country, $order = false ) {
 		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 		switch ( get_woocommerce_currency() ) {
 			case 'SEK' :
@@ -541,7 +551,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		
 		
 		$request  = new WC_AfterPay_Request_Customer_Lookup( $this->x_auth_key, $this->testmode );
-		$response = $request->response( $mobile_number, $billing_country, $customer_category );
+		$response = $request->response( $mobile_number, $personal_number, $billing_country, $customer_category );
 		$response  = json_decode( $response );
 		
 		if ( ! is_wp_error( $response ) ) {

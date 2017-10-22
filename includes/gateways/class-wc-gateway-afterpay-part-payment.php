@@ -104,7 +104,14 @@ function init_wc_gateway_afterpay_part_payment_class() {
 		 */
 		public function payment_fields() {
 			parent::payment_fields();
-
+			
+			
+			$this->get_available_installment_plans();
+			
+			
+			
+			/*
+			
 			$payment_options = WC()->session->get( 'afterpay_allowed_payment_methods' );
 			$installment_plans = 0;
 			foreach ( $payment_options as $payment_option ) {
@@ -135,6 +142,7 @@ function init_wc_gateway_afterpay_part_payment_class() {
 				$example = __( 'Example: 10000 kr over 12 months, effective interest rate 16.82%. Total credit amount 1682SEK, total repayment amount 11682 SEK.', 'woocommerce-gateway-afterpay'	);
 				echo '<p style="margin: 1.5em 0 0; font-size: 0.8em;">' . $example . '</p>';
 			}
+			*/
 		}
 
 		/**
@@ -147,6 +155,95 @@ function init_wc_gateway_afterpay_part_payment_class() {
 		 */
 		public function sort_payment_plans( $plana, $planb ) {
 			return $plana->NumberOfInstallments > $planb->NumberOfInstallments;
+		}
+		
+		/**
+		 * Get available installment plans
+		 *
+		 */
+		public function get_available_installment_plans( ) {
+			switch ( get_woocommerce_currency() ) {
+				case 'SEK' :
+					$country_code = 'SE';
+					break;
+				case 'NOK' :
+					$country_code = 'NO';
+					break;
+				default :
+					$country_code = 'SE';
+			}
+			
+			$request  = new WC_AfterPay_Request_Available_Installment_Plans( $this->x_auth_key, $this->testmode );
+			$response = $request->response( WC()->cart->total, get_woocommerce_currency(), $country_code );
+			$response  = json_decode( $response );
+			/*echo '<pre>';
+			print_r( $response->availableInstallmentPlans );
+			echo '</pre>';
+			*/
+			$installment_plans = $response->availableInstallmentPlans;
+			if ( ! is_wp_error( $response ) ) {
+				//WC()->session->set( 'afterpay_available_installment_plans', $response->availableInstallmentPlans );
+			   
+			   
+				echo '<p>' . __( 'Please select a payment plan:', 'woocommerce-gateway-afterpay' ) . '</p>';
+				$i = 0;
+				foreach( $installment_plans as $key => $installment_plan ) {
+					
+					if( $installment_plan->installmentProfileNumber < 11 ) {
+						$i ++;
+						$label = sprintf(
+							'%1$s x %2$s %3$s per month',
+							$installment_plan->numberOfInstallments,
+							round( $installment_plan->installmentAmount ),
+							get_woocommerce_currency()
+						);
+
+
+						// Create payment plan details output
+						if ( $i < 2 ) {
+							$inline_style = 'style="clear:both;position:relative"';
+							$extra_class  = 'visible-ppp';
+						} else {
+							$inline_style = 'style="clear:both;display:none;position:relative"';
+							$extra_class  = '';
+						}
+						$total_notification_fees = round( $installment_plan->numberOfInstallments * $installment_plan->monthlyFee );
+						
+						$payment_options_details_output .= '<div class="afterpay-ppp-details ' . $extra_class . '" data-campaign="' . $installment_plan->installmentProfileNumber . '" ' . $inline_style . '>';
+						
+						$payment_options_details_output .= sprintf( __( 'Effective interest rate: %s%s. Initial fee: %s. Notification fees: %s/mo (%s). Total: %s.', 'woocommerce-gateway-sveawebpay' ), 
+						$installment_plan->effectiveInterestRate, 
+						'%', 
+						wc_price($installment_plan->startupFee), 
+						wc_price($installment_plan->monthlyFee), 
+						wc_price($total_notification_fees), 
+						wc_price($installment_plan->totalAmount) );
+						
+						$payment_options_details_output .= '</div>';
+
+						echo '<input type="radio" name="afterpay_installment_plan" id="afterpay-installment-plan-' . $installment_plan->installmentProfileNumber . '" value="' . $installment_plan->installmentProfileNumber . '" ' . checked( $key, 0, false ) . ' />';
+						echo '<label for="afterpay-installment-plan-' . $installment_plan->installmentProfileNumber . '"> ' . $label . '</label>';
+						echo '<br>';
+						
+					}
+				}
+				
+				// Print payment plan details
+				//echo '<div class="afterpay-installment-plan-details">' . $payment_options_details_output . '</div>';
+				echo '<p style="margin: 1.5em 0 0; font-size: 0.8em;">' . $payment_options_details_output . '</p>';
+				//$example = __( 'Example: 10000 kr over 12 months, effective interest rate 16.82%. Total credit amount 1682SEK, total repayment amount 11682 SEK.', 'woocommerce-gateway-afterpay'	);
+				
+				
+				//echo '<p style="margin: 1.5em 0 0; font-size: 0.8em;">' . $example . '</p>';
+				
+			   
+			   
+			   
+	
+			} else {
+				//WC()->session->__unset( 'afterpay_installment_plans' );
+				
+			}
 		}
 	}
 

@@ -20,9 +20,9 @@ class WC_AfterPay_Request_Customer_Lookup extends WC_AfterPay_Request {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function response( $mobile_number, $billing_country, $customer_category ) {
+	public function response( $mobile_number, $personal_number, $billing_country, $customer_category ) {
 		$request_url = $this->base_url . $this->request_path;
-		$request     = wp_remote_retrieve_body( wp_remote_request( $request_url, $this->get_request_args( $mobile_number, $billing_country, $customer_category ) ) );
+		$request     = wp_remote_retrieve_body( wp_remote_request( $request_url, $this->get_request_args( $mobile_number, $personal_number, $billing_country, $customer_category ) ) );
 		WC_Gateway_AfterPay_Factory::log( 'WC_AfterPay_Request_Customer_Lookup request: ' . var_export( $request, true) );
 		return $request;
 	}
@@ -31,10 +31,10 @@ class WC_AfterPay_Request_Customer_Lookup extends WC_AfterPay_Request {
 	 *
 	 * @return array
 	 */
-	private function get_request_args( $mobile_number, $billing_country, $customer_category ) {
+	private function get_request_args( $mobile_number, $personal_number, $billing_country, $customer_category ) {
 		$request_args = array(
 			'headers' => $this->request_header(),
-			'body'    => $this->get_request_body( $mobile_number, $billing_country, $customer_category ),
+			'body'    => $this->get_request_body( $mobile_number, $personal_number, $billing_country, $customer_category ),
 			'method'  => $this->request_method,
 		);
 		return $request_args;
@@ -44,11 +44,15 @@ class WC_AfterPay_Request_Customer_Lookup extends WC_AfterPay_Request {
 	 *
 	 * @return false|string
 	 */
-	private function get_request_body( $mobile_number, $billing_country, $customer_category ) {
+	private function get_request_body( $mobile_number, $personal_number, $billing_country, $customer_category ) {
 		$formatted_request_body = array(
-			'mobilePhone'       => $mobile_number,
 			'countryCode'  		=> $billing_country,
 		);
+		if( 'NO' == $billing_country ) {
+			$formatted_request_body['mobilePhone'] = $mobile_number;
+		} else {
+			$formatted_request_body['identificationNumber'] = $personal_number;
+		}
 		return wp_json_encode( $formatted_request_body );
 	}
 }

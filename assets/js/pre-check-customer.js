@@ -176,7 +176,22 @@ jQuery(function ($) {
     $(document).on('click', '#afterpay-pre-check-customer', function () {
 		check_separate_shipping_address('no');
     });
+	
+	// Display of info about selected part payment method
+	//$(document).on('change', 'input[type=radio][name=afterpay_installment_plan]', function () {
+	//$("input[name=afterpay_installment_plan]:radio").on('change', function () {
+	//jQuery('input:radio[name=afterpay_installment_plan]:checked').change(function () {
+	$(document).on('change', 'input[name="afterpay_installment_plan"]', function (event) {
+		//console.log('hej');
+		var selectedOption =  $('input[name="afterpay_installment_plan"]:checked').val();
+		//var test = $('input[name=afterpay_installment_plan]:checked').val();
+		console.log( selectedOption );
+		
 
+		$('.afterpay-ppp-details').hide().removeClass('visible-ppp');
+		$('div.afterpay-ppp-details[data-campaign=' + selectedOption + ']').show().addClass('visible-ppp');
+	});
+				
 	// Fire PreCheckCustomer on update_checkout
 	// $(document).on('update_checkout', function(event) {
 		// trigger_ajax_pre_check_customer();
@@ -267,13 +282,18 @@ jQuery(function ($) {
 
 		var selected_payment_method = $('input[name="payment_method"]:checked').val();
 		var selected_customer_category = $('input[name="afterpay_customer_category"]:checked').val();
-		//var entered_personal_number = $('#afterpay-pre-check-customer .afterpay-pre-check-customer-number').val();
+		var entered_personal_number = $('#afterpay-pre-check-customer-number').val();
+		
 		var entered_mobile_number = $('#afterpay-pre-check-mobile-number').val();
 		var selected_billing_country = $("#billing_country").val();
 		//$('.afterpay-pre-check-customer-number').val(entered_personal_number);
-
-		if ('' != entered_mobile_number) { // Check if the field is empty
-
+		
+		// Check if the field is empty
+		if ('' == entered_mobile_number && '' == entered_personal_number ) { 
+			// If the field is empty show notification
+		} else { 
+			// Make a request
+			console.log('entered_personal_number ' + entered_personal_number);
 			$('.afterpay-customer-lookup-button').addClass('disabled');
 
 			$.ajax(
@@ -284,6 +304,7 @@ jQuery(function ($) {
 					data: {
 						action: 'afterpay_customer_lookup',
 						mobile_number: entered_mobile_number,
+						personal_number: entered_personal_number,
 						payment_method: selected_payment_method,
 						customer_category: selected_customer_category,
 						billing_country: selected_billing_country,
@@ -324,8 +345,6 @@ jQuery(function ($) {
 					}
 				}
 			);
-		} else { // If the field is empty show notification
-
 		}
 	}
 
