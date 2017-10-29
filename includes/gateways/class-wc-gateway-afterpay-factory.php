@@ -420,9 +420,6 @@ function init_wc_gateway_afterpay_factory_class() {
 
 			include_once( plugin_dir_path( __DIR__ ) . 'class-refund.php' );
 
-			// Use WC_AfterPay_Complete_Checkout class to process the payment
-			// Must previously perform PreCheckCustomer
-			// CheckoutID and CustomerNo are required and returned from PreCheckCustomer
 			$wc_afterpay_refund = new WC_AfterPay_Refund( $order_id, $this->id );
 
 			$result = $wc_afterpay_refund->refund_invoice( $order_id, $amount, $reason );

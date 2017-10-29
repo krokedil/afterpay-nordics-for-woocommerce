@@ -28,14 +28,11 @@ class WC_AfterPay_Pre_Check_Customer {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		// Register AJAX callback
-		add_action( 'wp_ajax_afterpay_pre_check_customer', array( $this, 'pre_check_customer' ) );
-		add_action( 'wp_ajax_nopriv_afterpay_pre_check_customer', array( $this, 'pre_check_customer' ) );
 		
 		add_action( 'wp_ajax_afterpay_customer_lookup', array( $this, 'customer_lookup' ) );
 		add_action( 'wp_ajax_nopriv_afterpay_customer_lookup', array( $this, 'customer_lookup' ) );
 
 		add_action( 'woocommerce_before_checkout_billing_form', array( $this, 'display_pre_check_form' ) );
-		//add_action( 'woocommerce_checkout_init', array( $this, 'maybe_pre_check_customer' ) );
 
 		// Check if PreCheckCustomer was performed and successful
 		add_action( 'woocommerce_before_checkout_process', array( $this, 'confirm_pre_check_customer' ) );
@@ -94,41 +91,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		) );
 	}
 
-	/**
-	 * Run PreCheckCustomer on checkout load if we have a personal number and an AfterPay method is selected
-	 */
-	public function maybe_pre_check_customer() {
-
-		WC()->cart->calculate_totals();
-		if ( WC()->session->get( 'afterpay_cart_total' ) == WC()->cart->total ) {
-			return;
-		}
-
-		// Only perform PreCheckCustomer on checkout_init for Swedish customers in live environment
-		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
-		$testmode = $afterpay_settings['testmode'];
-		if ( 'SE' != WC()->customer->get_billing_country() || 'yes' == $testmode ) {
-			return;
-		}
-
-		$chosen_payment_method = WC()->session->chosen_payment_method;
-		if ( strpos( $chosen_payment_method, 'afterpay' ) !== false ) {
-			$personal_no = '';
-
-			if ( WC()->session->get( 'afterpay_personal_no' ) ) {
-				$personal_no = WC()->session->get( 'afterpay_personal_no' );
-			} else if ( is_user_logged_in() ) {
-				$user = wp_get_current_user();
-				if ( get_user_meta( $user->ID, '_afterpay_personal_no', true ) ) {
-					$personal_no = get_user_meta( $user->ID, '_afterpay_personal_no', true );
-				}
-			}
-
-			if ( '' != $personal_no ) {
-				$this->pre_check_customer_request( $personal_no, $chosen_payment_method, 'Person', WC()->customer->get_billing_country() );
-			}
-		}
-	}
+	
 
 	/**
 	 * Check if customer has used PreCheckCustomer and received a positive response (if AfterPay method is selected)
@@ -298,47 +261,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		) );
 		wp_enqueue_script( 'afterpay_pre_check_customer' );
 	}
-
-	/**
-	 * AJAX PreCheckCustomer for AfterPay payment methods.
-	 */
-	public function pre_check_customer() {
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'afterpay_pre_check_customer_nonce' ) ) {
-			exit( 'Nonce can not be verified.' );
-		}
-
-		$data = array();
-
-		$personal_number   = $_REQUEST['personal_number'];
-		$email             = $_REQUEST['email'];
-		$payment_method    = $_REQUEST['payment_method'];
-		$customer_category = $_REQUEST['customer_category'];
-		$billing_country   = $_REQUEST['billing_country'];
-
-		if ( $customer_category != 'Company' ) {
-			$customer_category = 'Person';
-		}
-		$pre_check_customer_response = $this->pre_check_customer_request( $personal_number, $email, $payment_method, $customer_category, $billing_country );
-		$data['response']            = $pre_check_customer_response;
-		
-		if ( ! is_wp_error( $pre_check_customer_response ) ) {
-			$data['message'] = __(
-				'Address found and added to checkout form.',
-				'woocommerce-gateway-afterpay'
-			);
-			wp_send_json_success( $data );
-		} else {
-			/*
-			$data['message'] = __(
-				'No address was found. Please check your personal number or choose another payment method.',
-				'woocommerce-gateway-afterpay'
-			);
-			*/
-			$data['message'] = $pre_check_customer_response->get_error_message();
-			wp_send_json_error( $data );
-		}
-		wp_die();
-	}
+	
 
 	/**
 	 * Check billing fields against shipping fields for differences

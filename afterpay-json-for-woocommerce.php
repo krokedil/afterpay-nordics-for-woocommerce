@@ -39,13 +39,11 @@ define( 'AFTERPAY_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-factory.php' );
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-invoice.php' );
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-part-payment.php' );
-include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-account.php' );
 
 include_once( AFTERPAY_PATH . '/includes/class-pre-check-customer.php' );
 include_once( AFTERPAY_PATH . '/includes/class-cancel-reservation.php' );
-include_once( AFTERPAY_PATH . '/includes/class-create-contract.php' );
-include_once( AFTERPAY_PATH . '/includes/class-complete-checkout.php' );
-include_once( AFTERPAY_PATH . '/includes/class-update-reservation.php' );
+
+//include_once( AFTERPAY_PATH . '/includes/class-update-reservation.php' );
 
 include_once( AFTERPAY_PATH . '/includes/class-process-order-lines.php' );
 include_once( AFTERPAY_PATH . '/includes/class-invoice-fee.php' );
@@ -56,7 +54,7 @@ include_once( AFTERPAY_PATH . '/includes/class-admin-notices.php' );
 include_once( AFTERPAY_PATH . '/includes/requests/class-wc-afterpay-request.php' );
 include_once( AFTERPAY_PATH . '/includes/class-capture.php' );
 include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-customer.php' );
-include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-available-payment-methods.php' );
+//include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-available-payment-methods.php' );
 include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-authorize-payment.php' );
 include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-create-contract.php' );
 include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-capture-payment.php' );
