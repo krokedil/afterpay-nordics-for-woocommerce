@@ -117,7 +117,7 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * Display AfterPay PreCheckCustomer fields
 	 */
 	public static function display_pre_check_form() {
-		
+		/*
 		if ( is_user_logged_in() && 'SE' == WC()->customer->get_billing_country() ) {
 			$user = wp_get_current_user();
 			if ( get_user_meta( $user->ID, '_afterpay_personal_no', true ) ) {
@@ -125,7 +125,9 @@ class WC_AfterPay_Pre_Check_Customer {
 			}
 		} else {
 			$personal_number = WC()->session->get( 'afterpay_personal_no' ) ? WC()->session->get( 'afterpay_personal_no' ) : '';
-		} 
+		}
+		*/
+		$personal_number = WC()->session->get( 'afterpay_personal_no' ) ? WC()->session->get( 'afterpay_personal_no' ) : '';
 		
 		 // Check settings for what customer type is wanted, and print the form according to that.
         $afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
@@ -223,6 +225,8 @@ class WC_AfterPay_Pre_Check_Customer {
 				<label for="afterpay-customer-lookup-button button"> &nbsp;</label>
 				<button type="button" class="afterpay-customer-lookup-button button"><?php _e( 'Get address', 'woocommerce-gateway-afterpay' ); ?></button>
 			</p>
+			
+			
 		</div>
         <?php
 	}

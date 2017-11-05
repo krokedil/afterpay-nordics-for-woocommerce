@@ -32,7 +32,7 @@ function init_wc_gateway_afterpay_invoice_class() {
 			$this->id           = 'afterpay_invoice';
 			$this->method_title = __( 'AfterPay Invoice', 'woocommerce-gateway-afterpay' );
 
-			$this->icon               = apply_filters( 'woocommerce_afterpay_invoice_icon', AFTERPAY_URL . '/assets/images/logo.png' );
+			//$this->icon               = apply_filters( 'woocommerce_afterpay_invoice_icon', AFTERPAY_URL . '/assets/images/logo.png' );
 			$this->has_fields         = true;
 			$this->method_description = __( 'Allows payments through ' . $this->method_title . '.', 'woocommerce-gateway-afterpay' );
 
@@ -111,6 +111,15 @@ function init_wc_gateway_afterpay_invoice_class() {
 				'process_checkout_fields' 
 			) );
 			
+		}
+		
+		/**
+		 * Display payment fields for Part Payment
+		 */
+		public function payment_fields() {
+			parent::payment_fields();
+			
+			echo $this->get_afterpay_info();
 		}
 
 	}

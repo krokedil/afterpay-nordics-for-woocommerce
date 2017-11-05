@@ -204,6 +204,19 @@ function init_wc_gateway_afterpay_factory_class() {
 			);
 			$this->form_fields = $form_fields;
 		}
+		
+		/**
+		 * get_icon function.
+		 *
+		 * @return string
+		 */
+		public function get_icon() {
+			$icon_html = '';
+	
+			$icon_html = '<img src="' . AFTERPAY_URL . '/assets/images/afterpay-logo.png" alt="AfterPay - Payments made easy" style="margin-left:10px; margin-right:10px;" width="100"/>';
+	
+			return apply_filters( 'wc_afterpay_icon_html', $icon_html );
+		}
 
 		/**
 		 * Process the payment and return the result.
@@ -215,12 +228,11 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function process_payment( $order_id ) {
 			// @Todo - check if this is needed (for Norway) since we don't do Available payment methods there
-			
-			if ( isset( $_POST['afterpay-pre-check-customer-number-norway'] ) ) {
+			if ( isset( $_POST['afterpay-pre-check-customer-number-norway'] ) && 'NO' == $_POST['billing_country'] ) {
 				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number-norway'] );
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
-			if ( isset( $_POST['afterpay-pre-check-customer-number'] ) ) {
+			if ( isset( $_POST['afterpay-pre-check-customer-number'] ) && 'SE' == $_POST['billing_country'] ) {
 				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number'] );
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
@@ -309,7 +321,6 @@ function init_wc_gateway_afterpay_factory_class() {
 				echo wpautop( wptexturize( $this->description ) );
 			}
 			echo $this->get_afterpay_dob_field();
-			echo $this->get_afterpay_info();
 		}
 
 		/**
@@ -319,21 +330,21 @@ function init_wc_gateway_afterpay_factory_class() {
 			$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 			$customer_type = $afterpay_settings['customer_type'];
 			if ( $customer_type === 'both' ) {
-            		$label = __( 'Personal/organization number', 'woocommerce-gateway-afterpay' );
-            	} else if ( $customer_type === 'private' ) {
-                    $label = __( 'Personal number', 'woocommerce-gateway-afterpay' );
-                } else if ( $customer_type === 'company' ) {
-	            	$label = __( 'Organization number', 'woocommerce-gateway-afterpay' );
-	            }
-			?>
-			<p class="personal-number-norway">
+        		$label = __( 'Personal/organization number', 'woocommerce-gateway-afterpay' );
+        	} else if ( $customer_type === 'private' ) {
+                $label = __( 'Personal number', 'woocommerce-gateway-afterpay' );
+            } else if ( $customer_type === 'company' ) {
+            	$label = __( 'Organization number', 'woocommerce-gateway-afterpay' );
+            }
+            ?>
+            <p class="personal-number-norway">
 				<label for="afterpay-pre-check-customer-number-norway"><?php echo $label; ?> <span class="required">*</span></label>
 		            <input type="text" name="afterpay-pre-check-customer-number-norway" id="afterpay-pre-check-customer-number-norway"
 					       class="afterpay-pre-check-customer-number norway"
+					       value=""
 					       placeholder="<?php _e( 'YYMMDDNNNN', 'woocommerce-gateway-afterpay' ); ?>"/>
 			</p>
 			<?php
-
 		}
 		
 		/**

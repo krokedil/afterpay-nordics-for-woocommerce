@@ -32,7 +32,7 @@ function init_wc_gateway_afterpay_part_payment_class() {
 			$this->id                 = 'afterpay_part_payment';
 			$this->method_title       = __( 'AfterPay Part Payment', 'woocommerce-gateway-afterpay' );
 
-			$this->icon               = apply_filters( 'woocommerce_afterpay_part_payment_icon', AFTERPAY_URL . '/assets/images/logo.png' );
+			//$this->icon               = apply_filters( 'woocommerce_afterpay_part_payment_icon', AFTERPAY_URL . '/assets/images/logo.png' );
 			$this->has_fields         = true;
 			$this->method_description = __( 'Allows payments through ' . $this->method_title . '.', 'woocommerce-gateway-afterpay' );
 
@@ -107,6 +107,8 @@ function init_wc_gateway_afterpay_part_payment_class() {
 			
 			
 			$this->get_available_installment_plans();
+			
+			echo $this->get_afterpay_info();
 			
 			
 			
@@ -192,10 +194,11 @@ function init_wc_gateway_afterpay_part_payment_class() {
 					if( $installment_plan->installmentProfileNumber < 11 ) {
 						$i ++;
 						$label = sprintf(
-							'%1$s x %2$s %3$s per month',
+							'%1$s %2$s, %3$s / %4$s',
 							$installment_plan->numberOfInstallments,
-							round( $installment_plan->installmentAmount ),
-							get_woocommerce_currency()
+							__( 'months', 'woocommerce-gateway-afterpay' ),
+							wc_price( round( $installment_plan->installmentAmount ) ),
+							__( 'mo', 'woocommerce-gateway-afterpay' )
 						);
 
 
@@ -207,18 +210,16 @@ function init_wc_gateway_afterpay_part_payment_class() {
 							$inline_style = 'style="clear:both;display:none;position:relative"';
 							$extra_class  = '';
 						}
-						$total_notification_fees = round( $installment_plan->numberOfInstallments * $installment_plan->monthlyFee );
 						
 						$payment_options_details_output .= '<div class="afterpay-ppp-details ' . $extra_class . '" data-campaign="' . $installment_plan->installmentProfileNumber . '" ' . $inline_style . '>';
 						
-						$payment_options_details_output .= sprintf( __( 'Effective interest rate: %s%s. Initial fee: %s. Notification fees: %s/mo (%s). Total: %s.', 'woocommerce-gateway-sveawebpay' ), 
-						$installment_plan->effectiveInterestRate, 
+						$payment_options_details_output .= sprintf( __( 'Start fee: %1$s. Monthly fee: %2$s. Rate: %3$s%5$s. Annual effective rate: %4$s%5$s. Total: %6$s.', 'woocommerce-gateway-sveawebpay' ),
+						wc_price($installment_plan->startupFee),
+						wc_price($installment_plan->monthlyFee),
+						$installment_plan->interestRate,
+						$installment_plan->effectiveAnnualPercentageRate, 
 						'%', 
-						wc_price($installment_plan->startupFee), 
-						wc_price($installment_plan->monthlyFee), 
-						wc_price($total_notification_fees), 
 						wc_price($installment_plan->totalAmount) );
-						
 						$payment_options_details_output .= '</div>';
 
 						echo '<input type="radio" name="afterpay_installment_plan" id="afterpay-installment-plan-' . $installment_plan->installmentProfileNumber . '" value="' . $installment_plan->installmentProfileNumber . '" ' . checked( $key, 0, false ) . ' />';
