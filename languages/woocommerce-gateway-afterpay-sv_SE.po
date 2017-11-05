@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AfterPay for WooCommerce\n"
 "POT-Creation-Date: 2017-03-31 11:06+0200\n"
-"PO-Revision-Date: 2017-03-31 11:12+0200\n"
+"PO-Revision-Date: 2017-11-05 21:51+0100\n"
 "Last-Translator: Niklas Högefjord <info@krokedil.se>\n"
 "Language-Team: Niklas Högefjord <info@krokedil.se>\n"
 "Language: sv_SE\n"
@@ -424,7 +424,7 @@ msgstr "AfterPay för WooCommerce"
 
 #. Plugin URI of the plugin/theme
 msgid "https://krokedil.se/produkt/afterpay/"
-msgstr "https://Krokedil.se/produkt/afterpay/"
+msgstr "https://krokedil.se/produkt/afterpay/"
 
 #. Description of the plugin/theme
 msgid "Provides AfterPay payment gateway for WooCommerce."
