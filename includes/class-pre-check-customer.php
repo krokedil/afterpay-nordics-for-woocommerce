@@ -481,7 +481,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		$response  = json_decode( $response );
 		
 		if ( ! is_wp_error( $response ) ) {
-			WC_Gateway_AfterPay_Factory::log( '$response request: ' . var_export( $response, true) );
+			WC_Gateway_AfterPay_Factory::log( 'customer_lookup_request response: ' . var_export( $response, true) );
 		    if( $response->userProfiles[0]->firstName ) {
 			    // Customer information
 	            $afterpay_customer_details = array(
