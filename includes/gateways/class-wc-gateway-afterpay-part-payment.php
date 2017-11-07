@@ -213,7 +213,7 @@ function init_wc_gateway_afterpay_part_payment_class() {
 						
 						$payment_options_details_output .= '<div class="afterpay-ppp-details ' . $extra_class . '" data-campaign="' . $installment_plan->installmentProfileNumber . '" ' . $inline_style . '>';
 						
-						$payment_options_details_output .= sprintf( __( 'Start fee: %1$s. Monthly fee: %2$s. Rate: %3$s%5$s. Annual effective rate: %4$s%5$s. Total: %6$s.', 'woocommerce-gateway-sveawebpay' ),
+						$payment_options_details_output .= sprintf( __( 'Start fee: %1$s. Monthly fee: %2$s. Rate: %3$s%5$s. Annual effective rate: %4$s%5$s. Total: %6$s.', 'woocommerce-gateway-afterpay' ),
 						wc_price($installment_plan->startupFee),
 						wc_price($installment_plan->monthlyFee),
 						$installment_plan->interestRate,
