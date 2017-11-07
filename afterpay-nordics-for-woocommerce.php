@@ -7,9 +7,9 @@
  * @package WC_Gateway_AfterPay
  *
  * @wordpress-plugin
- * Plugin Name:     AfterPay via Json for WooCommerce
+ * Plugin Name:     AfterPay Nordics for WooCommerce
  * Plugin URI:      https://krokedil.se/produkt/afterpay/
- * Description:     Provides AfterPay v3 payment gateway for WooCommerce.
+ * Description:     Provides an AfterPay v3 payment gateway for WooCommerce.
  * Version:         0.1
  * Author:          Krokedil
  * Author URI:      http://krokedil.com/
