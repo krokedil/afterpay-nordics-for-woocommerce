@@ -308,7 +308,8 @@ function init_wc_gateway_afterpay_factory_class() {
 					'redirect' => $this->get_return_url( $order ),
 				);
 			} else {
-				wc_add_notice( $response->get_error_message(), 'error' );
+				$formatted_response = json_decode($response->get_error_message());
+				wc_add_notice( sprintf(__( '%s.', 'woocommerce-gateway-afterpay' ), $formatted_response[0]->message ), 'error' );
 				return false;
 			}
 		}
