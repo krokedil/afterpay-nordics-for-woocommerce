@@ -116,7 +116,7 @@ class WC_AfterPay_Pre_Check_Customer {
 	/**
 	 * Display AfterPay PreCheckCustomer fields
 	 */
-	public static function display_pre_check_form() {
+	public function display_pre_check_form() {
 		/*
 		if ( is_user_logged_in() && 'SE' == WC()->customer->get_billing_country() ) {
 			$user = wp_get_current_user();
