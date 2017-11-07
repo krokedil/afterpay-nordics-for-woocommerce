@@ -211,7 +211,7 @@ function init_wc_gateway_afterpay_part_payment_class() {
 							$extra_class  = '';
 						}
 						
-						$payment_options_details_output .= '<div class="afterpay-ppp-details ' . $extra_class . '" data-campaign="' . $installment_plan->installmentProfileNumber . '" ' . $inline_style . '>';
+						$payment_options_details_output .= '<div class="afterpay-ppp-details ' . $extra_class . '" data-campaign="' . $installment_plan->installmentProfileNumber . '" ' . $inline_style . '><small>';
 						
 						$payment_options_details_output .= sprintf( __( 'Start fee: %1$s. Monthly fee: %2$s. Rate: %3$s%5$s. Annual effective rate: %4$s%5$s. Total: %6$s.', 'woocommerce-gateway-afterpay' ),
 						wc_price($installment_plan->startupFee),
@@ -220,7 +220,7 @@ function init_wc_gateway_afterpay_part_payment_class() {
 						$installment_plan->effectiveAnnualPercentageRate, 
 						'%', 
 						wc_price($installment_plan->totalAmount) );
-						$payment_options_details_output .= '</div>';
+						$payment_options_details_output .= '</small></div>';
 
 						echo '<input type="radio" name="afterpay_installment_plan" id="afterpay-installment-plan-' . $installment_plan->installmentProfileNumber . '" value="' . $installment_plan->installmentProfileNumber . '" ' . checked( $key, 0, false ) . ' />';
 						echo '<label for="afterpay-installment-plan-' . $installment_plan->installmentProfileNumber . '"> ' . $label . '</label>';
@@ -230,16 +230,7 @@ function init_wc_gateway_afterpay_part_payment_class() {
 				}
 				
 				// Print payment plan details
-				//echo '<div class="afterpay-installment-plan-details">' . $payment_options_details_output . '</div>';
-				echo '<p style="margin: 1.5em 0 0; font-size: 0.8em;">' . $payment_options_details_output . '</p>';
-				//$example = __( 'Example: 10000 kr over 12 months, effective interest rate 16.82%. Total credit amount 1682SEK, total repayment amount 11682 SEK.', 'woocommerce-gateway-afterpay'	);
-				
-				
-				//echo '<p style="margin: 1.5em 0 0; font-size: 0.8em;">' . $example . '</p>';
-				
-			   
-			   
-			   
+				echo $payment_options_details_output;
 	
 			} else {
 				//WC()->session->__unset( 'afterpay_installment_plans' );
