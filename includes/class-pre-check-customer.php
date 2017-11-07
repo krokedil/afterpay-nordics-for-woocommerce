@@ -482,7 +482,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		
 		if ( ! is_wp_error( $response ) ) {
 			WC_Gateway_AfterPay_Factory::log( 'customer_lookup_request response: ' . var_export( $response, true) );
-		    if( $response->userProfiles[0]->firstName ) {
+		    if( $response->userProfiles[0]->firstName || $response->userProfiles[0]->eMail ) {
 			    // Customer information
 	            $afterpay_customer_details = array(
 					'first_name' => $response->userProfiles[0]->firstName,
@@ -492,7 +492,9 @@ class WC_AfterPay_Pre_Check_Customer {
 					'city'       => $response->userProfiles[0]->addressList[0]->city,
 					'country'    => $response->userProfiles[0]->addressList[0]->countryCode,
 				);
-				
+				if( $response->userProfiles[0]->eMail ) {
+					$afterpay_customer_details['email'] = $response->userProfiles[0]->eMail;
+				}
 				WC()->session->set( 'afterpay_customer_details', $afterpay_customer_details );
 				WC()->session->set( 'afterpay_cart_total', WC()->cart->total );
 
@@ -500,19 +502,20 @@ class WC_AfterPay_Pre_Check_Customer {
 				return $afterpay_customer_details;
 			    
 		    } else {
+			    // We didn't get a customer address in response
 			    if( 'NO' == $billing_country ) {
 				    $identifier = 'mobile phone number';
 				} else {
 					$identifier = 'personal/organization number';
 				}
-			    // We didn't get a customer address in response
-			    if( 'BusinessError' == $response[0]->type ) {
-				    //$error_meassage = $response[0]->message;
-				    $error_meassage = sprintf( __( 'No address was found. Please check your %s or choose another payment method.', 'woocommerce-gateway-afterpay' ), $identifier );
+			    // And because AfterPay returns the response in different formats depending on the error
+			    if( is_array( $response ) ) {
+				    $response_message = $response[0]->message;
 			    } else {
-				    $error_meassage = sprintf( __( 'No address was found. Please check your %s or choose another payment method.', 'woocommerce-gateway-afterpay' ), $identifier );
+				    $response_message = $response->message;
 			    }
 			    
+				$error_meassage = sprintf( __( 'No address was found (%s). Please check your %s or choose another payment method.', 'woocommerce-gateway-afterpay' ), $response_message, $identifier );
 			    return new WP_Error( 'failure',  sprintf( __( '%s', 'woocommerce-gateway-afterpay' ), $error_meassage ) );
 		    }
 			
