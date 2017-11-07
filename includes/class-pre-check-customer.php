@@ -349,10 +349,12 @@ class WC_AfterPay_Pre_Check_Customer {
 				WC()->session->set( 'afterpay_allowed_payment_methods', $response->paymentMethods );
 				WC()->session->set( 'afterpay_checkout_id', $response->checkoutId );
 				// Capture user's personal number as meta field, if logged in and is from Sweden
+				/*
 				if ( is_user_logged_in() && 'SE' == $billing_country ) {
 					$user = wp_get_current_user();
 					add_user_meta( $user->ID, '_afterpay_personal_no', $personal_number, true );
 				}
+				*/
 				// Send success
 				return $afterpay_customer_details;
 			    
@@ -498,12 +500,17 @@ class WC_AfterPay_Pre_Check_Customer {
 				return $afterpay_customer_details;
 			    
 		    } else {
+			    if( 'NO' == $billing_country ) {
+				    $identifier = 'mobile phone number';
+				} else {
+					$identifier = 'personal/organization number';
+				}
 			    // We didn't get a customer address in response
 			    if( 'BusinessError' == $response[0]->type ) {
 				    //$error_meassage = $response[0]->message;
-				    $error_meassage = __( 'No address was found. Please check your mobile phone number or choose another payment method.', 'woocommerce-gateway-afterpay' );
+				    $error_meassage = sprintf( __( 'No address was found. Please check your %s or choose another payment method.', 'woocommerce-gateway-afterpay' ), $identifier );
 			    } else {
-				    $error_meassage = __( 'No address was found. Please check your mobile phone number or choose another payment method.', 'woocommerce-gateway-afterpay' );
+				    $error_meassage = sprintf( __( 'No address was found. Please check your %s or choose another payment method.', 'woocommerce-gateway-afterpay' ), $identifier );
 			    }
 			    
 			    return new WP_Error( 'failure',  sprintf( __( '%s', 'woocommerce-gateway-afterpay' ), $error_meassage ) );
