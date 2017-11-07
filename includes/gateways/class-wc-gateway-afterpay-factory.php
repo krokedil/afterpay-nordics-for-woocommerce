@@ -244,7 +244,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			} else {
 				$profile_no = '';
 			}
-
+			update_post_meta( $order_id, '_afterpay_installment_profile_number', $profile_no );
 			// If needed, run PreCheckCustomer.
 			/*
 			if ( ! WC()->session->get( 'afterpay_checkout_id' ) ) {
