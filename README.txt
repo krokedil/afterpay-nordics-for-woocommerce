@@ -2,10 +2,11 @@
 Contributors: krokedil, niklashogefjord, slobodanmanic
 Tags: ecommerce, e-commerce, woocommerce, afterpay
 Requires at least: 4.2
-Tested up to: 4.7.3
-Stable tag: 0.1
+Tested up to: 4.8.3
+Requires PHP: 5.6
+Stable tag: trunk
 Requires WooCommerce at least: 3.0.0
-Tested WooCommerce up to: 3.1
+Tested WooCommerce up to: 3.2.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +41,9 @@ If you need help with installation and configuration Krokedil offer premium (pai
 
 
 == Changelog ==
+
+= 0.3 			- 2017.11.08 =
+* WordPress.org release
 
 = 0.1 			- 2017.08.24 =
 * Initial release
