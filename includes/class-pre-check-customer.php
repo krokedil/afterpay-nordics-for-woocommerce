@@ -166,7 +166,7 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * Get html for displaying customer category
 	 * - Both person and company.
 	 */
-	public function get_radiobutton_customer_type_both() {
+	public function get_radiobutton_customer_type_both( $separate_shipping_companies ) {
 		?>
 		<p>
             <input type="radio" class="input-radio" value="Person" name="afterpay_customer_category"
@@ -199,7 +199,7 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * Get html for displaying customer category
 	 * - Company.
 	 */
-	public function get_radiobutton_customer_type_company() {
+	public function get_radiobutton_customer_type_company( $separate_shipping_companies ) {
 		?>
 		<p>
             <input type="radio" value="Company" name="afterpay_customer_category"
