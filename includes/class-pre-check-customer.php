@@ -255,15 +255,18 @@ class WC_AfterPay_Pre_Check_Customer {
 
 		
 	/**
-	 * Load the JS file(s).
+	 * Load the JS & CSS file(s).
 	 */
 	public function enqueue_scripts() {
-		wp_register_script( 'afterpay_pre_check_customer', plugins_url( 'assets/js/pre-check-customer.js', __DIR__ ), array( 'jquery' ), false, true );
+		wp_register_script( 'afterpay_pre_check_customer', plugins_url( 'assets/js/pre-check-customer.js', __DIR__ ), array( 'jquery' ), AFTERPAY_VERSION, true );
 		wp_localize_script( 'afterpay_pre_check_customer', 'WC_AfterPay', array(
 			'ajaxurl'                           => admin_url( 'admin-ajax.php' ),
 			'afterpay_pre_check_customer_nonce' => wp_create_nonce( 'afterpay_pre_check_customer_nonce' ),
 		) );
 		wp_enqueue_script( 'afterpay_pre_check_customer' );
+		
+		wp_register_style( 'afterpay_pre_check_customer', plugins_url( 'assets/css/afterpay-pre-check-customer.css', __DIR__), array(), AFTERPAY_VERSION );
+		wp_enqueue_style( 'afterpay_pre_check_customer' );
 	}
 	
 
