@@ -23,7 +23,7 @@ class WC_AfterPay_Request_Customer_Lookup extends WC_AfterPay_Request {
 	public function response( $mobile_number, $personal_number, $billing_country, $customer_category ) {
 		$request_url = $this->base_url . $this->request_path;
 		$request     = wp_remote_retrieve_body( wp_remote_request( $request_url, $this->get_request_args( $mobile_number, $personal_number, $billing_country, $customer_category ) ) );
-		WC_Gateway_AfterPay_Factory::log( 'WC_AfterPay_Request_Customer_Lookup request: ' . var_export( $request, true) );
+		WC_Gateway_AfterPay_Factory::log( 'WC_AfterPay_Request_Customer_Lookup response: ' . var_export( $request, true) );
 		return $request;
 	}
 	/**
@@ -37,6 +37,7 @@ class WC_AfterPay_Request_Customer_Lookup extends WC_AfterPay_Request {
 			'body'    => $this->get_request_body( $mobile_number, $personal_number, $billing_country, $customer_category ),
 			'method'  => $this->request_method,
 		);
+		WC_Gateway_AfterPay_Factory::log( 'WC_AfterPay_Request_Customer_Lookup request args: ' . var_export( $request_args, true ) );
 		return $request_args;
 	}
 	/**
