@@ -515,7 +515,7 @@ function init_wc_gateway_afterpay_factory_class() {
 					break;
 				default:
 					$terms_url   			= 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
-					$terms_content			= wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
+					$terms_content			= wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
 					$terms_readmore 		= 'Läs mer om AfterPay <a href="' . $terms_url . '" target="_blank">här</a>.';
 					$short_readmore 		= 'Läs mer här';
 					$afterpay_info 			= '<div id="afterpay-terms-content" style="display:none;">';
