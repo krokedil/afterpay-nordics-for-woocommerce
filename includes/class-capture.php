@@ -51,7 +51,7 @@ class WC_AfterPay_Capture {
 		// If this reservation was already captured, do nothing.
 		if ( get_post_meta( $order_id, '_afterpay_reservation_captured', true ) ) {
 			$order->add_order_note(
-				__( 'Could not capture AfterPar reservation, AfterPay reservation is already captured.', 'woocommerce-gateway-afterpay' )
+				__( 'Could not capture AfterPar reservation, AfterPay reservation is already captured.', 'afterpay-nordics-for-woocommerce' )
 			);
 			return;
 		}
@@ -68,9 +68,9 @@ class WC_AfterPay_Capture {
 			update_post_meta( $order_id, '_afterpay_reservation_captured', current_time( 'mysql' ) );
 			update_post_meta( $order_id, '_transaction_id', $response->captureNumber );
 				
-			$order->add_order_note( sprintf( __( 'Payment captured with AfterPay with capture number %s', 'woocommerce-gateway-afterpay' ), $response->captureNumber ) );
+			$order->add_order_note( sprintf( __( 'Payment captured with AfterPay with capture number %s', 'afterpay-nordics-for-woocommerce' ), $response->captureNumber ) );
 		} else {
-			$order->add_order_note( sprintf( __( 'Payment failed to be captured by AfterPay', 'woocommerce-gateway-afterpay' ) ) );
+			$order->add_order_note( sprintf( __( 'Payment failed to be captured by AfterPay', 'afterpay-nordics-for-woocommerce' ) ) );
 		}
 	}
 	

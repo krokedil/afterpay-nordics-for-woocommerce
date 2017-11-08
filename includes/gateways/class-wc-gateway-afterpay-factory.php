@@ -109,55 +109,55 @@ function init_wc_gateway_afterpay_factory_class() {
 		public function init_form_fields() {
 			$form_fields = array(
 				'enabled' => array(
-					'title'   => __( 'Enable/Disable', 'woocommerce-gateway-afterpay' ),
+					'title'   => __( 'Enable/Disable', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
-					'label'   => __( 'Enable ' . $this->method_title, 'woocommerce-gateway-afterpay' ),
+					'label'   => __( 'Enable ' . $this->method_title, 'afterpay-nordics-for-woocommerce' ),
 					'default' => 'yes'
 				),
 				'title' => array(
-					'title'       => __( 'Title', 'woocommerce-gateway-afterpay' ),
+					'title'       => __( 'Title', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
-					'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce-gateway-afterpay' ),
-					'default'     => __( $this->method_title, 'woocommerce-gateway-afterpay' ),
+					'description' => __( 'This controls the title which the user sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
+					'default'     => __( $this->method_title, 'afterpay-nordics-for-woocommerce' ),
 					'desc_tip'    => true,
 				),
 				'description' => array(
-					'title'       => __( 'Description', 'woocommerce-gateway-afterpay' ),
+					'title'       => __( 'Description', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'textarea',
 					'desc_tip'    => true,
-					'description' => __( 'This controls the description which the user sees during checkout.', 'woocommerce-gateway-afterpay' ),
+					'description' => __( 'This controls the description which the user sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 				),
 				'x_auth_key_se' => array(
-					'title'       => __( 'AfterPay X-Auth-Key Sweden', 'woocommerce-gateway-afterpay' ),
+					'title'       => __( 'AfterPay X-Auth-Key Sweden', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
 						'Please enter your AfterPay X-Auth-Key for Sweden; this is needed in order to take payment',
-						'woocommerce-gateway-afterpay'
+						'afterpay-nordics-for-woocommerce'
 					),
 				),
 				'x_auth_key_no' => array(
-					'title'       => __( 'AfterPay X-Auth-Key Norway', 'woocommerce-gateway-afterpay' ),
+					'title'       => __( 'AfterPay X-Auth-Key Norway', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
 						'Please enter your AfterPay X-Auth-Key for Norway; this is needed in order to take payment',
-						'woocommerce-gateway-afterpay'
+						'afterpay-nordics-for-woocommerce'
 					),
 				),
 				'customer_type' => array(
-				'title'       => __( 'Customer type', 'woocommerce-gateway-afterpay' ),
+				'title'       => __( 'Customer type', 'afterpay-nordics-for-woocommerce' ),
 				'type'        => 'select',
-				'description' => __( 'Select the type of customer that can make purchases through AfterPay', 'woocommerce-gateway-afterpay' ),
+				'description' => __( 'Select the type of customer that can make purchases through AfterPay', 'afterpay-nordics-for-woocommerce' ),
 				'options'     => array(
-					'both'    => __( 'Both person and company', 'woocommerce-gateway-afterpay' ),
-					'private' => __( 'Person', 'woocommerce-gateway-afterpay' ),
-					'company' => __( 'Company', 'woocommerce-gateway-afterpay' ),
+					'both'    => __( 'Both person and company', 'afterpay-nordics-for-woocommerce' ),
+					'private' => __( 'Person', 'afterpay-nordics-for-woocommerce' ),
+					'company' => __( 'Company', 'afterpay-nordics-for-woocommerce' ),
 					),
 				'default'     => 'both',
 				),
 				'separate_shipping_companies' => array(
-					'title'   => __( 'Separate shipping address', 'woocommerce-gateway-afterpay' ),
+					'title'   => __( 'Separate shipping address', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
-					'label'   => __( 'Enable separate shipping address for companies', 'woocommerce-gateway-afterpay' ),
+					'label'   => __( 'Enable separate shipping address for companies', 'afterpay-nordics-for-woocommerce' ),
 					'default' => 'no',
 				),
 				
@@ -165,39 +165,39 @@ function init_wc_gateway_afterpay_factory_class() {
 			// Invoice fee for AfterPay Invoice.
 			if ( 'afterpay_invoice' === $this->id ) {
 				$form_fields['invoice_fee_id'] = array(
-					'title'       => __( 'Invoice Fee', 'woocommerce-gateway-afterpay' ),
+					'title'       => __( 'Invoice Fee', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
 						'Create a hidden (simple) product that acts as the invoice fee. Enter the ID number in this textfield. Leave blank to disable.',
-						'woocommerce-gateway-afterpay'
+						'afterpay-nordics-for-woocommerce'
 					),
 				);
 			}
 			// Logging, test mode and order management toggles for all payment methods are in AfterPay Invoice settings.
 			$form_fields['order_management'] = array(
-				'title'   => __( 'Enable Order Management', 'woocommerce-gateway-afterpay' ),
+				'title'   => __( 'Enable Order Management', 'afterpay-nordics-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __(
 					'Enable AfterPay order capture on WooCommerce order completion and AfterPay order cancellation on WooCommerce order cancellation',
-					'woocommerce-gateway-afterpay'
+					'afterpay-nordics-for-woocommerce'
 				),
 				'default' => 'yes',
 			);
 			$form_fields['testmode'] = array(
-				'title'   => __( 'AfterPay testmode', 'woocommerce-gateway-afterpay' ),
+				'title'   => __( 'AfterPay testmode', 'afterpay-nordics-for-woocommerce' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Enable AfterPay testmode', 'woocommerce-gateway-afterpay' ),
+				'label'   => __( 'Enable AfterPay testmode', 'afterpay-nordics-for-woocommerce' ),
 				'default' => 'no',
 			);
 			$form_fields['debug'] = array(
-				'title'       => __( 'Debug Log', 'woocommerce-gateway-afterpay' ),
+				'title'       => __( 'Debug Log', 'afterpay-nordics-for-woocommerce' ),
 				'type'        => 'checkbox',
-				'label'       => __( 'Enable logging', 'woocommerce-gateway-afterpay' ),
+				'label'       => __( 'Enable logging', 'afterpay-nordics-for-woocommerce' ),
 				'default'     => 'no',
 				'description' => sprintf(
 					__(
 						'Log AfterPay events in <code>%s</code>',
-						'woocommerce-gateway-afterpay'
+						'afterpay-nordics-for-woocommerce'
 					),
 					wc_get_log_file_path( 'afterpay-invoice' )
 				),
@@ -290,13 +290,13 @@ function init_wc_gateway_afterpay_factory_class() {
 						sprintf(
 							__(
 								'AfterPay reservation created, reservation ID: %s.',
-								'woocommerce-gateway-afterpay'
+								'afterpay-nordics-for-woocommerce'
 							),
 							$response->reservationId
 						)
 					);
 				} else {
-					wc_add_notice( sprintf(__( 'The payment was %s.', 'woocommerce-gateway-afterpay' ), $response->outcome ), 'error' );
+					wc_add_notice( sprintf(__( 'The payment was %s.', 'afterpay-nordics-for-woocommerce' ), $response->outcome ), 'error' );
 					return false;
 				}
 
@@ -309,7 +309,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				);
 			} else {
 				$formatted_response = json_decode($response->get_error_message());
-				wc_add_notice( sprintf(__( '%s.', 'woocommerce-gateway-afterpay' ), $formatted_response[0]->message ), 'error' );
+				wc_add_notice( sprintf(__( '%s.', 'afterpay-nordics-for-woocommerce' ), $formatted_response[0]->message ), 'error' );
 				return false;
 			}
 		}
@@ -331,11 +331,11 @@ function init_wc_gateway_afterpay_factory_class() {
 			$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 			$customer_type = $afterpay_settings['customer_type'];
 			if ( $customer_type === 'both' ) {
-        		$label = __( 'Personal/organization number', 'woocommerce-gateway-afterpay' );
+        		$label = __( 'Personal/organization number', 'afterpay-nordics-for-woocommerce' );
         	} else if ( $customer_type === 'private' ) {
-                $label = __( 'Personal number', 'woocommerce-gateway-afterpay' );
+                $label = __( 'Personal number', 'afterpay-nordics-for-woocommerce' );
             } else if ( $customer_type === 'company' ) {
-            	$label = __( 'Organization number', 'woocommerce-gateway-afterpay' );
+            	$label = __( 'Organization number', 'afterpay-nordics-for-woocommerce' );
             }
             ?>
             <p class="personal-number-norway">
@@ -343,7 +343,7 @@ function init_wc_gateway_afterpay_factory_class() {
 		            <input type="text" name="afterpay-pre-check-customer-number-norway" id="afterpay-pre-check-customer-number-norway"
 					       class="afterpay-pre-check-customer-number norway"
 					       value=""
-					       placeholder="<?php _e( 'YYMMDDNNNN', 'woocommerce-gateway-afterpay' ); ?>"/>
+					       placeholder="<?php _e( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' ); ?>"/>
 			</p>
 			<?php
 		}
@@ -476,12 +476,12 @@ function init_wc_gateway_afterpay_factory_class() {
 		public function process_checkout_fields() {
 			if ( 'afterpay_invoice' === $_POST['payment_method'] || 'afterpay_account' === $_POST['payment_method'] || 'afterpay_part_payment' === $_POST['payment_method'] ) { // Input var okay.
 				if ( ! is_numeric( $_POST['afterpay-pre-check-customer-number'] ) ) { // Input var okay.
-					$format = __( 'YYMMDDNNNN', 'woocommerce-gateway-afterpay' );
+					$format = __( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' );
 					wc_add_notice(
 						sprintf(
 							__(
 								'<strong>Personal/organization number</strong> needs to be numeric and in the following format: %s.',
-								'woocommerce-gateway-afterpay'
+								'afterpay-nordics-for-woocommerce'
 							),
 							$format
 						),

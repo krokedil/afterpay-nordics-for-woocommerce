@@ -30,11 +30,11 @@ function init_wc_gateway_afterpay_part_payment_class() {
 		 */
 		public function __construct() {
 			$this->id                 = 'afterpay_part_payment';
-			$this->method_title       = __( 'AfterPay Part Payment', 'woocommerce-gateway-afterpay' );
+			$this->method_title       = __( 'AfterPay Part Payment', 'afterpay-nordics-for-woocommerce' );
 
 			//$this->icon               = apply_filters( 'woocommerce_afterpay_part_payment_icon', AFTERPAY_URL . '/assets/images/logo.png' );
 			$this->has_fields         = true;
-			$this->method_description = __( 'Allows payments through ' . $this->method_title . '.', 'woocommerce-gateway-afterpay' );
+			$this->method_description = __( 'Allows payments through ' . $this->method_title . '.', 'afterpay-nordics-for-woocommerce' );
 
 			// Define user set variables
 			$this->title       		= $this->get_option( 'title' );
@@ -157,7 +157,7 @@ function init_wc_gateway_afterpay_part_payment_class() {
 					
 						//WC()->session->set( 'afterpay_available_installment_plans', $response->availableInstallmentPlans );
 					   
-						echo '<p>' . __( 'Please select a payment plan:', 'woocommerce-gateway-afterpay' ) . '</p>';
+						echo '<p>' . __( 'Please select a payment plan:', 'afterpay-nordics-for-woocommerce' ) . '</p>';
 						$i = 0;
 						foreach( $installment_plans as $key => $installment_plan ) {
 							
@@ -166,9 +166,9 @@ function init_wc_gateway_afterpay_part_payment_class() {
 								$label = sprintf(
 									'%1$s %2$s, %3$s / %4$s',
 									$installment_plan->numberOfInstallments,
-									__( 'months', 'woocommerce-gateway-afterpay' ),
+									__( 'months', 'afterpay-nordics-for-woocommerce' ),
 									wc_price( round( $installment_plan->installmentAmount ) ),
-									__( 'mo', 'woocommerce-gateway-afterpay' )
+									__( 'mo', 'afterpay-nordics-for-woocommerce' )
 								);
 		
 		
@@ -183,7 +183,7 @@ function init_wc_gateway_afterpay_part_payment_class() {
 								
 								$payment_options_details_output .= '<div class="afterpay-ppp-details ' . $extra_class . '" data-campaign="' . $installment_plan->installmentProfileNumber . '" ' . $inline_style . '><small>';
 								
-								$payment_options_details_output .= sprintf( __( 'Start fee: %1$s. Monthly fee: %2$s. Rate: %3$s%5$s. Annual effective rate: %4$s%5$s. Total: %6$s.', 'woocommerce-gateway-afterpay' ),
+								$payment_options_details_output .= sprintf( __( 'Start fee: %1$s. Monthly fee: %2$s. Rate: %3$s%5$s. Annual effective rate: %4$s%5$s. Total: %6$s.', 'afterpay-nordics-for-woocommerce' ),
 								wc_price($installment_plan->startupFee),
 								wc_price($installment_plan->monthlyFee),
 								$installment_plan->interestRate,

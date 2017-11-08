@@ -52,7 +52,7 @@ class WC_AfterPay_Cancel_Reservation {
 		// If this reservation was already cancelled, do nothing.
 		if ( get_post_meta( $order_id, '_afterpay_reservation_cancelled', true ) ) {
 			$order->add_order_note(
-				__( 'Could not cancel AfterPay reservation, AfterPay reservation is already cancelled.', 'woocommerce-gateway-afterpay' )
+				__( 'Could not cancel AfterPay reservation, AfterPay reservation is already cancelled.', 'afterpay-nordics-for-woocommerce' )
 			);
 			return;
 		}
@@ -71,9 +71,9 @@ class WC_AfterPay_Cancel_Reservation {
 		if ( 0 == $response->totalCapturedAmount ) {
 			// Add time stamp, used to prevent duplicate cancellations for the same order.
 			update_post_meta( $order_id, '_afterpay_reservation_cancelled', current_time( 'mysql' ) );
-			$order->add_order_note( __( 'AfterPay reservation was successfully cancelled.', 'woocommerce-gateway-afterpay' ) );
+			$order->add_order_note( __( 'AfterPay reservation was successfully cancelled.', 'afterpay-nordics-for-woocommerce' ) );
 		} else {
-			$order->add_order_note( __( 'AfterPay reservation could not be cancelled.', 'woocommerce-gateway-afterpay' ) );
+			$order->add_order_note( __( 'AfterPay reservation could not be cancelled.', 'afterpay-nordics-for-woocommerce' ) );
 		}
 	}
 	

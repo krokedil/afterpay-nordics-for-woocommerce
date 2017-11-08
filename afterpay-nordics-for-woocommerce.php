@@ -15,7 +15,7 @@
  * Author URI:      http://krokedil.com/
  * Developer:       Krokedil
  * Developer URI:   http://krokedil.com/
- * Text Domain:     woocommerce-gateway-afterpay
+ * Text Domain:     afterpay-nordics-for-woocommerce
  * Domain Path:     /languages
  * Copyright:       © 2017 Krokedil.
  * License:         GNU General Public License v3.0
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Localisation.
  */
-load_plugin_textdomain( 'woocommerce-gateway-afterpay', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+load_plugin_textdomain( 'afterpay-nordics-for-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 
 // Define plugin paths
