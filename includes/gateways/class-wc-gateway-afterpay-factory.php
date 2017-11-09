@@ -245,6 +245,14 @@ function init_wc_gateway_afterpay_factory_class() {
 				$profile_no = '';
 			}
 			update_post_meta( $order_id, '_afterpay_installment_profile_number', $profile_no );
+			
+			// Fetch installment plan selected by custiner in checkout
+			if ( isset( $_POST['afterpay_customer_category'] ) ) {
+				$customer_category = wc_clean( $_POST['afterpay_customer_category'] );
+			} else {
+				$customer_category = '';
+			}
+			update_post_meta( $order_id, '_afterpay_customer_category', $customer_category );
 			// If needed, run PreCheckCustomer.
 			/*
 			if ( ! WC()->session->get( 'afterpay_checkout_id' ) ) {
@@ -353,46 +361,62 @@ function init_wc_gateway_afterpay_factory_class() {
 		 * Compare the address entered in the checkout with the registered address (returned from AfterPay)
 		 **/
 		public function check_used_address( $response, $order_id ) {
-			$response  = json_decode( $response );
-			$order = wc_get_order( $order_id );
-			$changed_fields = array();
+			$response  			= json_decode( $response );
+			$order 				= wc_get_order( $order_id );
+			$customer_category 	= get_post_meta( $order_id, '_afterpay_customer_category', true );
+			$changed_fields 	= array();
 		
 			// Shipping address.
-			if ( $response->customer->addressList[0]->street != $order->shipping_address_1 ) {
-				$changed_fields['shipping_&_billing_address_1'] = $response->customer->addressList[0]->street;
+			if ( strtoupper( $response->customer->addressList[0]->street ) != strtoupper( $order->get_billing_address_1() ) ) {
+				$changed_fields['billing_address_1'] = $response->customer->addressList[0]->street;
 				//update_post_meta( $order->id, '_shipping_address_1', $response['address_1'] );
 				//update_post_meta( $order->id, '_billing_address_1', $response['address_1'] );
 			}
 			// Post number.
-			if ( $response->customer->addressList[0]->postalCode != $order->shipping_postcode ) {
-				$changed_fields['shipping_&_billing_postcode'] = $response->customer->addressList[0]->postalCode;
+			if ( strtoupper( $response->customer->addressList[0]->postalCode ) != strtoupper( $order->get_billing_postcode() ) ) {
+				$changed_fields['billing_postcode'] = $response->customer->addressList[0]->postalCode;
 				//update_post_meta( $order->id, '_shipping_postcode', $response['postcode'] );
 				//update_post_meta( $order->id, '_billing_postcode', $response['postcode'] );
 			}
 			// City.
-			if ( $response->customer->addressList[0]->postalPlace != $order->shipping_city ) {
-				$changed_fields['shipping_&_billing_city'] = $response->customer->addressList[0]->postalPlace;
+			if ( strtoupper( $response->customer->addressList[0]->postalPlace ) != strtoupper( $order->get_billing_city() ) ) {
+				$changed_fields['billing_city'] = $response->customer->addressList[0]->postalPlace;
 				//update_post_meta( $order->id, '_shipping_city', $response['city'] );
 				//update_post_meta( $order->id, '_billing_city', $response['city'] );
 			}
-			// First name.
-			if ( $response->customer->firstName != $order->shipping_first_name ) {
-				$changed_fields['shipping_&_billing_first_name'] = $response->customer->firstName;
-				//update_post_meta( $order->id, '_shipping_first_name', $response['first_name'] );
-				//update_post_meta( $order->id, '_billing_first_name', $response['first_name'] );
+			
+			// Person check
+			if( 'Person' == $customer_category ) {
+				// First name.
+				if ( strtoupper( $response->customer->firstName ) != strtoupper( $order->get_billing_first_name() ) ) {
+					$changed_fields['billing_first_name'] = $response->customer->firstName;
+					//update_post_meta( $order->id, '_shipping_first_name', $response['first_name'] );
+					//update_post_meta( $order->id, '_billing_first_name', $response['first_name'] );
+				}
+				// Last name.
+				if ( strtoupper( $response->customer->lastName ) != strtoupper( $order->get_billing_last_name() ) ) {
+					$changed_fields['billing_last_name'] = $response->customer->lastName;
+					//update_post_meta( $order->id, '_shipping_last_name', $response['last_name'] );
+					//update_post_meta( $order->id, '_billing_last_name', $response['last_name'] );
+				}
 			}
-			// Last name.
-			if ( $response->customer->lastName != $order->shipping_last_name ) {
-				$changed_fields['shipping_&_billing_last_name'] = $response->customer->lastName;
-				//update_post_meta( $order->id, '_shipping_last_name', $response['last_name'] );
-				//update_post_meta( $order->id, '_billing_last_name', $response['last_name'] );
+			
+			// Company check
+			if( 'Company' == $customer_category ) {
+				// Company name.
+				if ( strtoupper( $response->customer->lastName ) != strtoupper( $order->get_billing_company() ) ) {
+					$changed_fields['billing_company'] = $response->customer->lastName;
+					//update_post_meta( $order->id, '_shipping_last_name', $response['last_name'] );
+					//update_post_meta( $order->id, '_billing_last_name', $response['last_name'] );
+				}
 			}
+			
 			if ( count( $changed_fields ) > 0 ) {
 				// Add order note about the changes.
 				$order->add_order_note(
 					sprintf(
 						__(
-							'The registered address did not match the one specified in WooCommerce. The order has been updated. The following fields was changed: %s.',
+							'The registered address did not match the one specified in WooCommerce. The following fields was different: %s.',
 							'woocommerce'
 						),
 						var_export( $changed_fields, true )
