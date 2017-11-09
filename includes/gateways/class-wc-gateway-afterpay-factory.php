@@ -143,23 +143,7 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				),
-				'customer_type' => array(
-				'title'       => __( 'Customer type', 'afterpay-nordics-for-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Select the type of customer that can make purchases through AfterPay', 'afterpay-nordics-for-woocommerce' ),
-				'options'     => array(
-					'both'    => __( 'Both person and company', 'afterpay-nordics-for-woocommerce' ),
-					'private' => __( 'Person', 'afterpay-nordics-for-woocommerce' ),
-					'company' => __( 'Company', 'afterpay-nordics-for-woocommerce' ),
-					),
-				'default'     => 'both',
-				),
-				'separate_shipping_companies' => array(
-					'title'   => __( 'Separate shipping address', 'afterpay-nordics-for-woocommerce' ),
-					'type'    => 'checkbox',
-					'label'   => __( 'Enable separate shipping address for companies', 'afterpay-nordics-for-woocommerce' ),
-					'default' => 'no',
-				),
+				
 				
 			);
 			// Invoice fee for AfterPay Invoice.
@@ -172,17 +156,37 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				);
+				
+				// Customer type, separate shipping address fand order management or all payment methods are in AfterPay Invoice settings.
+				$form_fields['customer_type'] = array(
+				'title'       => __( 'Customer type', 'afterpay-nordics-for-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Select the type of customer that can make purchases through AfterPay', 'afterpay-nordics-for-woocommerce' ),
+				'options'     => array(
+					'both'    => __( 'Both person and company', 'afterpay-nordics-for-woocommerce' ),
+					'private' => __( 'Person', 'afterpay-nordics-for-woocommerce' ),
+					'company' => __( 'Company', 'afterpay-nordics-for-woocommerce' ),
+					),
+				'default'     => 'both',
+				);
+				$form_fields['separate_shipping_companies'] = array(
+					'title'   => __( 'Separate shipping address', 'afterpay-nordics-for-woocommerce' ),
+					'type'    => 'checkbox',
+					'label'   => __( 'Enable separate shipping address for companies', 'afterpay-nordics-for-woocommerce' ),
+					'default' => 'no',
+				);
+				
+				$form_fields['order_management'] = array(
+					'title'   => __( 'Enable Order Management', 'afterpay-nordics-for-woocommerce' ),
+					'type'    => 'checkbox',
+					'label'   => __(
+						'Enable AfterPay order capture on WooCommerce order completion and AfterPay order cancellation on WooCommerce order cancellation',
+						'afterpay-nordics-for-woocommerce'
+					),
+					'default' => 'yes',
+				);
 			}
-			// Logging, test mode and order management toggles for all payment methods are in AfterPay Invoice settings.
-			$form_fields['order_management'] = array(
-				'title'   => __( 'Enable Order Management', 'afterpay-nordics-for-woocommerce' ),
-				'type'    => 'checkbox',
-				'label'   => __(
-					'Enable AfterPay order capture on WooCommerce order completion and AfterPay order cancellation on WooCommerce order cancellation',
-					'afterpay-nordics-for-woocommerce'
-				),
-				'default' => 'yes',
-			);
+			
 			$form_fields['testmode'] = array(
 				'title'   => __( 'AfterPay testmode', 'afterpay-nordics-for-woocommerce' ),
 				'type'    => 'checkbox',
@@ -367,19 +371,19 @@ function init_wc_gateway_afterpay_factory_class() {
 			$changed_fields 	= array();
 		
 			// Shipping address.
-			if ( strtoupper( $response->customer->addressList[0]->street ) != strtoupper( $order->get_billing_address_1() ) ) {
+			if ( mb_strtoupper( $response->customer->addressList[0]->street ) != mb_strtoupper( $order->get_billing_address_1() ) ) {
 				$changed_fields['billing_address_1'] = $response->customer->addressList[0]->street;
 				//update_post_meta( $order->id, '_shipping_address_1', $response['address_1'] );
 				//update_post_meta( $order->id, '_billing_address_1', $response['address_1'] );
 			}
 			// Post number.
-			if ( strtoupper( $response->customer->addressList[0]->postalCode ) != strtoupper( $order->get_billing_postcode() ) ) {
+			if ( mb_strtoupper( $response->customer->addressList[0]->postalCode ) != mb_strtoupper( $order->get_billing_postcode() ) ) {
 				$changed_fields['billing_postcode'] = $response->customer->addressList[0]->postalCode;
 				//update_post_meta( $order->id, '_shipping_postcode', $response['postcode'] );
 				//update_post_meta( $order->id, '_billing_postcode', $response['postcode'] );
 			}
 			// City.
-			if ( strtoupper( $response->customer->addressList[0]->postalPlace ) != strtoupper( $order->get_billing_city() ) ) {
+			if ( mb_strtoupper( $response->customer->addressList[0]->postalPlace ) != mb_strtoupper( $order->get_billing_city() ) ) {
 				$changed_fields['billing_city'] = $response->customer->addressList[0]->postalPlace;
 				//update_post_meta( $order->id, '_shipping_city', $response['city'] );
 				//update_post_meta( $order->id, '_billing_city', $response['city'] );
@@ -388,13 +392,13 @@ function init_wc_gateway_afterpay_factory_class() {
 			// Person check
 			if( 'Person' == $customer_category ) {
 				// First name.
-				if ( strtoupper( $response->customer->firstName ) != strtoupper( $order->get_billing_first_name() ) ) {
+				if ( mb_strtoupper( $response->customer->firstName ) != mb_strtoupper( $order->get_billing_first_name() ) ) {
 					$changed_fields['billing_first_name'] = $response->customer->firstName;
 					//update_post_meta( $order->id, '_shipping_first_name', $response['first_name'] );
 					//update_post_meta( $order->id, '_billing_first_name', $response['first_name'] );
 				}
 				// Last name.
-				if ( strtoupper( $response->customer->lastName ) != strtoupper( $order->get_billing_last_name() ) ) {
+				if ( mb_strtoupper( $response->customer->lastName ) != mb_strtoupper( $order->get_billing_last_name() ) ) {
 					$changed_fields['billing_last_name'] = $response->customer->lastName;
 					//update_post_meta( $order->id, '_shipping_last_name', $response['last_name'] );
 					//update_post_meta( $order->id, '_billing_last_name', $response['last_name'] );
@@ -404,7 +408,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			// Company check
 			if( 'Company' == $customer_category ) {
 				// Company name.
-				if ( strtoupper( $response->customer->lastName ) != strtoupper( $order->get_billing_company() ) ) {
+				if ( mb_strtoupper( $response->customer->lastName ) != mb_strtoupper( $order->get_billing_company() ) ) {
 					$changed_fields['billing_company'] = $response->customer->lastName;
 					//update_post_meta( $order->id, '_shipping_last_name', $response['last_name'] );
 					//update_post_meta( $order->id, '_billing_last_name', $response['last_name'] );
