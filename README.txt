@@ -42,8 +42,15 @@ If you need help with installation and configuration Krokedil offer premium (pai
 
 == Changelog ==
 
-= 0.3 			- 2017.11.08 =
+= 0.3 			- 2017.11.xx =
 * WordPress.org release
+
+= 0.2.1 		- 2017.11.09 =
+* Fix			- Get address feature is not available for companies.
+* Tweak			- Improved handling of returned address data.
+
+= 0.2.0 		- 2017.11.08 =
+* Tweak			- Changed textdomain name.
 
 = 0.1 			- 2017.08.24 =
 * Initial release
