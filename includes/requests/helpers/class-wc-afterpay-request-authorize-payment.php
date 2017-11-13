@@ -40,7 +40,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 		$request_args = array(
 			'headers' => $this->request_header(),
 			'body'    => $this->get_request_body( $order_id, $payment_method_name, $profile_no ),
-			'timeout' => 10,
+			'timeout' => 15,
 			'method'  => $this->request_method
 		);
 		WC_Gateway_AfterPay_Factory::log( 'Authorize payment request args: ' . var_export( $request_args, true ) );
