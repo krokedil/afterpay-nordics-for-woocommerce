@@ -320,8 +320,15 @@ function init_wc_gateway_afterpay_factory_class() {
 					'redirect' => $this->get_return_url( $order ),
 				);
 			} else {
-				$formatted_response = json_decode($response->get_error_message());
-				wc_add_notice( sprintf(__( '%s.', 'afterpay-nordics-for-woocommerce' ), $formatted_response[0]->message ), 'error' );
+				$formatted_response = json_decode( $response->get_error_message() );
+				
+				if( is_array( $formatted_response ) ) {
+				    $response_message = $formatted_response[0]->message;
+			    } else {
+				    $response_message = $formatted_response->message;
+			    }
+			    
+				wc_add_notice( sprintf(__( '%s', 'afterpay-nordics-for-woocommerce' ), $response_message ), 'error' );
 				return false;
 			}
 		}
