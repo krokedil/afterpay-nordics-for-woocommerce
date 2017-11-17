@@ -8,13 +8,13 @@
  *
  * @wordpress-plugin
  * Plugin Name:     AfterPay Nordics for WooCommerce
- * Plugin URI:      https://krokedil.se/produkt/afterpay/
+ * Plugin URI:      https://krokedil.se/afterpay/
  * Description:     Provides an AfterPay v3 payment gateway for WooCommerce.
- * Version:         0.2.1
+ * Version:         0.3.0
  * Author:          Krokedil
- * Author URI:      http://krokedil.com/
+ * Author URI:      https://krokedil.se/
  * Developer:       Krokedil
- * Developer URI:   http://krokedil.com/
+ * Developer URI:   https://krokedil.se/
  * Text Domain:     afterpay-nordics-for-woocommerce
  * Domain Path:     /languages
  * Copyright:       © 2017 Krokedil.
@@ -35,7 +35,7 @@ load_plugin_textdomain( 'afterpay-nordics-for-woocommerce', false, dirname( plug
 // Define plugin paths
 define( 'AFTERPAY_URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'AFTERPAY_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
-define( 'AFTERPAY_VERSION', '0.2.1' );
+define( 'AFTERPAY_VERSION', '0.3.0' );
 
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-factory.php' );
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-invoice.php' );
