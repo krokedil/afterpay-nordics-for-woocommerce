@@ -1,8 +1,8 @@
-=== AfterPay via Json for WooCommerce ===
-Contributors: krokedil, niklashogefjord, slobodanmanic
-Tags: ecommerce, e-commerce, woocommerce, afterpay
+=== AfterPay Nordics for WooCommerce ===
+Contributors: krokedil, arvato, NiklasHogefjord, slobodanmanic
+Tags: ecommerce, e-commerce, woocommerce, afterpay, arvato
 Requires at least: 4.2
-Tested up to: 4.8.3
+Tested up to: 4.9
 Requires PHP: 5.6
 Stable tag: trunk
 Requires WooCommerce at least: 3.0.0
@@ -10,14 +10,14 @@ Tested WooCommerce up to: 3.2.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-AfterPay via Json for WooCommerce is a plugin that extends WooCommerce, allowing you to take payments via AfterPay's new RESTful Json API.
+AfterPay Nordics for WooCommerce is a plugin that extends WooCommerce, allowing you to take payments via AfterPay's new RESTful Json API.
 
 == Description ==
 
-With this extension you get access to [AfterPay's](http://www.afterpay.se/en/) three payment methods - Invoice, Part Payment and Account - in Sweden.
+With this extension you get access to [AfterPay's](http://www.afterpay.se/en/) payment methods - Invoice and Part Payment in Sweden & Invoice in Norway.
 
 = Get started =
-More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/afterpay-via-json-for-woocommerce/).
+More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/afterpay-nordics-for-woocommerce/).
 
 == Installation ==
 
@@ -29,20 +29,19 @@ More information on how to get started can be found in the [plugin documentation
 
 == Frequently Asked Questions ==
 = Which countries does this payment gateway support? =
-Sweden is the only available country at the moment. Norway will be added in short.
+Invoice payments work for Sweden and Norway. Part payment only works for Sweden at the moment. Norway will be added in short.
 
 = Where can I find AfterPay for WooCommerce documentation? =
-For help setting up and configuring AfterPay for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/afterpay-via-json-for-woocommerce/).
+For help setting up and configuring AfterPay for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/afterpay-nordics-for-woocommerce/).
 
 = Where can I get support? =
-If you get stuck, you can ask for help in the Plugin Forum.
+If you get stuck, you can send a support ticket to support@krokedil.se. You can ask your question in English, Swedish or Norwegian. Support tickets written in Norwegian will be answered in Swedish. 
 
-If you need help with installation and configuration Krokedil offer premium (paid) support. More information about our concierge service can be found on [the AfterPay for WooCommerce product page](https://krokedil.se/produkt/afterpay/).
 
 
 == Changelog ==
 
-= 0.3 			- 2017.11.xx =
+= 0.3 			- 2017.11.17 =
 * WordPress.org release
 
 = 0.2.1 		- 2017.11.09 =
