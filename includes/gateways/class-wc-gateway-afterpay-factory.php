@@ -56,10 +56,16 @@ function init_wc_gateway_afterpay_factory_class() {
 			// Check if payment method is configured
 			$payment_method 			= $this->id;
 			$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );
+			$invoice_settings 			= get_option( 'woocommerce_afterpay_invoice_settings' );
 			
 			// Is the payment method enabled?
 			$enabled = $payment_method_settings['enabled'];
 			if ( "yes" !== $enabled ) {
+				return false;
+			}
+			
+			// Don't display part payment if only selling to companies
+			if( 'afterpay_part_payment' == $this->id && 'company' == $invoice_settings['customer_type'] ) {
 				return false;
 			}
 			
