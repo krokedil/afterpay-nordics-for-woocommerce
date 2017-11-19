@@ -53,8 +53,10 @@ jQuery(function ($) {
 			// Hide/show customer lookup button
 			if ( $( '#afterpay-customer-category-company' ).is(":checked") ) {
 				jQuery( '.afterpay-customer-lookup-button' ).hide();
+				jQuery('li.payment_method_afterpay_part_payment').fadeOut();
 			} else {
 				jQuery( '.afterpay-customer-lookup-button' ).show();
+				jQuery('li.payment_method_afterpay_part_payment').fadeIn();
 			}
 		} else {
 			jQuery('#afterpay-pre-check-customer').fadeOut();
@@ -193,8 +195,10 @@ jQuery(function ($) {
     $(document).on('change', 'input[name="afterpay_customer_category"]', function (event) {
 		if ( $( '#afterpay-customer-category-company' ).is(":checked") ) {
 			jQuery( '.afterpay-customer-lookup-button' ).hide();
+			jQuery('li.payment_method_afterpay_part_payment').fadeOut();
 		} else {
 			jQuery( '.afterpay-customer-lookup-button' ).show();
+			jQuery('li.payment_method_afterpay_part_payment').fadeIn();
 		}
 	});
 	
