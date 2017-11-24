@@ -41,6 +41,9 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 == Changelog ==
 
+= 0.3.2 		- 2017.11.24 =
+* Fix			- Remove - from personal/organization number sent to AfterPay.
+
 = 0.3.1 		- 2017.11.19 =
 * Fix			- Don’t display payment method if it isn’t enabled in settings.
 * Fix			- Don’t display part payment if only selling to companies.
