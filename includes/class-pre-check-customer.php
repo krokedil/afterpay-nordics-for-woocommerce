@@ -478,7 +478,7 @@ class WC_AfterPay_Pre_Check_Customer {
 				break;
 		}
 		
-		
+		$personal_number = str_replace('-', '', $personal_number);
 		$request  = new WC_AfterPay_Request_Customer_Lookup( $this->x_auth_key, $this->testmode );
 		$response = $request->response( $mobile_number, $personal_number, $billing_country, $customer_category );
 		$response  = json_decode( $response );

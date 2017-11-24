@@ -215,10 +215,12 @@ function init_wc_gateway_afterpay_factory_class() {
 			// @Todo - check if this is needed (for Norway) since we don't do Available payment methods there
 			if ( isset( $_POST['afterpay-pre-check-customer-number-norway'] ) && 'NO' == $_POST['billing_country'] ) {
 				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number-norway'] );
+				$personal_number = str_replace('-', '', $personal_number);
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
 			if ( isset( $_POST['afterpay-pre-check-customer-number'] ) && 'SE' == $_POST['billing_country'] ) {
 				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number'] );
+				$personal_number = str_replace('-', '', $personal_number);
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
 			
