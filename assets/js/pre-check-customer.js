@@ -101,36 +101,36 @@ jQuery(function ($) {
 		var selected_customer_category = $('input[name="afterpay_customer_category"]:checked').val();
 
 		if ( 'Person' == selected_customer_category ) {
-			$('#billing_first_name').val(mask_form_field(customer_first_name)).prop('readonly', true);
-			$('#billing_last_name').val(mask_form_field(customer_last_name)).prop('readonly', true);
+			$('#billing_first_name').val(customer_first_name).prop('readonly', false);
+			$('#billing_last_name').val(customer_last_name).prop('readonly', false);
             $('#billing_email').val($('#afterpay-customer-email').val());
 			$('#billing_company').val('').prop('readonly', false);
 		} else {
 			$('#billing_first_name').val('').prop('readonly', false);
 			$('#billing_last_name').val('').prop('readonly', false);
 			$('#billing_email').val($('#afterpay-customer-email').val());
-			$('#billing_company').val(mask_form_field(customer_last_name)).prop('readonly', true);
+			$('#billing_company').val(customer_last_name).prop('readonly', false);
 		}
-		$('#billing_address_1').val(mask_form_field(customer_address_1)).prop('readonly', true);
-		//$('#billing_address_2').val(mask_form_field(customer_address_2)).prop('readonly', true);
-		$('#billing_postcode').val(mask_form_field(customer_postcode)).prop('readonly', true);
-		$('#billing_city').val(mask_form_field(customer_city)).prop('readonly', true);
+		$('#billing_address_1').val(customer_address_1).prop('readonly', false);
+		//$('#billing_address_2').val(customer_address_2).prop('readonly', false);
+		$('#billing_postcode').val(customer_postcode).prop('readonly', false);
+		$('#billing_city').val(customer_city).prop('readonly', false);
 
 		if ( 'Person' == selected_customer_category ) {
-			$('#shipping_first_name').val(mask_form_field(customer_first_name)).prop('readonly', true);
-			$('#shipping_last_name').val(mask_form_field(customer_last_name)).prop('readonly', true);
+			$('#shipping_first_name').val(customer_first_name).prop('readonly', false);
+			$('#shipping_last_name').val(customer_last_name).prop('readonly', false);
             $('#shipping_email').val($('#afterpay-customer-email').val());
 			$('#shipping_company').val('').prop('readonly', false);
 		} else {
 			$('#shipping_first_name').val('').prop('readonly', false);
 			$('#shipping_last_name').val('').prop('readonly', false);
             $('#shipping_email').val($('#afterpay-customer-email').val());
-			$('#shipping_company').val(mask_form_field(customer_last_name));
+			$('#shipping_company').val(customer_last_name);
 		}
-		$('#shipping_address_1').val(mask_form_field(customer_address_1));
-		//$('#shipping_address_2').val(mask_form_field(customer_address_2));
-		$('#shipping_postcode').val(mask_form_field(customer_postcode));
-		$('#shipping_city').val(mask_form_field(customer_city));
+		$('#shipping_address_1').val(customer_address_1);
+		//$('#shipping_address_2').val(customer_address_2);
+		$('#shipping_postcode').val(customer_postcode);
+		$('#shipping_city').val(customer_city);
 	}
 
 	function wipe_afterpay_fields() {
@@ -320,7 +320,6 @@ jQuery(function ($) {
 			// Make a request
 			console.log('entered_personal_number ' + entered_personal_number);
 			$('.afterpay-customer-lookup-button').addClass('disabled');
-
 			$.ajax(
 				WC_AfterPay.ajaxurl,
 				{

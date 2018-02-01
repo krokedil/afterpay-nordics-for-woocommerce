@@ -38,6 +38,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		add_action( 'woocommerce_before_checkout_process', array( $this, 'confirm_pre_check_customer' ) );
 
 		// Filter checkout billing fields
+		/*
 		add_filter( 'woocommerce_process_checkout_field_billing_first_name', array(
 			$this,
 			'filter_pre_checked_value',
@@ -89,6 +90,7 @@ class WC_AfterPay_Pre_Check_Customer {
 			$this,
 			'filter_pre_checked_value',
 		) );
+		*/
 	}
 
 	
