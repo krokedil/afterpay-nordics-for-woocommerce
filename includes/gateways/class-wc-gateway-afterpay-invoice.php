@@ -29,10 +29,10 @@ function init_wc_gateway_afterpay_invoice_class() {
 		 * Constructor for the gateway.
 		 */
 		public function __construct() {
-			$this->id           = 'afterpay_invoice';
-			$this->method_title = __( 'AfterPay Invoice', 'afterpay-nordics-for-woocommerce' );
-			$this->has_fields         = true;
-			$this->method_description = __( 'Allows payments through ' . $this->method_title . '.', 'afterpay-nordics-for-woocommerce' );
+			$this->id           		= 'afterpay_invoice';
+			$this->method_title			= __( 'AfterPay Invoice', 'afterpay-nordics-for-woocommerce' );
+			$this->has_fields         	= true;
+			$this->method_description 	= __( 'Allows payments through ' . $this->method_title . '.', 'afterpay-nordics-for-woocommerce' );
 
 			// Define user set variables
 			$this->title       		= $this->get_option( 'title' );
