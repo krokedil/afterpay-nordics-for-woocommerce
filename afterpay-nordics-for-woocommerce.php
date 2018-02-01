@@ -40,6 +40,7 @@ define( 'AFTERPAY_VERSION', '0.3.2' );
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-factory.php' );
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-invoice.php' );
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-part-payment.php' );
+include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-account.php' );
 
 include_once( AFTERPAY_PATH . '/includes/class-pre-check-customer.php' );
 include_once( AFTERPAY_PATH . '/includes/class-cancel-reservation.php' );

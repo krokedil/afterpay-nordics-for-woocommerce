@@ -76,9 +76,11 @@ function init_wc_gateway_afterpay_factory_class() {
 				}
 
 				// Don't display part payment and Account for Norwegian customers
+				
 				if ( WC()->customer->get_billing_country() == true && 'NO' == WC()->customer->get_billing_country() && ( 'afterpay_part_payment' == $this->id || 'afterpay_account' == $this->id ) ) {
 					return false;
 				}
+				
 			}
 
 			return true;
@@ -225,8 +227,10 @@ function init_wc_gateway_afterpay_factory_class() {
 			}
 			
 			
-			// Fetch installment plan selected by custiner in checkout
-			if ( isset( $_POST['afterpay_installment_plan'] ) ) {
+			// Fetch installment plan selected by customer in checkout
+			if ( 'afterpay_account' == $this->id ) {
+				$profile_no = '1';
+			} elseif( isset( $_POST['afterpay_installment_plan'] ) && !empty( $_POST['afterpay_installment_plan'] ) ) {
 				$profile_no = wc_clean( $_POST['afterpay_installment_plan'] );
 			} else {
 				$profile_no = '';
