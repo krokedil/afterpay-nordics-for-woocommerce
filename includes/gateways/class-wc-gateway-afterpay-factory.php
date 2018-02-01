@@ -76,11 +76,11 @@ function init_wc_gateway_afterpay_factory_class() {
 				}
 
 				// Don't display part payment and Account for Norwegian customers
-				
+				/*
 				if ( WC()->customer->get_billing_country() == true && 'NO' == WC()->customer->get_billing_country() && ( 'afterpay_part_payment' == $this->id || 'afterpay_account' == $this->id ) ) {
 					return false;
 				}
-				
+				*/
 			}
 
 			return true;
