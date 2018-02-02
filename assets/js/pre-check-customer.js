@@ -319,7 +319,7 @@ jQuery(function ($) {
 		} else { 
 			// Make a request
 			console.log('entered_personal_number ' + entered_personal_number);
-			$('.afterpay-customer-lookup-button').addClass('disabled');
+			$('.afterpay-customer-lookup-button').addClass('disabled spinner');
 			$.ajax(
 				WC_AfterPay.ajaxurl,
 				{
@@ -362,6 +362,7 @@ jQuery(function ($) {
 
 							$('#afterpay-pre-check-customer').append('<div id="afterpay-pre-check-customer-response" class="woocommerce-error">' + response.data.message + '</div>');
 						}
+						$('.afterpay-customer-lookup-button').removeClass('disabled spinner');
 					},
 					error: function (response) {
 						console.log('AJAX error');
