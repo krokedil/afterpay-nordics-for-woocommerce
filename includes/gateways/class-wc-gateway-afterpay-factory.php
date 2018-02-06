@@ -129,6 +129,20 @@ function init_wc_gateway_afterpay_factory_class() {
 				
 				
 			);
+			
+			// Installment plan for Account (Account Profile number).
+			if ( 'afterpay_account' === $this->id ) {
+				$form_fields['account_profile_no'] = array(
+					'title'       => __( 'Account profile number', 'afterpay-nordics-for-woocommerce' ),
+					'type'        => 'text',
+					'default' 	  => '1',
+					'description' => __(
+						'ID number for sent to AfterPay for Account purchases. Defaults to 1. Should usually not be changed.',
+						'afterpay-nordics-for-woocommerce'
+					),
+				);
+			}
+			
 			// Invoice fee for AfterPay Invoice.
 			if ( 'afterpay_invoice' === $this->id ) {
 				$form_fields['invoice_fee_id'] = array(
@@ -229,7 +243,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			
 			// Fetch installment plan selected by customer in checkout
 			if ( 'afterpay_account' == $this->id ) {
-				$profile_no = '1';
+				$profile_no = isset( $this->account_profile_no ) ? $this->account_profile_no : '1';
 			} elseif( isset( $_POST['afterpay_installment_plan'] ) && !empty( $_POST['afterpay_installment_plan'] ) ) {
 				$profile_no = wc_clean( $_POST['afterpay_installment_plan'] );
 			} else {
@@ -237,7 +251,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			}
 			update_post_meta( $order_id, '_afterpay_installment_profile_number', $profile_no );
 			
-			// Fetch installment plan selected by custiner in checkout
+			// Fetch installment plan selected by customer in checkout
 			if ( isset( $_POST['afterpay_customer_category'] ) ) {
 				$customer_category = wc_clean( $_POST['afterpay_customer_category'] );
 			} else {

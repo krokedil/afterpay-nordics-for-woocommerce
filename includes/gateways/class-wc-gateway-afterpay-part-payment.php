@@ -37,19 +37,20 @@ function init_wc_gateway_afterpay_part_payment_class() {
 			$this->method_description = __( 'Allows payments through ' . $this->method_title . '.', 'afterpay-nordics-for-woocommerce' );
 
 			// Define user set variables
-			$this->title       		= $this->get_option( 'title' );
-			$this->description 		= $this->get_option( 'description' );
-			$this->client_id_se   	= $this->get_option( 'client_id_se' );
-			$this->username_se    	= $this->get_option( 'username_se' );
-			$this->password_se    	= $this->get_option( 'password_se' );
-			$this->client_id_no   	= $this->get_option( 'client_id_no' );
-			$this->username_no    	= $this->get_option( 'username_no' );
-			$this->password_no    	= $this->get_option( 'password_no' );
-			$this->debug       		= $this->get_option( 'debug' );
-			$this->api_key       	= $this->get_option( 'api_key' );
-			$this->x_auth_key_se    = $this->get_option( 'x_auth_key_se' );
-			$this->x_auth_key_no    = $this->get_option( 'x_auth_key_no' );
-			$this->testmode       	= $this->get_option( 'testmode' );
+			$this->title       			= $this->get_option( 'title' );
+			$this->description 			= $this->get_option( 'description' );
+			$this->client_id_se   		= $this->get_option( 'client_id_se' );
+			$this->username_se    		= $this->get_option( 'username_se' );
+			$this->password_se    		= $this->get_option( 'password_se' );
+			$this->client_id_no   		= $this->get_option( 'client_id_no' );
+			$this->username_no    		= $this->get_option( 'username_no' );
+			$this->password_no    		= $this->get_option( 'password_no' );
+			$this->debug       			= $this->get_option( 'debug' );
+			$this->api_key       		= $this->get_option( 'api_key' );
+			$this->x_auth_key_se    	= $this->get_option( 'x_auth_key_se' );
+			$this->x_auth_key_no    	= $this->get_option( 'x_auth_key_no' );
+			$this->account_profile_no	= $this->get_option( 'account_profile_no' );
+			$this->testmode       		= $this->get_option( 'testmode' );
 
 			// Set country and merchant credentials based on currency.
 			switch ( get_woocommerce_currency() ) {
