@@ -101,6 +101,7 @@ jQuery(function ($) {
 		var selected_customer_category = $('input[name="afterpay_customer_category"]:checked').val();
 
 		if ( 'Person' == selected_customer_category ) {
+			console.log(customer_first_name);
 			$('#billing_first_name').val(customer_first_name).prop('readonly', false);
 			$('#billing_last_name').val(customer_last_name).prop('readonly', false);
             $('#billing_email').val($('#afterpay-customer-email').val());
@@ -165,7 +166,7 @@ jQuery(function ($) {
 		//maybe_show_pre_checkout_form(do_focus);
 		
 		$('body').trigger('update_checkout');
-
+		/*
 		var selected = $('input[name="payment_method"]:checked').val();
 		if (selected.indexOf('afterpay') < 0) {
 			$('#afterpay-pre-check-customer-response').remove();
@@ -176,6 +177,7 @@ jQuery(function ($) {
 				populate_afterpay_fields();
 			}
 		}
+		*/
 	});
 
 	// Fire PreCheckCustomer when the button is clicked
