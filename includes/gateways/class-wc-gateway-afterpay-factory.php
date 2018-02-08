@@ -229,8 +229,9 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function process_payment( $order_id ) {
 			// @Todo - check if this is needed (for Norway) since we don't do Available payment methods there
-			if ( isset( $_POST['afterpay-pre-check-customer-number-norway'] ) && 'NO' == $_POST['billing_country'] ) {
-				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number-norway'] );
+			$customer_number_norway = $this->id . '-check-customer-number-norway';
+			if ( isset( $_POST[$customer_number_norway] ) && 'NO' == $_POST['billing_country'] ) {
+				$personal_number = wc_clean( $_POST[$customer_number_norway] );
 				$personal_number = str_replace('-', '', $personal_number);
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
@@ -359,8 +360,8 @@ function init_wc_gateway_afterpay_factory_class() {
             }
             ?>
             <p class="personal-number-norway">
-				<label for="afterpay-pre-check-customer-number-norway"><?php echo $label; ?> <span class="required">*</span></label>
-		            <input type="text" name="afterpay-pre-check-customer-number-norway" id="afterpay-pre-check-customer-number-norway"
+				<label for="<?php echo $this->id;?>-check-customer-number-norway"><?php echo $label; ?> <span class="required">*</span></label>
+		            <input type="text" name="<?php echo $this->id;?>-check-customer-number-norway" id="<?php echo $this->id;?>-check-customer-number-norway"
 					       class="afterpay-pre-check-customer-number norway"
 					       value=""
 					       placeholder="<?php _e( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' ); ?>"/>
