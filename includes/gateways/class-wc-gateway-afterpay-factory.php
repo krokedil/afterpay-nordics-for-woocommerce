@@ -378,49 +378,55 @@ function init_wc_gateway_afterpay_factory_class() {
 			$order 				= wc_get_order( $order_id );
 			$customer_category 	= get_post_meta( $order_id, '_afterpay_customer_category', true );
 			$changed_fields 	= array();
+			
+			$billing_first_name	= sanitize_text_field( $response->customer->firstName );
+			$billing_last_name	= sanitize_text_field( $response->customer->lastName );
+			$billing_address	= sanitize_text_field( $response->customer->addressList[0]->street );
+			$billing_postcode	= sanitize_text_field( $response->customer->addressList[0]->postalCode );
+			$billing_city		= sanitize_text_field( $response->customer->addressList[0]->postalPlace );
 		
 			// Shipping address.
-			if ( mb_strtoupper( $response->customer->addressList[0]->street ) != mb_strtoupper( $order->get_billing_address_1() ) ) {
-				$changed_fields['billing_address_1'] = $response->customer->addressList[0]->street;
-				//update_post_meta( $order->id, '_shipping_address_1', $response['address_1'] );
-				//update_post_meta( $order->id, '_billing_address_1', $response['address_1'] );
+			if ( !empty( $billing_address ) && mb_strtoupper( $billing_address ) != mb_strtoupper( $order->get_billing_address_1() ) ) {
+				$changed_fields['billing_address_1'] = $billing_address . ' (' . $order->get_billing_address_1() . ')';
+				update_post_meta( $order->id, '_shipping_address_1', $billing_address );
+				update_post_meta( $order->id, '_billing_address_1', $billing_address );
 			}
 			// Post number.
-			if ( mb_strtoupper( $response->customer->addressList[0]->postalCode ) != mb_strtoupper( $order->get_billing_postcode() ) ) {
-				$changed_fields['billing_postcode'] = $response->customer->addressList[0]->postalCode;
-				//update_post_meta( $order->id, '_shipping_postcode', $response['postcode'] );
-				//update_post_meta( $order->id, '_billing_postcode', $response['postcode'] );
+			if ( !empty( $billing_postcode ) && mb_strtoupper( $billing_postcode ) != mb_strtoupper( $order->get_billing_postcode() ) ) {
+				$changed_fields['billing_postcode'] = $billing_postcode . ' (' . $order->get_billing_postcode() . ')';
+				update_post_meta( $order->id, '_shipping_postcode', $billing_postcode );
+				update_post_meta( $order->id, '_billing_postcode', $billing_postcode );
 			}
 			// City.
-			if ( mb_strtoupper( $response->customer->addressList[0]->postalPlace ) != mb_strtoupper( $order->get_billing_city() ) ) {
-				$changed_fields['billing_city'] = $response->customer->addressList[0]->postalPlace;
-				//update_post_meta( $order->id, '_shipping_city', $response['city'] );
-				//update_post_meta( $order->id, '_billing_city', $response['city'] );
+			if ( !empty( $billing_city ) && mb_strtoupper( $billing_city ) != mb_strtoupper( $order->get_billing_city() ) ) {
+				$changed_fields['billing_city'] = $billing_city . ' (' . $order->get_billing_city() . ')';
+				update_post_meta( $order->id, '_shipping_city', $billing_city );
+				update_post_meta( $order->id, '_billing_city', $billing_city );
 			}
 			
 			// Person check
 			if( 'Person' == $customer_category ) {
 				// First name.
-				if ( mb_strtoupper( $response->customer->firstName ) != mb_strtoupper( $order->get_billing_first_name() ) ) {
-					$changed_fields['billing_first_name'] = $response->customer->firstName;
-					//update_post_meta( $order->id, '_shipping_first_name', $response['first_name'] );
-					//update_post_meta( $order->id, '_billing_first_name', $response['first_name'] );
+				if ( !empty( $billing_first_name ) && mb_strtoupper( $billing_first_name ) != mb_strtoupper( $order->get_billing_first_name() ) ) {
+					$changed_fields['billing_first_name'] = $billing_first_name . ' (' . $order->get_billing_first_name() . ')';
+					update_post_meta( $order->id, '_shipping_first_name', $billing_first_name );
+					update_post_meta( $order->id, '_billing_first_name', $billing_first_name );
 				}
 				// Last name.
-				if ( mb_strtoupper( $response->customer->lastName ) != mb_strtoupper( $order->get_billing_last_name() ) ) {
-					$changed_fields['billing_last_name'] = $response->customer->lastName;
-					//update_post_meta( $order->id, '_shipping_last_name', $response['last_name'] );
-					//update_post_meta( $order->id, '_billing_last_name', $response['last_name'] );
+				if ( !empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) != mb_strtoupper( $order->get_billing_last_name() ) ) {
+					$changed_fields['billing_last_name'] = $billing_last_name . ' (' . $order->get_billing_last_name() . ')';
+					update_post_meta( $order->id, '_shipping_last_name', $billing_last_name );
+					update_post_meta( $order->id, '_billing_last_name', $billing_last_name );
 				}
 			}
 			
 			// Company check
 			if( 'Company' == $customer_category ) {
 				// Company name.
-				if ( mb_strtoupper( $response->customer->lastName ) != mb_strtoupper( $order->get_billing_company() ) ) {
-					$changed_fields['billing_company'] = $response->customer->lastName;
-					//update_post_meta( $order->id, '_shipping_last_name', $response['last_name'] );
-					//update_post_meta( $order->id, '_billing_last_name', $response['last_name'] );
+				if ( !empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) != mb_strtoupper( $order->get_billing_company() ) ) {
+					$changed_fields['billing_company'] = $billing_last_name . ' (' . $order->get_billing_company() . ')';
+					update_post_meta( $order->id, '_billing_company', $billing_last_name );
+					update_post_meta( $order->id, '_shipping_company', $billing_last_name );
 				}
 			}
 			
@@ -429,10 +435,10 @@ function init_wc_gateway_afterpay_factory_class() {
 				$order->add_order_note(
 					sprintf(
 						__(
-							'The registered address did not match the one specified in WooCommerce. The following fields was different: %s.',
+							'The registered address did not match the one specified in WooCommerce. The following fields was different and updated in the order: %s.',
 							'woocommerce'
 						),
-						var_export( $changed_fields, true )
+						json_encode( $changed_fields, JSON_PRETTY_PRINT )
 					)
 				);
 			}
