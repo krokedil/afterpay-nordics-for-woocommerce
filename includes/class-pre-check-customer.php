@@ -219,7 +219,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		?>
 		<div class="afterpay-pre-check-no">
 			<p class="form-row form-row-first validate-required">
-				<label for="afterpay-pre-check-mobile-number"><?php _e( 'Mobile phone number', 'afterpay-nordics-for-woocommerce' ); ?> <span class="required">*</span></label>
+				<label for="afterpay-pre-check-mobile-number"><?php _e( 'Mobile phone number', 'afterpay-nordics-for-woocommerce' ); ?></label>
 		            <input type="text" name="afterpay-pre-check-mobile-number" id="afterpay-pre-check-mobile-number"
 					       class="afterpay-pre-check-mobile-number"/>
 			</p>
