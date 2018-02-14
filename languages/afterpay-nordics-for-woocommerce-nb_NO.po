@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AfterPay for WooCommerce\n"
 "POT-Creation-Date: 2017-11-07 15:57+0100\n"
-"PO-Revision-Date: 2018-02-14 16:04+0000\n"
+"PO-Revision-Date: 2018-02-14 16:07+0000\n"
 "Last-Translator: Krokedil Produktionsbyrå <info@krokedil.se>\n"
 "Language-Team: Norwegian (Bokmål)\n"
 "Language: nb-NO\n"
@@ -324,11 +324,11 @@ msgstr "Velg en betalingsplan:"
 
 #: includes/gateways/class-wc-gateway-afterpay-part-payment.php:199
 msgid "months"
-msgstr ""
+msgstr "måneder"
 
 #: includes/gateways/class-wc-gateway-afterpay-part-payment.php:201
 msgid "mo"
-msgstr ""
+msgstr "mnd"
 
 #: includes/gateways/class-wc-gateway-afterpay-part-payment.php:216
 #, php-format
