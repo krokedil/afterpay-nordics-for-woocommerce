@@ -35,7 +35,7 @@ load_plugin_textdomain( 'afterpay-nordics-for-woocommerce', false, dirname( plug
 // Define plugin paths
 define( 'AFTERPAY_URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'AFTERPAY_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
-define( 'AFTERPAY_VERSION', '0.3.2' );
+define( 'AFTERPAY_VERSION', '0.3.4' );
 
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-factory.php' );
 include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-invoice.php' );

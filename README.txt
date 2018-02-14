@@ -41,6 +41,20 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 == Changelog ==
 
+= 0.4.x 		-  =
+* Feature		- Added Account payments.
+* Feature		- Added Part payment Norway.
+* Feature		- Add support for partial refunds (if order only contain one tax rate).
+* Tweak			- Add setting for separate Description fields for Sweden & Norway.
+* Tweak			- Plugin checked against AfterPay design guidelines.
+* Tweak			- Remove feature for allowing separate shipping address for companies.
+* Tweak			- Remove get address masking.
+* Tweak			- Added loading spinner to get address button.
+* Tweak			- Added setting for account profile number.
+* Fix			- Send correct payment type (installment) for part payment.
+* Tweak			- Don’t change address data when switching payment method.
+* Tweak			- Update WC order with address information received from AfterPay.
+
 = 0.3.2 		- 2017.11.24 =
 * Fix			- Remove - from personal/organization number sent to AfterPay.
 
