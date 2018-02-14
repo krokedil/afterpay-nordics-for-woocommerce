@@ -568,7 +568,7 @@ function init_wc_gateway_afterpay_factory_class() {
 					//if( 'afterpay_account' == $this->id ) {
 						//$afterpay_info		= wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-account-content-' . $this->afterpay_country . '.html' ) );
 					//}
-					$afterpay_info			= '<p class="afterpay-credit-check-info"><small>Ved bruk av denne tjensten gjøres en kredittsjekk. Gjenpartsbrev sendes fortrinnsvis elektronisk. Varene sendes kund till folkeregistrert addresse.</small></p>';
+					$afterpay_info			= '<p class="afterpay-credit-check-info"><small>Ved bruk av denne tjenesten gjøres en kredittsjekk. Gjenpartsbrev sendes fortrinnsvis elektronisk. Varene sendes kun till folkeregistret adresse.</small></p>';
 					$short_readmore 		= 'Les mer her';
 					$afterpay_info 			.= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
 					break;
@@ -629,7 +629,7 @@ function init_wc_gateway_afterpay_factory_class() {
 					$description = 'Betal varene om 14 dager.';
 					break;
 				case 'afterpay_account':
-					$description = '<h4>Detaljer:</h4>Månedspris: <strong>Minimum 95 NOK eller 1/24 av totalbeløp</strong><br>Etableringsgebyr: <strong>0 Kr</strong><br>Rente: <strong>19.95%</strong></p><p><small>Ved et kjøp på 5000 NOK dernetbetalingen foregår over 1 år, der betalingen har et fakturagebyr på 39 NOK med en rente på 19.95% vil du få en årlig sammenlignbare rente på 39%. Den totale kredittkjøpsprisen vil vare 6000 NOK.</small></p>';
+					$description = '<h4>Detaljer:</h4>Månedspris: <strong>Minimum 100 NOK eller 1/24 av totalbeløp</strong><br>Etableringsgebyr: <strong>0 Kr</strong><br>Rente: <strong>19.95%</strong></p><p><small>Ved et kjøp på 5000 NOK der netbetalingen foregår over 1 år, der betalingen har et fakturagebyr på 39 NOK med en rente på 19.95% vil du få en årlig sammenlignbar rente på 45,18%. Den totale kredittkjøpsprisen vil være 6084 NOK.</small></p>';
 					break;
 				case 'afterpay_part_payment':
 					$description = 'Del opp betalingen i faste avdrag.';
