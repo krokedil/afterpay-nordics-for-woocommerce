@@ -104,12 +104,6 @@ function init_wc_gateway_afterpay_factory_class() {
 					'default'     => __( $this->method_title, 'afterpay-nordics-for-woocommerce' ),
 					'desc_tip'    => true,
 				),
-				'description' => array(
-					'title'       => __( 'Description', 'afterpay-nordics-for-woocommerce' ),
-					'type'        => 'textarea',
-					'desc_tip'    => true,
-					'description' => __( 'This controls the description which the user sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
-				),
 				'x_auth_key_se' => array(
 					'title'       => __( 'AfterPay X-Auth-Key Sweden', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
@@ -118,6 +112,13 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				),
+				'description_se' => array(
+					'title'       => __( 'Description Sweden', 'afterpay-nordics-for-woocommerce' ),
+					'type'        => 'textarea',
+					'desc_tip'    => true,
+					'description' => __( 'This controls the description which Swedish customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
+					'default' => $this->get_default_description_sweden(),
+				),
 				'x_auth_key_no' => array(
 					'title'       => __( 'AfterPay X-Auth-Key Norway', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
@@ -125,6 +126,13 @@ function init_wc_gateway_afterpay_factory_class() {
 						'Please enter your AfterPay X-Auth-Key for Norway; this is needed in order to take payment',
 						'afterpay-nordics-for-woocommerce'
 					),
+				),
+				'description_no' => array(
+					'title'       => __( 'Description Norway', 'afterpay-nordics-for-woocommerce' ),
+					'type'        => 'textarea',
+					'desc_tip'    => true,
+					'description' => __( 'This controls the description which Norwegian customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
+					'default' 	=> $this->get_default_description_norway(),
 				),
 				
 				
@@ -339,8 +347,19 @@ function init_wc_gateway_afterpay_factory_class() {
 		 * Display payment fields for all three payment methods
 		 */
 		function payment_fields() {
-			if ( $this->description ) {
-				echo wpautop( wptexturize( $this->description ) );
+			switch ( get_woocommerce_currency() ) {
+				case 'SEK':
+					$description = $this->description_se;
+					break;
+				case 'NOK':
+					$description = $this->description_no;
+					break;
+				default:
+					$description = '';
+			}
+			
+			if ( $description ) {
+				echo wpautop( wptexturize( $description ) );
 			}
 			echo $this->get_afterpay_dob_field();
 		}
@@ -468,11 +487,11 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function process_refund( $order_id, $amount = null, $reason = '' ) {
 			$order = wc_get_order( $order_id );
-
+			/*
 			if ( is_wp_error( $this->can_refund_order( $order, $amount ) ) ) {
 				return $this->can_refund_order( $order, $amount );
 			}
-
+			*/
 			include_once( plugin_dir_path( __DIR__ ) . 'class-refund.php' );
 
 			$wc_afterpay_refund = new WC_AfterPay_Refund( $order_id, $this->id );
@@ -543,8 +562,14 @@ function init_wc_gateway_afterpay_factory_class() {
 			switch ( get_woocommerce_currency() ) {
 
 				case 'NOK':
+				$afterpay_info				= '';
+				
+					//if( 'afterpay_account' == $this->id ) {
+						//$afterpay_info		= wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-account-content-' . $this->afterpay_country . '.html' ) );
+					//}
+					$afterpay_info			= '<p class="afterpay-credit-check-info"><small>Ved bruk av denne tjensten gjøres en kredittsjekk. Gjenpartsbrev sendes fortrinnsvis elektronisk. Varene sendes kund till folkeregistrert addresse.</small></p>';
 					$short_readmore 		= 'Les mer her';
-					$afterpay_info ='<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
+					$afterpay_info 			.= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
 					break;
 				case 'SEK':
 					$terms_url   			= 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
@@ -592,6 +617,50 @@ function init_wc_gateway_afterpay_factory_class() {
 			}
 		}
 
+		/**
+		 * get_default_description_norway function.
+		 *
+		 * @return string
+		 */
+		public function get_default_description_norway() {
+			switch ( $this->id ) {
+				case 'afterpay_invoice':
+					$description = 'Betal varene om 14 dager.';
+					break;
+				case 'afterpay_account':
+					$description = '<h4>Detaljer:</h4>Månedspris: <strong>Minimum 95 NOK eller 1/24 av totalbeløp</strong><br>Etableringsgebyr: <strong>0 Kr</strong><br>Rente: <strong>19.95%</strong></p><p><small>Ved et kjøp på 5000 NOK dernetbetalingen foregår over 1 år, der betalingen har et fakturagebyr på 39 NOK med en rente på 19.95% vil du få en årlig sammenlignbare rente på 39%. Den totale kredittkjøpsprisen vil vare 6000 NOK.</small></p>';
+					break;
+				case 'afterpay_part_payment':
+					$description = 'Del opp betalingen i faste avdrag.';
+					break;
+				default:
+					$description = '';
+			}
+			return $description;
+		}
+		
+		/**
+		 * get_default_description_sweden function.
+		 *
+		 * @return string
+		 */
+		public function get_default_description_sweden() {
+			switch ( $this->id ) {
+				case 'afterpay_invoice':
+					$description = 'Upplev först, betala inom 14 dagar.';
+					break;
+				case 'afterpay_account':
+					$description = '• Lägg till flera inköp i en faktura<br> • Bestäm hur mycket du vill betala varje månad<br>• Betala det totala beloppet när som helst du vill<p>Ingen uppläggningskostnad, aviseringsavgift 29 kr och månatlig ränta 1,63 %.</p>';
+					break;
+				case 'afterpay_part_payment':
+					$description = '• Samma belopp varje månad<br> •Du kan även betala det totala beloppet när du vill';
+					break;
+				default:
+					$description = '';
+			}
+			return $description;
+		}
+		
 		/**
 		 * Helper function - get Invoice fee price
 		 */

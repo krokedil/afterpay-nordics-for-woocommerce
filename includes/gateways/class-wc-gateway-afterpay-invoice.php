@@ -36,7 +36,8 @@ function init_wc_gateway_afterpay_invoice_class() {
 
 			// Define user set variables
 			$this->title       		= $this->get_option( 'title' );
-			$this->description 		= $this->get_option( 'description' );
+			$this->description_se 	= $this->get_option( 'description_se' );
+			$this->description_no 	= $this->get_option( 'description_no' );
 			$this->debug       		= $this->get_option( 'debug' );
 			$this->client_id_se   	= $this->get_option( 'client_id_se' );
 			$this->username_se    	= $this->get_option( 'username_se' );

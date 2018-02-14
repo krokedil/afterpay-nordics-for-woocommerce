@@ -36,7 +36,8 @@ function init_wc_gateway_afterpay_account_class() {
 
 			// Define user set variables.
 			$this->title       		= $this->get_option( 'title' );
-			$this->description 		= $this->get_option( 'description' );
+			$this->description_se 	= $this->get_option( 'description_se' );
+			$this->description_no 	= $this->get_option( 'description_no' );
 			$this->client_id_se   	= $this->get_option( 'client_id_se' );
 			$this->username_se    	= $this->get_option( 'username_se' );
 			$this->password_se    	= $this->get_option( 'password_se' );
@@ -95,6 +96,15 @@ function init_wc_gateway_afterpay_account_class() {
 				$this, 
 				'process_checkout_fields' 
 			) );
+		}
+		
+		/**
+		 * Display payment fields for Part Payment
+		 */
+		public function payment_fields() {
+			parent::payment_fields();
+			
+			echo $this->get_afterpay_info();
 		}
 	}
 
