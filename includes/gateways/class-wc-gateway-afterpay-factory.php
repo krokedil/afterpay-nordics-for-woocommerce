@@ -174,13 +174,14 @@ function init_wc_gateway_afterpay_factory_class() {
 					),
 				'default'     => 'both',
 				);
+				/*
 				$form_fields['separate_shipping_companies'] = array(
 					'title'   => __( 'Separate shipping address', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable separate shipping address for companies', 'afterpay-nordics-for-woocommerce' ),
 					'default' => 'no',
 				);
-				
+				*/
 				$form_fields['order_management'] = array(
 					'title'   => __( 'Enable Order Management', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',

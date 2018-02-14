@@ -71,7 +71,7 @@ jQuery(function ($) {
                 // Check if option is checked in admin for separate shipping address for companies
                 if ( $('#separate_shipping_companies').val() === 'yes' ){
                     // Show separate shipping address for AfterPay if customer is company
-                    $('#ship-to-different-address').show();
+                    //$('#ship-to-different-address').show();
                 } else{
                     // Do not allow separate shipping address for AfterPay if the option is not checked
                     $('div.shipping_address').hide();
