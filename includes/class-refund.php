@@ -46,9 +46,8 @@ class WC_AfterPay_Refund {
 		$country  					= strtolower( $order->get_billing_country() );
 		$this->x_auth_key 			= $payment_method_settings['x_auth_key_' . $country];
 
-		$order_number 				= $order->get_order_number();
 		$request      				= new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );
-		$response 					= $request->response( $order_number );
+		$response 					= $request->response( $order_id, $amount, $reason );
 		$response 					= json_decode( $response );
 		
 		if ( $response->totalCapturedAmount ) {
