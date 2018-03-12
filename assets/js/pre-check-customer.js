@@ -99,39 +99,71 @@ jQuery(function ($) {
 
 	function populate_afterpay_fields() {
 		var selected_customer_category = $('input[name="afterpay_customer_category"]:checked').val();
+		if( 'SE' == $("#billing_country").val() ) {
+			if ( 'Person' == selected_customer_category ) {
+				console.log(customer_first_name);
+				$('#billing_first_name').val(customer_first_name).prop('readonly', true);
+				$('#billing_last_name').val(customer_last_name).prop('readonly', true);
+				//$('#billing_email').val($('#afterpay-customer-email').val());
+				//$('#billing_company').val('').prop('readonly', false);
+	
+				$('#shipping_first_name').val(customer_first_name).prop('readonly', true);
+				$('#shipping_last_name').val(customer_last_name).prop('readonly', true);
+				//$('#shipping_email').val($('#afterpay-customer-email').val());
+				//$('#shipping_company').val('').prop('readonly', false);
+	
+			} else {
+				//$('#billing_first_name').val('').prop('readonly', false);
+				//$('#billing_last_name').val('').prop('readonly', false);
+				//$('#billing_email').val($('#afterpay-customer-email').val());
+				$('#billing_company').val(customer_last_name).prop('readonly', true);
+	
+				//$('#shipping_first_name').val('').prop('readonly', false);
+				//$('#shipping_last_name').val('').prop('readonly', false);
+				//$('#shipping_email').val($('#afterpay-customer-email').val());
+				$('#shipping_company').val(customer_last_name).prop('readonly', true);
+			}
+			$('#billing_address_1').val(customer_address_1).prop('readonly', true);
+			$('#billing_postcode').val(customer_postcode).prop('readonly', true);
+			$('#billing_city').val(customer_city).prop('readonly', true);
 
-		if ( 'Person' == selected_customer_category ) {
-			console.log(customer_first_name);
-			$('#billing_first_name').val(customer_first_name).prop('readonly', false);
-			$('#billing_last_name').val(customer_last_name).prop('readonly', false);
-            $('#billing_email').val($('#afterpay-customer-email').val());
-			$('#billing_company').val('').prop('readonly', false);
-		} else {
-			$('#billing_first_name').val('').prop('readonly', false);
-			$('#billing_last_name').val('').prop('readonly', false);
-			$('#billing_email').val($('#afterpay-customer-email').val());
-			$('#billing_company').val(customer_last_name).prop('readonly', false);
-		}
-		$('#billing_address_1').val(customer_address_1).prop('readonly', false);
-		//$('#billing_address_2').val(customer_address_2).prop('readonly', false);
-		$('#billing_postcode').val(customer_postcode).prop('readonly', false);
-		$('#billing_city').val(customer_city).prop('readonly', false);
+			$('#shipping_address_1').val(customer_address_1).prop('readonly', true);
+			$('#shipping_postcode').val(customer_postcode).prop('readonly', true);
+			$('#shipping_city').val(customer_city).prop('readonly', true);
 
-		if ( 'Person' == selected_customer_category ) {
-			$('#shipping_first_name').val(customer_first_name).prop('readonly', false);
-			$('#shipping_last_name').val(customer_last_name).prop('readonly', false);
-            $('#shipping_email').val($('#afterpay-customer-email').val());
-			$('#shipping_company').val('').prop('readonly', false);
 		} else {
-			$('#shipping_first_name').val('').prop('readonly', false);
-			$('#shipping_last_name').val('').prop('readonly', false);
-            $('#shipping_email').val($('#afterpay-customer-email').val());
-			$('#shipping_company').val(customer_last_name);
+			if ( 'Person' == selected_customer_category ) {
+				console.log(customer_first_name);
+				$('#billing_first_name').val(customer_first_name).prop('readonly', false);
+				$('#billing_last_name').val(customer_last_name).prop('readonly', false);
+				//$('#billing_email').val($('#afterpay-customer-email').val());
+				//$('#billing_company').val('').prop('readonly', false);
+	
+				$('#shipping_first_name').val(customer_first_name).prop('readonly', false);
+				$('#shipping_last_name').val(customer_last_name).prop('readonly', false);
+				//$('#shipping_email').val($('#afterpay-customer-email').val());
+				//$('#shipping_company').val('').prop('readonly', false);
+	
+			} else {
+				//$('#billing_first_name').val('').prop('readonly', false);
+				//$('#billing_last_name').val('').prop('readonly', false);
+				$('#billing_email').val($('#afterpay-customer-email').val());
+				$('#billing_company').val(customer_last_name).prop('readonly', false);
+	
+				//$('#shipping_first_name').val('').prop('readonly', false);
+				//$('#shipping_last_name').val('').prop('readonly', false);
+				//$('#shipping_email').val($('#afterpay-customer-email').val());
+				$('#shipping_company').val(customer_last_name);
+			}
+			$('#billing_address_1').val(customer_address_1).prop('readonly', false);
+			$('#billing_postcode').val(customer_postcode).prop('readonly', false);
+			$('#billing_city').val(customer_city).prop('readonly', false);
+			
+			$('#shipping_address_1').val(customer_address_1).prop('readonly', false);
+			$('#shipping_postcode').val(customer_postcode).prop('readonly', false);
+			$('#shipping_city').val(customer_city).prop('readonly', false);
 		}
-		$('#shipping_address_1').val(customer_address_1);
-		//$('#shipping_address_2').val(customer_address_2);
-		$('#shipping_postcode').val(customer_postcode);
-		$('#shipping_city').val(customer_city);
+		
 	}
 
 	function wipe_afterpay_fields() {

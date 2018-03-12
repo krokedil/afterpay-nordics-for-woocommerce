@@ -22,3 +22,7 @@
   border-top-color: #333;
   animation: spinner .6s linear infinite;
 }
+.woocommerce-checkout input:read-only {
+  opacity: 0.6; 
+  cursor: not-allowed;
+}
