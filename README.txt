@@ -41,7 +41,7 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 == Changelog ==
 
-= 0.4.x 		-  =
+= 0.4.0 		-  2018.03.12 =
 * Feature		- Added Account payments.
 * Feature		- Added Part payment Norway.
 * Feature		- Add support for partial refunds (if order only contain one tax rate).
@@ -49,6 +49,7 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 * Tweak			- Plugin checked against AfterPay design guidelines.
 * Tweak			- Remove feature for allowing separate shipping address for companies.
 * Tweak			- Remove get address masking.
+* Tweak			- Make address fields readonly for Sweden when get address feature has been used.
 * Tweak			- Added loading spinner to get address button.
 * Tweak			- Added setting for account profile number.
 * Fix			- Send correct payment type (installment) for part payment.
