@@ -43,7 +43,7 @@ class WC_AfterPay_Refund {
 		$order 						= wc_get_order( $order_id );
 		$payment_method 			= $order->payment_method;
 		$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );
-		$country  					= strtolower( $order->get_billing_country() );
+		$country  					= strtolower( krokedil_get_order_property( $order_id, 'billing_country' ) );
 		$this->x_auth_key 			= $payment_method_settings['x_auth_key_' . $country];
 
 		$request      				= new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );

@@ -54,26 +54,32 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function is_available() {
 			// Check if payment method is configured
-			$payment_method 			= $this->id;
-			$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );
-			$invoice_settings 			= get_option( 'woocommerce_afterpay_invoice_settings' );
-			
+			$payment_method          = $this->id;
+			$payment_method_settings = get_option( 'woocommerce_' . $payment_method . '_settings' );
+			$invoice_settings        = get_option( 'woocommerce_afterpay_invoice_settings' );
+
 			// Is the payment method enabled?
 			$enabled = $payment_method_settings['enabled'];
 			if ( "yes" !== $enabled ) {
 				return false;
 			}
-			
+
 			// Don't display part payment if only selling to companies
-			if( 'afterpay_part_payment' == $this->id && 'company' == $invoice_settings['customer_type'] ) {
+			if ( 'afterpay_part_payment' == $this->id && 'company' == $invoice_settings['customer_type'] ) {
 				return false;
 			}
-			
-			if( WC()->customer ) {
+
+			if ( WC()->customer ) {
 				// Only activate the payment gateway if the customers country is the same as the shop country ($this->afterpay_country)
-				if ( WC()->customer->get_billing_country() == true && WC()->customer->get_billing_country() != $this->afterpay_country ) {
-					return false;
-				}
+                if ( is_callable( array( WC()->customer, 'get_billing_country' ) ) ) {
+	                if ( WC()->customer->get_billing_country() == true && WC()->customer->get_billing_country() != $this->afterpay_country ) {
+		                return false;
+	                }
+                } else {
+	                if ( WC()->customer->get_country() == true && WC()->customer->get_country() != $this->afterpay_country ) {
+		                return false;
+	                }
+                }
 
 				// Don't display part payment and Account for Norwegian customers
 				/*
@@ -91,20 +97,20 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function init_form_fields() {
 			$form_fields = array(
-				'enabled' => array(
+				'enabled'        => array(
 					'title'   => __( 'Enable/Disable', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable ' . $this->method_title, 'afterpay-nordics-for-woocommerce' ),
 					'default' => 'yes'
 				),
-				'title' => array(
+				'title'          => array(
 					'title'       => __( 'Title', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __( 'This controls the title which the user sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => __( $this->method_title, 'afterpay-nordics-for-woocommerce' ),
 					'desc_tip'    => true,
 				),
-				'x_auth_key_se' => array(
+				'x_auth_key_se'  => array(
 					'title'       => __( 'AfterPay X-Auth-Key Sweden', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
@@ -117,9 +123,9 @@ function init_wc_gateway_afterpay_factory_class() {
 					'type'        => 'textarea',
 					'desc_tip'    => true,
 					'description' => __( 'This controls the description which Swedish customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
-					'default' => $this->get_default_description_sweden(),
+					'default'     => $this->get_default_description_sweden(),
 				),
-				'x_auth_key_no' => array(
+				'x_auth_key_no'  => array(
 					'title'       => __( 'AfterPay X-Auth-Key Norway', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
@@ -132,25 +138,25 @@ function init_wc_gateway_afterpay_factory_class() {
 					'type'        => 'textarea',
 					'desc_tip'    => true,
 					'description' => __( 'This controls the description which Norwegian customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
-					'default' 	=> $this->get_default_description_norway(),
+					'default'     => $this->get_default_description_norway(),
 				),
-				
-				
+
+
 			);
-			
+
 			// Installment plan for Account (Account Profile number).
 			if ( 'afterpay_account' === $this->id ) {
 				$form_fields['account_profile_no'] = array(
 					'title'       => __( 'Account profile number', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
-					'default' 	  => '1',
+					'default'     => '1',
 					'description' => __(
 						'ID number for sent to AfterPay for Account purchases. Defaults to 1. Should usually not be changed.',
 						'afterpay-nordics-for-woocommerce'
 					),
 				);
 			}
-			
+
 			// Invoice fee for AfterPay Invoice.
 			if ( 'afterpay_invoice' === $this->id ) {
 				$form_fields['invoice_fee_id'] = array(
@@ -161,18 +167,18 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				);
-				
+
 				// Customer type, separate shipping address fand order management or all payment methods are in AfterPay Invoice settings.
 				$form_fields['customer_type'] = array(
-				'title'       => __( 'Customer type', 'afterpay-nordics-for-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Select the type of customer that can make purchases through AfterPay', 'afterpay-nordics-for-woocommerce' ),
-				'options'     => array(
-					'both'    => __( 'Both person and company', 'afterpay-nordics-for-woocommerce' ),
-					'private' => __( 'Person', 'afterpay-nordics-for-woocommerce' ),
-					'company' => __( 'Company', 'afterpay-nordics-for-woocommerce' ),
+					'title'       => __( 'Customer type', 'afterpay-nordics-for-woocommerce' ),
+					'type'        => 'select',
+					'description' => __( 'Select the type of customer that can make purchases through AfterPay', 'afterpay-nordics-for-woocommerce' ),
+					'options'     => array(
+						'both'    => __( 'Both person and company', 'afterpay-nordics-for-woocommerce' ),
+						'private' => __( 'Person', 'afterpay-nordics-for-woocommerce' ),
+						'company' => __( 'Company', 'afterpay-nordics-for-woocommerce' ),
 					),
-				'default'     => 'both',
+					'default'     => 'both',
 				);
 				/*
 				$form_fields['separate_shipping_companies'] = array(
@@ -192,14 +198,14 @@ function init_wc_gateway_afterpay_factory_class() {
 					'default' => 'yes',
 				);
 			}
-			
+
 			$form_fields['testmode'] = array(
 				'title'   => __( 'AfterPay testmode', 'afterpay-nordics-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable AfterPay testmode', 'afterpay-nordics-for-woocommerce' ),
 				'default' => 'no',
 			);
-			$form_fields['debug'] = array(
+			$form_fields['debug']    = array(
 				'title'       => __( 'Debug Log', 'afterpay-nordics-for-woocommerce' ),
 				'type'        => 'checkbox',
 				'label'       => __( 'Enable logging', 'afterpay-nordics-for-woocommerce' ),
@@ -212,9 +218,9 @@ function init_wc_gateway_afterpay_factory_class() {
 					wc_get_log_file_path( 'afterpay-invoice' )
 				),
 			);
-			$this->form_fields = $form_fields;
+			$this->form_fields       = $form_fields;
 		}
-		
+
 		/**
 		 * get_icon function.
 		 *
@@ -222,9 +228,9 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function get_icon() {
 			$icon_html = '';
-	
+
 			$icon_html = '<img src="' . AFTERPAY_URL . '/assets/images/afterpay-logo.png" alt="AfterPay - Payments made easy" style="margin-left:10px; margin-right:10px;" width="100"/>';
-	
+
 			return apply_filters( 'wc_afterpay_icon_html', $icon_html );
 		}
 
@@ -239,28 +245,30 @@ function init_wc_gateway_afterpay_factory_class() {
 		public function process_payment( $order_id ) {
 			// @Todo - check if this is needed (for Norway) since we don't do Available payment methods there
 			$customer_number_norway = $this->id . '-check-customer-number-norway';
-			if ( isset( $_POST[$customer_number_norway] ) && 'NO' == $_POST['billing_country'] ) {
-				$personal_number = wc_clean( $_POST[$customer_number_norway] );
-				$personal_number = str_replace('-', '', $personal_number);
+
+			if ( isset( $_POST[ $customer_number_norway ] ) && 'NO' == $_POST['billing_country'] ) {
+				$personal_number = wc_clean( $_POST[ $customer_number_norway ] );
+				$personal_number = str_replace( '-', '', $personal_number );
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
+
 			if ( isset( $_POST['afterpay-pre-check-customer-number'] ) && 'SE' == $_POST['billing_country'] ) {
 				$personal_number = wc_clean( $_POST['afterpay-pre-check-customer-number'] );
-				$personal_number = str_replace('-', '', $personal_number);
+				$personal_number = str_replace( '-', '', $personal_number );
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
-			
-			
+
+
 			// Fetch installment plan selected by customer in checkout
 			if ( 'afterpay_account' == $this->id ) {
 				$profile_no = isset( $this->account_profile_no ) ? $this->account_profile_no : '1';
-			} elseif( isset( $_POST['afterpay_installment_plan'] ) && !empty( $_POST['afterpay_installment_plan'] ) ) {
+			} elseif ( isset( $_POST['afterpay_installment_plan'] ) && ! empty( $_POST['afterpay_installment_plan'] ) ) {
 				$profile_no = wc_clean( $_POST['afterpay_installment_plan'] );
 			} else {
 				$profile_no = '';
 			}
 			update_post_meta( $order_id, '_afterpay_installment_profile_number', $profile_no );
-			
+
 			// Fetch installment plan selected by customer in checkout
 			if ( isset( $_POST['afterpay_customer_category'] ) ) {
 				$customer_category = wc_clean( $_POST['afterpay_customer_category'] );
@@ -291,18 +299,18 @@ function init_wc_gateway_afterpay_factory_class() {
 			*/
 			$request  = new WC_AfterPay_Request_Authorize_Payment( $this->x_auth_key, $this->testmode );
 			$response = $request->response( $order_id, $this->get_formatted_payment_method_name(), $profile_no );
-			
+
 			// Compare the received address (from AfterPay) with the one entered by the customer in checkout.
 			// Change it if they don't match
 			$this->check_used_address( $response, $order_id );
-				
-			$order = wc_get_order( $order_id );
-			
-			if ( ! is_wp_error( $response ) ) {
-				$response  = json_decode( $response );
 
-				if( 'Accepted' == $response->outcome ) {
-					
+			$order = wc_get_order( $order_id );
+
+			if ( ! is_wp_error( $response ) ) {
+				$response = json_decode( $response );
+
+				if ( 'Accepted' == $response->outcome ) {
+
 					// Mark payment complete on success.
 					$order->payment_complete();
 
@@ -319,12 +327,14 @@ function init_wc_gateway_afterpay_factory_class() {
 						)
 					);
 				} else {
-					wc_add_notice( sprintf(__( 'The payment was %s.', 'afterpay-nordics-for-woocommerce' ), $response->outcome ), 'error' );
+					wc_add_notice( sprintf( __( 'The payment was %s.', 'afterpay-nordics-for-woocommerce' ), $response->outcome ), 'error' );
+
 					return false;
 				}
 
 				// Remove cart.
 				WC()->cart->empty_cart();
+
 				// Return thank you redirect.
 				return array(
 					'result'   => 'success',
@@ -332,14 +342,15 @@ function init_wc_gateway_afterpay_factory_class() {
 				);
 			} else {
 				$formatted_response = json_decode( $response->get_error_message() );
-				
-				if( is_array( $formatted_response ) ) {
-				    $response_message = $formatted_response[0]->message;
-			    } else {
-				    $response_message = $formatted_response->message;
-			    }
-			    
-				wc_add_notice( sprintf(__( '%s', 'afterpay-nordics-for-woocommerce' ), $response_message ), 'error' );
+
+				if ( is_array( $formatted_response ) ) {
+					$response_message = $formatted_response[0]->message;
+				} else {
+					$response_message = $formatted_response->message;
+				}
+
+				wc_add_notice( sprintf( __( '%s', 'afterpay-nordics-for-woocommerce' ), $response_message ), 'error' );
+
 				return false;
 			}
 		}
@@ -358,7 +369,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				default:
 					$description = '';
 			}
-			
+
 			if ( $description ) {
 				echo wpautop( wptexturize( $description ) );
 			}
@@ -370,86 +381,88 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function get_afterpay_dob_field() {
 			$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
-			$customer_type = $afterpay_settings['customer_type'];
+			$customer_type     = $afterpay_settings['customer_type'];
 			if ( $customer_type === 'both' ) {
-        		$label = __( 'Personal/organization number', 'afterpay-nordics-for-woocommerce' );
-        	} else if ( $customer_type === 'private' ) {
-                $label = __( 'Personal number', 'afterpay-nordics-for-woocommerce' );
-            } else if ( $customer_type === 'company' ) {
-            	$label = __( 'Organization number', 'afterpay-nordics-for-woocommerce' );
-            }
-            ?>
+				$label = __( 'Personal/organization number', 'afterpay-nordics-for-woocommerce' );
+			} else if ( $customer_type === 'private' ) {
+				$label = __( 'Personal number', 'afterpay-nordics-for-woocommerce' );
+			} else if ( $customer_type === 'company' ) {
+				$label = __( 'Organization number', 'afterpay-nordics-for-woocommerce' );
+			}
+			?>
             <p class="personal-number-norway">
-				<label for="<?php echo $this->id;?>-check-customer-number-norway"><?php echo $label; ?> <span class="required">*</span></label>
-		            <input type="text" name="<?php echo $this->id;?>-check-customer-number-norway" id="<?php echo $this->id;?>-check-customer-number-norway"
-					       class="afterpay-pre-check-customer-number norway"
-					       value=""
-					       placeholder="<?php _e( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' ); ?>"/>
-			</p>
+                <label for="<?php echo $this->id; ?>-check-customer-number-norway"><?php echo $label; ?> <span
+                            class="required">*</span></label>
+                <input type="text" name="<?php echo $this->id; ?>-check-customer-number-norway"
+                       id="<?php echo $this->id; ?>-check-customer-number-norway"
+                       class="afterpay-pre-check-customer-number norway"
+                       value=""
+                       placeholder="<?php _e( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' ); ?>"/>
+            </p>
 			<?php
 		}
-		
+
 		/**
 		 * Check used address
 		 * Compare the address entered in the checkout with the registered address (returned from AfterPay)
 		 **/
 		public function check_used_address( $response, $order_id ) {
-			$response  			= json_decode( $response );
-			$order 				= wc_get_order( $order_id );
-			$customer_category 	= get_post_meta( $order_id, '_afterpay_customer_category', true );
-			$changed_fields 	= array();
-			
-			$billing_first_name	= sanitize_text_field( $response->customer->firstName );
-			$billing_last_name	= sanitize_text_field( $response->customer->lastName );
-			$billing_address	= sanitize_text_field( $response->customer->addressList[0]->street );
-			$billing_postcode	= sanitize_text_field( $response->customer->addressList[0]->postalCode );
-			$billing_city		= sanitize_text_field( $response->customer->addressList[0]->postalPlace );
-		
+			$response          = json_decode( $response );
+			$order             = wc_get_order( $order_id );
+			$customer_category = get_post_meta( $order_id, '_afterpay_customer_category', true );
+			$changed_fields    = array();
+
+			$billing_first_name = sanitize_text_field( $response->customer->firstName );
+			$billing_last_name  = sanitize_text_field( $response->customer->lastName );
+			$billing_address    = sanitize_text_field( $response->customer->addressList[0]->street );
+			$billing_postcode   = sanitize_text_field( $response->customer->addressList[0]->postalCode );
+			$billing_city       = sanitize_text_field( $response->customer->addressList[0]->postalPlace );
+
 			// Shipping address.
-			if ( !empty( $billing_address ) && mb_strtoupper( $billing_address ) != mb_strtoupper( $order->get_billing_address_1() ) ) {
-				$changed_fields['billing_address_1'] = $billing_address . ' (' . $order->get_billing_address_1() . ')';
+			if ( ! empty( $billing_address ) && mb_strtoupper( $billing_address ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_address_1' ) ) ) {
+				$changed_fields['billing_address_1'] = $billing_address . ' (' . krokedil_get_order_property( $order_id, 'billing_address_1' ) . ')';
 				update_post_meta( $order->id, '_shipping_address_1', $billing_address );
 				update_post_meta( $order->id, '_billing_address_1', $billing_address );
 			}
 			// Post number.
-			if ( !empty( $billing_postcode ) && mb_strtoupper( $billing_postcode ) != mb_strtoupper( $order->get_billing_postcode() ) ) {
-				$changed_fields['billing_postcode'] = $billing_postcode . ' (' . $order->get_billing_postcode() . ')';
+			if ( ! empty( $billing_postcode ) && mb_strtoupper( $billing_postcode ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_postcode' ) ) ) {
+				$changed_fields['billing_postcode'] = $billing_postcode . ' (' . krokedil_get_order_property( $order_id, 'billing_postcode' ) . ')';
 				update_post_meta( $order->id, '_shipping_postcode', $billing_postcode );
 				update_post_meta( $order->id, '_billing_postcode', $billing_postcode );
 			}
 			// City.
-			if ( !empty( $billing_city ) && mb_strtoupper( $billing_city ) != mb_strtoupper( $order->get_billing_city() ) ) {
+			if ( ! empty( $billing_city ) && mb_strtoupper( $billing_city ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_city' ) ) ) {
 				$changed_fields['billing_city'] = $billing_city . ' (' . $order->get_billing_city() . ')';
 				update_post_meta( $order->id, '_shipping_city', $billing_city );
 				update_post_meta( $order->id, '_billing_city', $billing_city );
 			}
-			
+
 			// Person check
-			if( 'Person' == $customer_category ) {
+			if ( 'Person' == $customer_category ) {
 				// First name.
-				if ( !empty( $billing_first_name ) && mb_strtoupper( $billing_first_name ) != mb_strtoupper( $order->get_billing_first_name() ) ) {
-					$changed_fields['billing_first_name'] = $billing_first_name . ' (' . $order->get_billing_first_name() . ')';
+				if ( ! empty( $billing_first_name ) && mb_strtoupper( $billing_first_name ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_first_name' ) ) ) {
+					$changed_fields['billing_first_name'] = $billing_first_name . ' (' . krokedil_get_order_property( $order_id, 'billing_first_name' ) . ')';
 					update_post_meta( $order->id, '_shipping_first_name', $billing_first_name );
 					update_post_meta( $order->id, '_billing_first_name', $billing_first_name );
 				}
 				// Last name.
-				if ( !empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) != mb_strtoupper( $order->get_billing_last_name() ) ) {
-					$changed_fields['billing_last_name'] = $billing_last_name . ' (' . $order->get_billing_last_name() . ')';
+				if ( ! empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_last_name' ) ) ) {
+					$changed_fields['billing_last_name'] = $billing_last_name . ' (' . krokedil_get_order_property( $order_id, 'billing_last_name' ) . ')';
 					update_post_meta( $order->id, '_shipping_last_name', $billing_last_name );
 					update_post_meta( $order->id, '_billing_last_name', $billing_last_name );
 				}
 			}
-			
+
 			// Company check
-			if( 'Company' == $customer_category ) {
+			if ( 'Company' == $customer_category ) {
 				// Company name.
-				if ( !empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) != mb_strtoupper( $order->get_billing_company() ) ) {
-					$changed_fields['billing_company'] = $billing_last_name . ' (' . $order->get_billing_company() . ')';
+				if ( ! empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_company' ) ) ) {
+					$changed_fields['billing_company'] = $billing_last_name . ' (' . krokedil_get_order_property( $order_id, 'billing_company' ) . ')';
 					update_post_meta( $order->id, '_billing_company', $billing_last_name );
 					update_post_meta( $order->id, '_shipping_company', $billing_last_name );
 				}
 			}
-			
+
 			if ( count( $changed_fields ) > 0 ) {
 				// Add order note about the changes.
 				$order->add_order_note(
@@ -463,7 +476,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				);
 			}
 		}
-		
+
 		/**
 		 * Clear sessions on finalized purchase
 		 */
@@ -477,13 +490,14 @@ function init_wc_gateway_afterpay_factory_class() {
 			WC()->session->__unset( 'afterpay_cart_total' );
 
 		}
-		
+
 		/**
 		 * Process a refund if supported.
 		 *
-		 * @param  int    $order_id
-		 * @param  float  $amount
+		 * @param  int $order_id
+		 * @param  float $amount
 		 * @param  string $reason
+		 *
 		 * @return bool True or false based on success, or a WP_Error object
 		 */
 		public function process_refund( $order_id, $amount = null, $reason = '' ) {
@@ -501,6 +515,7 @@ function init_wc_gateway_afterpay_factory_class() {
 
 			if ( is_wp_error( $result ) ) {
 				$this->log( 'Refund Failed: ' . $result->get_error_message() );
+
 				return new WP_Error( 'error', $result->get_error_message() );
 			}
 
@@ -509,7 +524,9 @@ function init_wc_gateway_afterpay_factory_class() {
 
 		/**
 		 * Can the order be refunded via AfterPay AfterPay?
+		 *
 		 * @param  WC_Order $order
+		 *
 		 * @return bool
 		 */
 		public function can_refund_order( $order, $amount ) {
@@ -521,6 +538,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			// At the moment, only full refund is possible, because we can't send refunded order lines to AfterPay.
 			if ( $amount !== $order->get_total() ) {
 				$this->log( 'Refund failed: Only full order amount can be refunded via AfterPay.' );
+
 				return new WP_Error(
 					'error',
 					__(
@@ -529,6 +547,7 @@ function init_wc_gateway_afterpay_factory_class() {
 					)
 				);
 			}
+
 			return true;
 		}
 
@@ -563,34 +582,34 @@ function init_wc_gateway_afterpay_factory_class() {
 			switch ( get_woocommerce_currency() ) {
 
 				case 'NOK':
-				$afterpay_info				= '';
-				
+					$afterpay_info = '';
+
 					//if( 'afterpay_account' == $this->id ) {
-						//$afterpay_info		= wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-account-content-' . $this->afterpay_country . '.html' ) );
+					//$afterpay_info		= wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-account-content-' . $this->afterpay_country . '.html' ) );
 					//}
-					$afterpay_info			= '<p class="afterpay-credit-check-info"><small>Ved bruk av denne tjenesten gjøres en kredittsjekk. Gjenpartsbrev sendes fortrinnsvis elektronisk. Varene sendes kun till folkeregistret adresse.</small></p>';
-					$short_readmore 		= 'Les mer her';
-					$afterpay_info 			.= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
+					$afterpay_info  = '<p class="afterpay-credit-check-info"><small>Ved bruk av denne tjenesten gjøres en kredittsjekk. Gjenpartsbrev sendes fortrinnsvis elektronisk. Varene sendes kun till folkeregistret adresse.</small></p>';
+					$short_readmore = 'Les mer her';
+					$afterpay_info  .= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
 					break;
 				case 'SEK':
-					$terms_url   			= 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
-					$terms_content			= wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
-					$terms_readmore 		= 'Läs mer om AfterPay <a href="' . $terms_url . '" target="_blank">här</a>.';
-					$short_readmore 		= 'Läs mer här';
-					$afterpay_info 			= '<div id="afterpay-terms-content" style="display:none;">';
-					$afterpay_info 			.= $terms_content;
-					$afterpay_info 			.='</div>';
-					$afterpay_info 			.='<a href="#TB_inline?width=600&height=550&inlineId=afterpay-terms-content" class="thickbox">' . $short_readmore . '</a>';
+					$terms_url      = 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
+					$terms_content  = wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
+					$terms_readmore = 'Läs mer om AfterPay <a href="' . $terms_url . '" target="_blank">här</a>.';
+					$short_readmore = 'Läs mer här';
+					$afterpay_info  = '<div id="afterpay-terms-content" style="display:none;">';
+					$afterpay_info  .= $terms_content;
+					$afterpay_info  .= '</div>';
+					$afterpay_info  .= '<a href="#TB_inline?width=600&height=550&inlineId=afterpay-terms-content" class="thickbox">' . $short_readmore . '</a>';
 					break;
 				default:
-					$terms_url   			= 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
-					$terms_content			= wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
-					$terms_readmore 		= 'Läs mer om AfterPay <a href="' . $terms_url . '" target="_blank">här</a>.';
-					$short_readmore 		= 'Läs mer här';
-					$afterpay_info 			= '<div id="afterpay-terms-content" style="display:none;">';
-					$afterpay_info 			.= $terms_content;
-					$afterpay_info 			.='</div>';
-					$afterpay_info 			.='<a href="#TB_inline?width=600&height=550&inlineId=afterpay-terms-content" class="thickbox">' . $short_readmore . '</a>';
+					$terms_url      = 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
+					$terms_content  = wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
+					$terms_readmore = 'Läs mer om AfterPay <a href="' . $terms_url . '" target="_blank">här</a>.';
+					$short_readmore = 'Läs mer här';
+					$afterpay_info  = '<div id="afterpay-terms-content" style="display:none;">';
+					$afterpay_info  .= $terms_content;
+					$afterpay_info  .= '</div>';
+					$afterpay_info  .= '<a href="#TB_inline?width=600&height=550&inlineId=afterpay-terms-content" class="thickbox">' . $short_readmore . '</a>';
 					break;
 			}
 
@@ -604,7 +623,7 @@ function init_wc_gateway_afterpay_factory_class() {
 		 * Helper function - get Invoice fee price
 		 */
 		public function get_invoice_fee_price() {
-			$invoice_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
+			$invoice_settings     = get_option( 'woocommerce_afterpay_invoice_settings' );
 			$this->invoice_fee_id = $invoice_settings['invoice_fee_id'];
 			if ( $this->invoice_fee_id > 0 ) {
 				$product = wc_get_product( $this->invoice_fee_id );
@@ -637,9 +656,10 @@ function init_wc_gateway_afterpay_factory_class() {
 				default:
 					$description = '';
 			}
+
 			return $description;
 		}
-		
+
 		/**
 		 * get_default_description_sweden function.
 		 *
@@ -659,9 +679,10 @@ function init_wc_gateway_afterpay_factory_class() {
 				default:
 					$description = '';
 			}
+
 			return $description;
 		}
-		
+
 		/**
 		 * Helper function - get Invoice fee price
 		 */
@@ -679,11 +700,12 @@ function init_wc_gateway_afterpay_factory_class() {
 				default:
 					$payment_method_name = '';
 			}
+
 			return $payment_method_name;
 		}
 
 		public function afterpay_order_completed( $order_id ) {
-			$request  = new WC_AfterPay_Request_Capture_Payment;
+			$request = new WC_AfterPay_Request_Capture_Payment;
 			$request->response( $order_id );
 		}
 	}

@@ -38,7 +38,7 @@ class WC_AfterPay_Request_Capture_Payment extends WC_AfterPay_Request {
 		$request_body = array(
 			'orderDetails' => array(
 				'totalGrossAmount' => $order->get_total(),
-				'currency' => $order->get_currency(),
+				'currency' => krokedil_get_order_property( $order_id, 'order_currency' ),
 			),
 		);
 		return wp_json_encode( $request_body );
