@@ -37,28 +37,31 @@ define( 'AFTERPAY_URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'AFTERPAY_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'AFTERPAY_VERSION', '0.4.0' );
 
-include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-factory.php' );
-include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-invoice.php' );
-include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-part-payment.php' );
-include_once( AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-account.php' );
+// Compatibility functions
+include_once AFTERPAY_PATH . '/includes/krokedil-compatibility-functions.php';
 
-include_once( AFTERPAY_PATH . '/includes/class-pre-check-customer.php' );
-include_once( AFTERPAY_PATH . '/includes/class-cancel-reservation.php' );
+include_once AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-factory.php';
+include_once AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-invoice.php';
+include_once AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-part-payment.php';
+include_once AFTERPAY_PATH . '/includes/gateways/class-wc-gateway-afterpay-account.php';
 
-include_once( AFTERPAY_PATH . '/includes/class-process-order-lines.php' );
-include_once( AFTERPAY_PATH . '/includes/class-invoice-fee.php' );
+include_once AFTERPAY_PATH . '/includes/class-pre-check-customer.php';
+include_once AFTERPAY_PATH . '/includes/class-cancel-reservation.php';
+
+include_once AFTERPAY_PATH . '/includes/class-process-order-lines.php';
+include_once AFTERPAY_PATH . '/includes/class-invoice-fee.php';
 
 // V3
-include_once( AFTERPAY_PATH . '/includes/requests/class-wc-afterpay-request.php' );
-include_once( AFTERPAY_PATH . '/includes/class-capture.php' );
-include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-customer.php' );
-include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-authorize-payment.php' );
-include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-create-contract.php' );
-include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-capture-payment.php' );
-include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-cancel-payment.php' );
-include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-refund-payment.php' );
-include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-customer-lookup.php' );
-include_once( AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-available-installment-plans.php' );
+include_once AFTERPAY_PATH . '/includes/requests/class-wc-afterpay-request.php';
+include_once AFTERPAY_PATH . '/includes/class-capture.php';
+include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-customer.php';
+include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-authorize-payment.php';
+include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-create-contract.php';
+include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-capture-payment.php';
+include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-cancel-payment.php';
+include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-refund-payment.php';
+include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-customer-lookup.php';
+include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-available-installment-plans.php';
 
 // Define server endpoints
 define(

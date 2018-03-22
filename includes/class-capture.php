@@ -56,7 +56,7 @@ class WC_AfterPay_Capture {
 			return;
 		}
 		
-		$country  = strtolower( $order->get_billing_country() );
+		$country  = strtolower( krokedil_get_order_property( $order_id, 'billing_country' ) );
 		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 		$this->x_auth_key = $afterpay_settings['x_auth_key_' . $country];
 		
