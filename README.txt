@@ -2,11 +2,11 @@
 Contributors: krokedil, arvato, NiklasHogefjord, slobodanmanic
 Tags: ecommerce, e-commerce, woocommerce, afterpay, arvato
 Requires at least: 4.2
-Tested up to: 4.9
+Tested up to: 4.9.4
 Requires PHP: 5.6
 Stable tag: trunk
-Requires WooCommerce at least: 3.0.0
-Tested WooCommerce up to: 3.2.3
+WC requires at least: 3.0.0
+WC tested up to: 3.3.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,10 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+
+= 0.5.0 		-  2018.03.23 =
+* Tweak         - Compatible with WC 2.6.
+* Fix           - Fix so products with 0 amount price & 0% vat can be included in order data sent to AfterPay.
 
 = 0.4.0 		-  2018.03.12 =
 * Feature		- Added Account payments.
