@@ -64,7 +64,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 		$order_lines           = $order_lines_processor->get_order_lines( $order_id );
 		$net_total_amount      = 0;
 		foreach ( $order_lines as $key => $value ) {
-			$net_total_amount = $net_total_amount + ( floatval( $value['netUnitPrice'] * $value['quantity'] ) );
+			$net_total_amount = $net_total_amount + ( round( $value['netUnitPrice'] * $value['quantity'], 2 ) );
 		}
 
 		$customer_category      = get_post_meta( $order_id, '_afterpay_customer_category', true );
