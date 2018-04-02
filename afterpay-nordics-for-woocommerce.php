@@ -56,6 +56,7 @@ include_once AFTERPAY_PATH . '/includes/requests/class-wc-afterpay-request.php';
 include_once AFTERPAY_PATH . '/includes/class-capture.php';
 include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-customer.php';
 include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-authorize-payment.php';
+include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-authorize-subscription-payment.php';
 include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-create-contract.php';
 include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-capture-payment.php';
 include_once AFTERPAY_PATH . '/includes/requests/helpers/class-wc-afterpay-request-cancel-payment.php';

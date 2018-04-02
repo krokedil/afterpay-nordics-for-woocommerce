@@ -257,7 +257,13 @@ function init_wc_gateway_afterpay_factory_class() {
 				$personal_number = str_replace( '-', '', $personal_number );
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
-
+			
+			// Is this a subscription payment
+			if ( class_exists( 'WC_Subscriptions_Order' ) && WC_Subscriptions_Order::order_contains_subscription( $order_id ) ) {
+				// Save personal number to order/subscription as subscription token
+				update_post_meta( $order_id, 'afterpay_subscription_token', $personal_number );
+				// @todo ? - adjust initial total price if there is a sign up fee?
+			}
 
 			// Fetch installment plan selected by customer in checkout
 			if ( 'afterpay_account' == $this->id ) {
@@ -708,5 +714,105 @@ function init_wc_gateway_afterpay_factory_class() {
 			$request = new WC_AfterPay_Request_Capture_Payment;
 			$request->response( $order_id );
 		}
+
+		/**
+		 * Process a scheduled subscription payment.
+		 *
+		 * @param $amount_to_charge
+		 * @param $order
+		 */
+		function scheduled_subscription_payment( $amount_to_charge, $order ) {
+			// This function may get triggered multiple times because the class is instantiated one time per payment method (card, invoice & mobile pay). Only run it for card payments.
+			// TODO: Restructure the classes so this doesn't happen.
+			if( 'afterpay_invoice' != $this->id ) {
+				return;
+			}
+			
+			$result = $this->process_subscription_payment( $order, $amount_to_charge );
+			if ( false == $result ) {
+				// Debug
+				$this->log( 'Scheduled subscription payment failed for order ID: ' . $order->get_id() );
+				WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $order );
+			} else {
+				// Debug
+				if ( $this->debug == 'yes' ) {
+					$this->log( 'Scheduled subscription payment succeeded for order ID: ' . $order->get_id() );
+				}
+				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order );
+				$order->payment_complete();
+			}
+		}
+
+		/**
+		 * Process subscription payment.
+		 *
+		 * @since  0.6.0
+		 **/
+		public function process_subscription_payment( $order, $amount_to_charge ) {
+			if ( 0 == $amount_to_charge ) {
+				return true;
+			}
+			$order_id = $order->get_id();
+			$subscriptions = wcs_get_subscriptions_for_renewal_order( $order->get_id() );
+			reset( $subscriptions );
+			$subscription_id = key( $subscriptions );
+
+			// Reccuring token
+			$afterpay_subscription_token = get_post_meta( $order_id, 'afterpay_subscription_token', true );
+			// If the recurring token isn't stored in the subscription, grab it from parent order.
+			if( empty( $afterpay_subscription_token ) ) {
+				$afterpay_subscription_token = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), 'afterpay_subscription_token', true );
+				$afterpay_customer_category = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_afterpay_customer_category', true );
+				update_post_meta( $order_id, 'afterpay_subscription_token', $afterpay_subscription_token );
+				update_post_meta( $order_id, '_afterpay_customer_category', $afterpay_customer_category );
+				$this->log( 'AfterPay subscription token could not be retrieved from subscription. Grabbing it from parent order instead. Order ID: ' . $order->get_id() );
+			}
+			if( empty( $afterpay_subscription_token ) ) {
+				$order->add_order_note( __( 'AfterPay subscription token could not be retrieved.', 'woocommerce-gateway-klarna' ) );
+				$this->log( 'AfterPay subscription token could not be retrieved. Order ID: ' . $order->get_id() );
+				return false;
+			}
+
+			$request  = new WC_AfterPay_Request_Authorize_Subscription_Payment( $this->x_auth_key, $this->testmode );
+			$response = $request->response( $order_id, $this->get_formatted_payment_method_name() );
+
+			if ( ! is_wp_error( $response ) ) {
+				$response = json_decode( $response );
+
+				if ( 'Accepted' == $response->outcome ) {
+
+					update_post_meta( $order_id, '_afterpay_reservation_id', $response->reservationId );
+
+					// Store reservation ID as order note.
+					$order->add_order_note(
+						sprintf(
+							__(
+								'AfterPay reservation created, reservation ID: %s.',
+								'afterpay-nordics-for-woocommerce'
+							),
+							$response->reservationId
+						)
+					);
+					return true;
+				} else {
+					$order->add_order_note( __( 'AfterPay subscription authorization error. Response message: ' . $response->outcome, 'woocommerce-gateway-klarna' ) );
+					$this->log( 'AfterPay subscription authorization error. Response message: ' . $response->outcome );
+					return false;
+				}
+			} else {
+				$formatted_response = json_decode( $response->get_error_message() );
+
+				if ( is_array( $formatted_response ) ) {
+					$response_message = $formatted_response[0]->message;
+				} else {
+					$response_message = $formatted_response->message;
+				}
+				$order->add_order_note( __( 'AfterPay subscription authorization error. Response message: ' . $response_message, 'woocommerce-gateway-klarna' ) );
+				$this->log( 'AfterPay subscription authorization error. Response message: ' . $response_message );
+				return false;
+			}
+			
+		}
+
 	}
 }

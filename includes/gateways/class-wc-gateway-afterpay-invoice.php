@@ -93,7 +93,15 @@ function init_wc_gateway_afterpay_invoice_class() {
 
 			$this->supports = array(
 				'products',
-				'refunds'
+				'refunds',
+				'subscriptions',
+				'subscription_cancellation', 
+            	'subscription_suspension', 
+            	'subscription_reactivation',
+            	'subscription_amount_changes',
+				'subscription_date_changes',
+				'subscription_payment_method_change_admin',
+            	'subscription_payment_method_change'
 			);
 
 			// Actions
@@ -109,6 +117,11 @@ function init_wc_gateway_afterpay_invoice_class() {
 				$this, 
 				'process_checkout_fields' 
 			) );
+
+			add_action( 'woocommerce_scheduled_subscription_payment_' . $this->id, array(
+				$this,
+				'scheduled_subscription_payment'
+			), 10, 3 );
 			
 		}
 		
