@@ -41,6 +41,9 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 == Changelog ==
 
+= 0.5.1 		-  2018.04.04 =
+* Fix           - Send correct shipping vat to AfterPay even for v2.6.x.
+
 = 0.5.0 		-  2018.03.23 =
 * Tweak         - Compatible with WC 2.6.
 * Fix           - Fix so products with 0 amount price & 0% vat can be included in order data sent to AfterPay.
