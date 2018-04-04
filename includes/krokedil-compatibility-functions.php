@@ -8,6 +8,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 /**
+ * Version check
+ */ 
+if ( ! function_exists( 'krokedil_get_wc_version' ) ) {
+	function krokedil_get_wc_version() {
+		return defined( 'WC_VERSION' ) && WC_VERSION ? WC_VERSION : null;
+	}
+	// Check if WooCommerce version is greater or equal to 3.0
+	function krokedil_wc_gte_3_0() {
+		return krokedil_get_wc_version() && version_compare( krokedil_get_wc_version(), '3.0', '>=' );
+	}
+}
+
+/**
  * Gets order property.
  *
  * @param  $order_id int Order ID
