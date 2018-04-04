@@ -64,9 +64,16 @@ class WC_AfterPay_Process_Order_Lines {
 		// Process shipping
 		if ( $order->get_total_shipping() > 0 ) {
 			$shipping_methods = $order->get_shipping_methods();
+			$shipping_method_tax = 0;
 			foreach ( $shipping_methods as $shipping_method_key => $shipping_method_value ) {
-				$shipping_method_taxes = $shipping_method_value['taxes']['total'];
-				$shipping_method_tax = 0;
+				
+				// WC 2.6 vs 3.x check
+				if( krokedil_wc_gte_3_0() ) {
+					$shipping_method_taxes = $shipping_method_value['taxes']['total'];
+				} else {
+					$shipping_method_taxes = maybe_unserialize( $shipping_method_value['taxes'] );
+				}
+
 				foreach ( $shipping_method_taxes as $key => $value ) {
 					$shipping_method_tax = $shipping_method_tax + floatval( $value );
 				}
@@ -75,6 +82,7 @@ class WC_AfterPay_Process_Order_Lines {
 				} else {
 					$vat = round( $shipping_method_tax / $shipping_method_value['cost'], 4 ) * 100;
 				}
+				
 				$order_lines[] = array(
 					'grossUnitPrice'  	=> round( $shipping_method_tax + $shipping_method_value['cost'], 2 ),
 					'description' 		=> $shipping_method_value['name'],
