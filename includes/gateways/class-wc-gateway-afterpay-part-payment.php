@@ -200,8 +200,10 @@ function init_wc_gateway_afterpay_part_payment_class() {
 							}
 						}
 						
-						// Print payment plan details
-						echo $payment_options_details_output;
+						// Print payment plan details - only for Norway
+						if( 'NOK' == get_woocommerce_currency() ) {
+							echo $payment_options_details_output;
+						}
 						
 					}
 				}
