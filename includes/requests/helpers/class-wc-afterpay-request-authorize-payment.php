@@ -114,6 +114,6 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 			$formatted_request_body['customer']['customerNumber'] = $woo_customer_id;
 		}
 
-		return wp_json_encode( $formatted_request_body );
+		return wp_json_encode( apply_filters( 'afterpay_authorize_order', $formatted_request_body, $order_id ) );
 	}
 }
