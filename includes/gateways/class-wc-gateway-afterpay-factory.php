@@ -773,6 +773,19 @@ function init_wc_gateway_afterpay_factory_class() {
 				return false;
 			}
 
+			// Check order currency to be able to send correct x_auth_key
+			$currency = krokedil_get_order_property( $order_id, 'order_currency' );
+			switch ( $currency ) {
+				case 'NOK' :
+					$this->x_auth_key			= $this->x_auth_key_no;
+					break;
+				case 'SEK' :
+					$this->x_auth_key			= $this->x_auth_key_se;
+					break;
+				default:
+					$this->x_auth_key			= '';
+			}
+
 			$request  = new WC_AfterPay_Request_Authorize_Subscription_Payment( $this->x_auth_key, $this->testmode );
 			$response = $request->response( $order_id, $this->get_formatted_payment_method_name() );
 
