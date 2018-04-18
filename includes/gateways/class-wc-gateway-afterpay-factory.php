@@ -243,6 +243,9 @@ function init_wc_gateway_afterpay_factory_class() {
 		 * @throws Exception
 		 */
 		public function process_payment( $order_id ) {
+
+			$order = wc_get_order( $order_id );
+
 			// @Todo - check if this is needed (for Norway) since we don't do Available payment methods there
 			$customer_number_norway = $this->id . '-check-customer-number-norway';
 
@@ -260,8 +263,14 @@ function init_wc_gateway_afterpay_factory_class() {
 			
 			// Is this a subscription payment
 			if ( class_exists( 'WC_Subscriptions_Order' ) && WC_Subscriptions_Order::order_contains_subscription( $order_id ) ) {
-				// Save personal number to order/subscription as subscription token
-				update_post_meta( $order_id, 'afterpay_subscription_token', $personal_number );
+				// Save customer ID or personal number to order/subscription as subscription token
+				$woo_customer_id = $order->get_user_id();
+				if ( is_int( $woo_customer_id ) && $woo_customer_id > 0 ) {
+					$subscription_token = $woo_customer_id;
+				} else {
+					$subscription_token = $personal_number;
+				}
+				update_post_meta( $order_id, 'afterpay_subscription_token', $subscription_token );
 				// @todo ? - adjust initial total price if there is a sign up fee?
 			}
 
@@ -309,8 +318,6 @@ function init_wc_gateway_afterpay_factory_class() {
 			// Compare the received address (from AfterPay) with the one entered by the customer in checkout.
 			// Change it if they don't match
 			$this->check_used_address( $response, $order_id );
-
-			$order = wc_get_order( $order_id );
 
 			if ( ! is_wp_error( $response ) ) {
 				$response = json_decode( $response );
