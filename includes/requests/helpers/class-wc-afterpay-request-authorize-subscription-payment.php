@@ -76,13 +76,13 @@ class WC_AfterPay_Request_Authorize_Subscription_Payment extends WC_AfterPay_Req
 				'lastName'             => krokedil_get_order_property( $order_id, 'billing_last_name' ),
 				'email'                => krokedil_get_order_property( $order_id, 'billing_email' ),
 				'mobilePhone'          => krokedil_get_order_property( $order_id, 'billing_phone' ),
-				'identificationNumber' => get_post_meta( $order_id, 'afterpay_subscription_token', true ),
 				'address'              => array(
 					'street'      => krokedil_get_order_property( $order_id, 'billing_address_1' ),
 					'postalCode'  => krokedil_get_order_property( $order_id, 'billing_postcode' ),
 					'postalPlace' => krokedil_get_order_property( $order_id, 'billing_city' ),
 					'countryCode' => krokedil_get_order_property( $order_id, 'billing_country' ),
 				),
+				'customerNumber' => get_post_meta( $order_id, 'afterpay_subscription_token', true ),
 			),
 			'order'    => array(
 				'number'           => $order->get_order_number(),
