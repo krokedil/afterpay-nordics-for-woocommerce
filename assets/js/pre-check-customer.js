@@ -407,4 +407,10 @@ jQuery(function ($) {
 		}
 	}
 
+	$(document).ready(function(){
+		$('input[name=afterpay-pre-check-mobile-number]').keyup(function(){
+			$('input[name=billing_phone]').val($(this).val());
+		});
+	});
+
 });
