@@ -92,7 +92,6 @@ class WC_AfterPay_Request_Authorize_Subscription_Payment extends WC_AfterPay_Req
 				'items'            => $order_lines,
 			),
 		);
-
-		return wp_json_encode( $formatted_request_body );
+		return wp_json_encode( apply_filters( 'afterpay_authorize_subscription_renewal_order', $formatted_request_body, $order_id ) );
 	}
 }
