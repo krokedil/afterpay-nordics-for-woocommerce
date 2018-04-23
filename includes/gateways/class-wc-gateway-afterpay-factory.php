@@ -262,6 +262,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			}
 			
 			// Is this a subscription payment
+			/*
 			if ( class_exists( 'WC_Subscriptions_Order' ) && WC_Subscriptions_Order::order_contains_subscription( $order_id ) ) {
 				// Save customer ID or personal number to order/subscription as subscription token
 				$woo_customer_id = $order->get_user_id();
@@ -270,10 +271,10 @@ function init_wc_gateway_afterpay_factory_class() {
 				} else {
 					$subscription_token = $personal_number;
 				}
-				update_post_meta( $order_id, 'afterpay_subscription_token', $subscription_token );
+				update_post_meta( $order_id, 'afterpay_customer_number', $subscription_token );
 				// @todo ? - adjust initial total price if there is a sign up fee?
 			}
-
+			*/
 			// Fetch installment plan selected by customer in checkout
 			if ( 'afterpay_account' == $this->id ) {
 				$profile_no = isset( $this->account_profile_no ) ? $this->account_profile_no : '1';
@@ -328,6 +329,16 @@ function init_wc_gateway_afterpay_factory_class() {
 					$order->payment_complete();
 
 					update_post_meta( $order_id, '_afterpay_reservation_id', $response->reservationId );
+
+					// Save AfterPay customer Number
+					if( $response->customer->customerNumber ) {
+						update_post_meta( $order_id, 'afterpay_customer_number', $response->customer->customerNumber );
+						if ( email_exists( krokedil_get_order_property( $order_id, 'billing_email' ) ) ) {
+							$user    = get_user_by( 'email', krokedil_get_order_property( $order_id, 'billing_email' ) );
+							$user_id = $user->ID;
+							update_user_meta( $user_id, 'afterpay_customer_number', $response->customer->customerNumber );
+						}
+					}
 
 					// Store reservation ID as order note.
 					$order->add_order_note(
@@ -765,16 +776,18 @@ function init_wc_gateway_afterpay_factory_class() {
 			$subscription_id = key( $subscriptions );
 
 			// Reccuring token
-			$afterpay_subscription_token = get_post_meta( $order_id, 'afterpay_subscription_token', true );
+			$afterpay_customer_number = get_post_meta( $order_id, 'afterpay_customer_number', true );
 			// If the recurring token isn't stored in the subscription, grab it from parent order.
-			if( empty( $afterpay_subscription_token ) ) {
-				$afterpay_subscription_token = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), 'afterpay_subscription_token', true );
+			if( empty( $afterpay_customer_number ) ) {
+				$afterpay_customer_number = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), 'afterpay_customer_number', true );
 				$afterpay_customer_category = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_afterpay_customer_category', true );
-				update_post_meta( $order_id, 'afterpay_subscription_token', $afterpay_subscription_token );
+				update_post_meta( $order_id, 'afterpay_customer_number', $afterpay_customer_number );
 				update_post_meta( $order_id, '_afterpay_customer_category', $afterpay_customer_category );
+				update_post_meta( $subscription_id, 'afterpay_customer_number', $afterpay_customer_number );
+				update_post_meta( $subscription_id, '_afterpay_customer_category', $afterpay_customer_category );
 				$this->log( 'AfterPay subscription token could not be retrieved from subscription. Grabbing it from parent order instead. Order ID: ' . $order->get_id() );
 			}
-			if( empty( $afterpay_subscription_token ) ) {
+			if( empty( $afterpay_customer_number ) ) {
 				$order->add_order_note( __( 'AfterPay subscription token could not be retrieved.', 'woocommerce-gateway-klarna' ) );
 				$this->log( 'AfterPay subscription token could not be retrieved. Order ID: ' . $order->get_id() );
 				return false;

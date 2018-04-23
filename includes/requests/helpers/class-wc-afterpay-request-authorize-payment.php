@@ -108,12 +108,6 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 			);
 		}
 
-		// Add customer number if it exist
-		$woo_customer_id = $order->get_user_id();
-		if ( is_int( $woo_customer_id ) && $woo_customer_id > 0 ) {
-			$formatted_request_body['customer']['customerNumber'] = $woo_customer_id;
-		}
-
 		return wp_json_encode( apply_filters( 'afterpay_authorize_order', $formatted_request_body, $order_id ) );
 	}
 }

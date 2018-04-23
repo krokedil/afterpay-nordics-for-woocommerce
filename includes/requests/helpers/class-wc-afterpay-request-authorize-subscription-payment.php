@@ -82,7 +82,7 @@ class WC_AfterPay_Request_Authorize_Subscription_Payment extends WC_AfterPay_Req
 					'postalPlace' => krokedil_get_order_property( $order_id, 'billing_city' ),
 					'countryCode' => krokedil_get_order_property( $order_id, 'billing_country' ),
 				),
-				'customerNumber' => get_post_meta( $order_id, 'afterpay_subscription_token', true ),
+				'customerNumber' => get_post_meta( $order_id, 'afterpay_customer_number', true ),
 			),
 			'order'    => array(
 				'number'           => $order->get_order_number(),
