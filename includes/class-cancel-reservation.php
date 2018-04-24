@@ -57,7 +57,7 @@ class WC_AfterPay_Cancel_Reservation {
 			return;
 		}
 		
-		$payment_method 			= $order->get_payment_method();
+		$payment_method 			= krokedil_get_order_property( $order_id, 'payment_method' );
 		$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );
 		$country  					= strtolower( krokedil_get_order_property( $order_id, 'billing_country' ) );
 		$this->x_auth_key 			= $payment_method_settings['x_auth_key_' . $country];
