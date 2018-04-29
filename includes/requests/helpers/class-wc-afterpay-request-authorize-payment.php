@@ -92,6 +92,16 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 				'items'            => $order_lines,
 			),
 		);
+
+		// Customer name or company name depending on type of customer.
+		// Contact person name for B2B is sent in capture call
+		if( 'Company' == $customer_category ) {
+			$formatted_request_body['customer']['firstName'] = '';
+			$formatted_request_body['customer']['lastName'] = krokedil_get_order_property( $order_id, 'billing_company' );
+		} else {
+			$formatted_request_body['customer']['firstName'] = krokedil_get_order_property( $order_id, 'billing_first_name' );
+			$formatted_request_body['customer']['lastName'] = krokedil_get_order_property( $order_id, 'billing_last_name' );
+		}
 		// Add profileNo for Account
 		if ( isset( $profile_no ) && 'Account' === $payment_method_name ) {
 			$formatted_request_body['payment']['account'] = array(

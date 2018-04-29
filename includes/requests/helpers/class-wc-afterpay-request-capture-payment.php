@@ -41,6 +41,14 @@ class WC_AfterPay_Request_Capture_Payment extends WC_AfterPay_Request {
 				'currency' => krokedil_get_order_property( $order_id, 'order_currency' ),
 			),
 		);
+
+		// Add reference if this is a B2B purchase (first and last name is not sent in authorize request).
+		$customer_category = get_post_meta( $order_id, '_afterpay_customer_category', true );
+		if( 'Company' == $customer_category ) {
+			$request_body['references'] = array(
+				'yourReference' => krokedil_get_order_property( $order_id, 'billing_first_name' ) . ' ' . krokedil_get_order_property( $order_id, 'billing_last_name' ),
+			);
+		}
 		return wp_json_encode( $request_body );
 	}
 }
