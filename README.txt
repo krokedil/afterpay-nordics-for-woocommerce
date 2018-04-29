@@ -41,14 +41,23 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 == Changelog ==
 
-= 0.5.1 		-  2018.04.04 =
+= 0.6.0 		- 2018.04.29 =
+* Feature       - Add support for recurring payments (for invoice) via WooCommerce Subscriptions.
+* Tweak         - Store AfterPay customer number in WooCommerce order.
+* Tweak         - Added filters afterpay_authorize_order & afterpay_authorize_subscription_renewal_order.
+* Tweak         - Only display detailed part payment info to Norwegian customers.
+* Fix           - WC 2.6 support in Cancel reservation request.
+* Fix           - Send correct params in authorize and capture request for B2B purchases.
+* Fix           - Sync afterpay-pre-check-mobile-number field with billing phone field.
+
+= 0.5.1 		- 2018.04.04 =
 * Fix           - Send correct shipping vat to AfterPay even for v2.6.x.
 
-= 0.5.0 		-  2018.03.23 =
+= 0.5.0 		- 2018.03.23 =
 * Tweak         - Compatible with WC 2.6.
 * Fix           - Fix so products with 0 amount price & 0% vat can be included in order data sent to AfterPay.
 
-= 0.4.0 		-  2018.03.12 =
+= 0.4.0 		- 2018.03.12 =
 * Feature		- Added Account payments.
 * Feature		- Added Part payment Norway.
 * Feature		- Add support for partial refunds (if order only contain one tax rate).
