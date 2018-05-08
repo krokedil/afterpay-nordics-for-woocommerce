@@ -29,7 +29,7 @@ jQuery(function ($) {
 		//console.log(do_focus);
 		console.log('maybe_show_pre_checkout_form');
 		var selected_payment_method = $('input[name="payment_method"]:checked').val();
-        if (selected_payment_method.indexOf('afterpay') >= 0) {
+        //if (selected_payment_method.indexOf('afterpay') >= 0) {
 	        
 	        jQuery('#afterpay-pre-check-customer').fadeIn();
 	        check_separate_shipping_address(do_focus);
@@ -58,9 +58,9 @@ jQuery(function ($) {
 				jQuery( '.afterpay-customer-lookup-button' ).show();
 				jQuery('li.payment_method_afterpay_part_payment').fadeIn();
 			}
-		} else {
-			jQuery('#afterpay-pre-check-customer').fadeOut();
-		}
+		//} else {
+		//	jQuery('#afterpay-pre-check-customer').fadeOut();
+		//}
 	}
 
 	function check_separate_shipping_address(do_focus){
@@ -90,7 +90,7 @@ jQuery(function ($) {
             //$( '#billing_email_field' ).hide();
         } else {
             // Hide pno
-            $('#afterpay-pre-check-customer').slideUp(250);
+            //$('#afterpay-pre-check-customer').slideUp(250);
             // Show ship to different address checkbox
             $( '#ship-to-different-address' ).show();
             //$( '#billing_email_field' ).show();
