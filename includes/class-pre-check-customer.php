@@ -37,60 +37,6 @@ class WC_AfterPay_Pre_Check_Customer {
 		// Check if PreCheckCustomer was performed and successful
 		add_action( 'woocommerce_before_checkout_process', array( $this, 'confirm_pre_check_customer' ) );
 
-		// Filter checkout billing fields
-		/*
-		add_filter( 'woocommerce_process_checkout_field_billing_first_name', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_billing_last_name', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_billing_address_1', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_billing_address_2', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_billing_postcode', array( $this, 'filter_pre_checked_value' ) );
-		add_filter( 'woocommerce_process_checkout_field_billing_city', array( $this, 'filter_pre_checked_value' ) );
-		add_filter( 'woocommerce_process_checkout_field_billing_company', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		// Filter checkout shipping fields
-		add_filter( 'woocommerce_process_checkout_field_shipping_first_name', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_last_name', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_address_1', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_address_2', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_postcode', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_city', array(
-            $this,
-            'filter_pre_checked_value',
-        ) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_company', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		*/
 	}
 
 
@@ -104,13 +50,6 @@ class WC_AfterPay_Pre_Check_Customer {
 			if ( empty( $_POST['afterpay-pre-check-customer-number'] ) && empty( $_POST['afterpay_invoice-check-customer-number-norway'] ) && empty( $_POST['afterpay_part_payment-check-customer-number-norway'] ) && empty( $_POST['afterpay_account-check-customer-number-norway'] ) ) {
 				wc_add_notice( __( 'Personal/organization number is a required field.', 'afterpay-nordics-for-woocommerce' ), 'error' );
 			}
-			// Check if PreCheckCustomer was performed
-			/*
-			elseif ( ! WC()->session->get( 'afterpay_allowed_payment_methods' ) && 'SE' == WC()->customer->get_billing_country() ) {
-				error_log('afterpay_allowed_payment_methods ' . var_export(WC()->session->get( 'afterpay_allowed_payment_methods' ), true));
-				wc_add_notice( __( 'Please use get address feature first, before using one of AfterPay payment methods.', 'afterpay-nordics-for-woocommerce' ), 'error' );
-			}
-			*/
 		}
 	}
 
@@ -118,16 +57,6 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * Display AfterPay PreCheckCustomer fields
 	 */
 	public function display_pre_check_form() {
-		/*
-		if ( is_user_logged_in() && 'SE' == WC()->customer->get_billing_country() ) {
-			$user = wp_get_current_user();
-			if ( get_user_meta( $user->ID, '_afterpay_personal_no', true ) ) {
-				$personal_number = get_user_meta( $user->ID, '_afterpay_personal_no', true );
-			}
-		} else {
-			$personal_number = WC()->session->get( 'afterpay_personal_no' ) ? WC()->session->get( 'afterpay_personal_no' ) : '';
-		}
-		*/
 		$personal_number = WC()->session->get( 'afterpay_personal_no' ) ? WC()->session->get( 'afterpay_personal_no' ) : '';
 
 		// Check settings for what customer type is wanted, and print the form according to that.
@@ -357,13 +286,6 @@ class WC_AfterPay_Pre_Check_Customer {
 				// Set session data
 				WC()->session->set( 'afterpay_allowed_payment_methods', $response->paymentMethods );
 				WC()->session->set( 'afterpay_checkout_id', $response->checkoutId );
-				// Capture user's personal number as meta field, if logged in and is from Sweden
-				/*
-				if ( is_user_logged_in() && 'SE' == $billing_country ) {
-					$user = wp_get_current_user();
-					add_user_meta( $user->ID, '_afterpay_personal_no', $personal_number, true );
-				}
-				*/
 
 				// Send success
 				return $afterpay_customer_details;
