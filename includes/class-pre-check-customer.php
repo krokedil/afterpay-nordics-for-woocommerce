@@ -72,7 +72,7 @@ class WC_AfterPay_Pre_Check_Customer {
 			$customer_type               = $afterpay_settings['customer_type'];
 			$separate_shipping_companies = isset( $afterpay_settings['separate_shipping_companies'] ) ? $afterpay_settings['separate_shipping_companies'] : 'no';
 			?>
-			<div id="afterpay-pre-check-customer">
+			<div id="afterpay-pre-check-customer" style="display:none">
 				<?php
 				if ( $customer_type === 'both' ) {
 
