@@ -21,8 +21,15 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * WC_AfterPay_Pre_Check_Customer constructor.
 	 */
 	public function __construct() {
-		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
-		$this->testmode    = 'yes' == $afterpay_settings['testmode'] ? true : false;
+		$afterpay_settings 			= get_option( 'woocommerce_afterpay_invoice_settings' );
+		$this->testmode    			= 'yes' == $afterpay_settings['testmode'] ? true : false;
+
+		$invoice_settings 			= get_option( 'woocommerce_afterpay_invoice_settings' );
+		$part_payment_settings 		= get_option( 'woocommerce_afterpay_part_payment_settings' );
+		$account_settings 			= get_option( 'woocommerce_afterpay_account_settings' );
+		$this->enabled_invoice 		= $invoice_settings['enabled'];
+		$this->enabled_part_payment	= $part_payment_settings['enabled'];
+		$this->enabled_account 		= $account_settings['enabled'];
 
 		// Enqueue JS file
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -37,60 +44,6 @@ class WC_AfterPay_Pre_Check_Customer {
 		// Check if PreCheckCustomer was performed and successful
 		add_action( 'woocommerce_before_checkout_process', array( $this, 'confirm_pre_check_customer' ) );
 
-		// Filter checkout billing fields
-		/*
-		add_filter( 'woocommerce_process_checkout_field_billing_first_name', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_billing_last_name', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_billing_address_1', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_billing_address_2', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_billing_postcode', array( $this, 'filter_pre_checked_value' ) );
-		add_filter( 'woocommerce_process_checkout_field_billing_city', array( $this, 'filter_pre_checked_value' ) );
-		add_filter( 'woocommerce_process_checkout_field_billing_company', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		// Filter checkout shipping fields
-		add_filter( 'woocommerce_process_checkout_field_shipping_first_name', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_last_name', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_address_1', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_address_2', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_postcode', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_city', array(
-            $this,
-            'filter_pre_checked_value',
-        ) );
-		add_filter( 'woocommerce_process_checkout_field_shipping_company', array(
-			$this,
-			'filter_pre_checked_value',
-		) );
-		*/
 	}
 
 
@@ -104,13 +57,6 @@ class WC_AfterPay_Pre_Check_Customer {
 			if ( empty( $_POST['afterpay-pre-check-customer-number'] ) && empty( $_POST['afterpay_invoice-check-customer-number-norway'] ) && empty( $_POST['afterpay_part_payment-check-customer-number-norway'] ) && empty( $_POST['afterpay_account-check-customer-number-norway'] ) ) {
 				wc_add_notice( __( 'Personal/organization number is a required field.', 'afterpay-nordics-for-woocommerce' ), 'error' );
 			}
-			// Check if PreCheckCustomer was performed
-			/*
-			elseif ( ! WC()->session->get( 'afterpay_allowed_payment_methods' ) && 'SE' == WC()->customer->get_billing_country() ) {
-				error_log('afterpay_allowed_payment_methods ' . var_export(WC()->session->get( 'afterpay_allowed_payment_methods' ), true));
-				wc_add_notice( __( 'Please use get address feature first, before using one of AfterPay payment methods.', 'afterpay-nordics-for-woocommerce' ), 'error' );
-			}
-			*/
 		}
 	}
 
@@ -118,49 +64,41 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * Display AfterPay PreCheckCustomer fields
 	 */
 	public function display_pre_check_form() {
-		/*
-		if ( is_user_logged_in() && 'SE' == WC()->customer->get_billing_country() ) {
-			$user = wp_get_current_user();
-			if ( get_user_meta( $user->ID, '_afterpay_personal_no', true ) ) {
-				$personal_number = get_user_meta( $user->ID, '_afterpay_personal_no', true );
-			}
-		} else {
+		if( 'yes' == $this->enabled_invoice || 'yes' == $this->enabled_part_payment || 'yes' == $this->enabled_account ) {
 			$personal_number = WC()->session->get( 'afterpay_personal_no' ) ? WC()->session->get( 'afterpay_personal_no' ) : '';
-		}
-		*/
-		$personal_number = WC()->session->get( 'afterpay_personal_no' ) ? WC()->session->get( 'afterpay_personal_no' ) : '';
 
-		// Check settings for what customer type is wanted, and print the form according to that.
-		$afterpay_settings           = get_option( 'woocommerce_afterpay_invoice_settings' );
-		$customer_type               = $afterpay_settings['customer_type'];
-		$separate_shipping_companies = isset( $afterpay_settings['separate_shipping_companies'] ) ? $afterpay_settings['separate_shipping_companies'] : 'no';
-		?>
-        <div id="afterpay-pre-check-customer" style="display:none">
-			<?php
-			if ( $customer_type === 'both' ) {
-
-				echo $this->get_radiobutton_customer_type_both( $separate_shipping_companies );
-				$label = __( 'Personal/organization number', 'afterpay-nordics-for-woocommerce' );
-
-			} else if ( $customer_type === 'private' ) {
-
-				echo $this->get_radiobutton_customer_type_private();
-				$label = __( 'Personal number', 'afterpay-nordics-for-woocommerce' );
-
-			} else if ( $customer_type === 'company' ) {
-
-				echo $this->get_radiobutton_customer_type_company( $separate_shipping_companies );
-				$label = __( 'Organization number', 'afterpay-nordics-for-woocommerce' );
-
-			}
-
-			$this->get_fields_no();
-
-			$this->get_fields_se( $label, $personal_number );
-
+			// Check settings for what customer type is wanted, and print the form according to that.
+			$afterpay_settings           = get_option( 'woocommerce_afterpay_invoice_settings' );
+			$customer_type               = $afterpay_settings['customer_type'];
+			$separate_shipping_companies = isset( $afterpay_settings['separate_shipping_companies'] ) ? $afterpay_settings['separate_shipping_companies'] : 'no';
 			?>
-        </div>
-		<?php
+			<div id="afterpay-pre-check-customer" style="display:none">
+				<?php
+				if ( $customer_type === 'both' ) {
+
+					echo $this->get_radiobutton_customer_type_both( $separate_shipping_companies );
+					$label = __( 'Personal/organization number', 'afterpay-nordics-for-woocommerce' );
+
+				} else if ( $customer_type === 'private' ) {
+
+					echo $this->get_radiobutton_customer_type_private();
+					$label = __( 'Personal number', 'afterpay-nordics-for-woocommerce' );
+
+				} else if ( $customer_type === 'company' ) {
+
+					echo $this->get_radiobutton_customer_type_company( $separate_shipping_companies );
+					$label = __( 'Organization number', 'afterpay-nordics-for-woocommerce' );
+
+				}
+
+				$this->get_fields_no();
+
+				$this->get_fields_se( $label, $personal_number );
+
+				?>
+			</div>
+			<?php
+		}
 	}
 
 	/**
@@ -264,15 +202,19 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * Load the JS & CSS file(s).
 	 */
 	public function enqueue_scripts() {
-		wp_register_script( 'afterpay_pre_check_customer', plugins_url( 'assets/js/pre-check-customer.js', __DIR__ ), array( 'jquery' ), AFTERPAY_VERSION, true );
-		wp_localize_script( 'afterpay_pre_check_customer', 'WC_AfterPay', array(
-			'ajaxurl'                           => admin_url( 'admin-ajax.php' ),
-			'afterpay_pre_check_customer_nonce' => wp_create_nonce( 'afterpay_pre_check_customer_nonce' ),
-		) );
-		wp_enqueue_script( 'afterpay_pre_check_customer' );
+		
 
-		wp_register_style( 'afterpay_pre_check_customer', plugins_url( 'assets/css/afterpay-pre-check-customer.css', __DIR__ ), array(), AFTERPAY_VERSION );
-		wp_enqueue_style( 'afterpay_pre_check_customer' );
+		if( is_checkout() && ( 'yes' == $this->enabled_invoice || 'yes' == $this->enabled_part_payment || 'yes' == $this->enabled_account ) ) {
+			wp_register_script( 'afterpay_pre_check_customer', plugins_url( 'assets/js/pre-check-customer.js', __DIR__ ), array( 'jquery' ), AFTERPAY_VERSION, true );
+			wp_localize_script( 'afterpay_pre_check_customer', 'WC_AfterPay', array(
+				'ajaxurl'                           => admin_url( 'admin-ajax.php' ),
+				'afterpay_pre_check_customer_nonce' => wp_create_nonce( 'afterpay_pre_check_customer_nonce' ),
+			) );
+			wp_enqueue_script( 'afterpay_pre_check_customer' );
+
+			wp_register_style( 'afterpay_pre_check_customer', plugins_url( 'assets/css/afterpay-pre-check-customer.css', __DIR__ ), array(), AFTERPAY_VERSION );
+			wp_enqueue_style( 'afterpay_pre_check_customer' );
+		}
 	}
 
 
@@ -357,13 +299,6 @@ class WC_AfterPay_Pre_Check_Customer {
 				// Set session data
 				WC()->session->set( 'afterpay_allowed_payment_methods', $response->paymentMethods );
 				WC()->session->set( 'afterpay_checkout_id', $response->checkoutId );
-				// Capture user's personal number as meta field, if logged in and is from Sweden
-				/*
-				if ( is_user_logged_in() && 'SE' == $billing_country ) {
-					$user = wp_get_current_user();
-					add_user_meta( $user->ID, '_afterpay_personal_no', $personal_number, true );
-				}
-				*/
 
 				// Send success
 				return $afterpay_customer_details;

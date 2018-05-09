@@ -351,7 +351,12 @@ function init_wc_gateway_afterpay_factory_class() {
 						)
 					);
 				} else {
-					wc_add_notice( sprintf( __( 'The payment was %s.', 'afterpay-nordics-for-woocommerce' ), $response->outcome ), 'error' );
+					if( $response->riskCheckMessages[0]->customerFacingMessage ) {
+						$error_message = $response->riskCheckMessages[0]->customerFacingMessage;
+					} else {
+						$error_message = sprintf( __( 'The payment was %s.', 'afterpay-nordics-for-woocommerce' ), $response->outcome );
+					}
+					wc_add_notice( $error_message , 'error' );
 
 					return false;
 				}
