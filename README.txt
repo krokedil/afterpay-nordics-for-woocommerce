@@ -41,6 +41,10 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 == Changelog ==
 
+= 0.6.1 		- 2018.05.09 =
+* Tweak			- Improved messaging to customer in checkout when purchase (Authorize request) is denied by AfterPay.
+* Tweak			- Display get address form even if AfterPay isn't the selected payment gateway.
+
 = 0.6.0 		- 2018.04.29 =
 * Feature       - Add support for recurring payments (for invoice) via WooCommerce Subscriptions.
 * Tweak         - Store AfterPay customer number in WooCommerce order.
