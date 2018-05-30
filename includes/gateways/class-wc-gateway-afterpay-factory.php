@@ -558,7 +558,7 @@ function init_wc_gateway_afterpay_factory_class() {
 		 *
 		 * @return bool
 		 */
-		public function can_refund_order( $order, $amount ) {
+		public function can_refund_order( $order, $amount = 0 ) {
 			// Check if there's a transaction ID (invoice number).
 			//if ( ! $order->get_transaction_id() ) {
 			//	$this->log( 'Refund failed: No AfterPay invoice number ID.' );
