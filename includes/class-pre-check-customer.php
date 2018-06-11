@@ -180,7 +180,7 @@ class WC_AfterPay_Pre_Check_Customer {
 	public function get_fields_se( $label, $personal_number ) {
 		?>
         <div class="afterpay-pre-check-se">
-            <p class="form-row form-row-first validate-required">
+            <p class="form-row form-row-first afterpay-dob-field">
                 <label for="afterpay-pre-check-customer-number"><?php echo $label; ?> <span
                             class="required">*</span></label>
                 <input type="text" name="afterpay-pre-check-customer-number" id="afterpay-pre-check-customer-number"
@@ -192,7 +192,10 @@ class WC_AfterPay_Pre_Check_Customer {
                 <label for="afterpay-customer-lookup-button button"> &nbsp;</label>
                 <button type="button"
                         class="afterpay-customer-lookup-button button"><?php _e( 'Get address', 'afterpay-nordics-for-woocommerce' ); ?></button>
-            </p>
+			</p>
+			<p class="form-row form-row-wide afterpay-privacy-info">
+				<a href="https://documents.myafterpay.com/privacy-statement/sv_se/" target="_blank"><?php _e( 'This is how your data is used.', 'afterpay-nordics-for-woocommerce' ); ?></a>
+			</p>
         </div>
 		<?php
 	}

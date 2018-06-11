@@ -29,3 +29,14 @@
 .afterpay-terms-content-box {
   padding: 10px;
 }
+.woocommerce-billing-fields p.afterpay-get-address-button-row,
+.woocommerce-billing-fields p.afterpay-dob-field {
+  margin-bottom: 0;
+}
+p.form-row.form-row-wide.afterpay-privacy-info {
+  font-size: smaller;
+}
+input#afterpay-pre-check-customer-number,
+button.afterpay-customer-lookup-button.button {
+  margin-bottom: 0.2em;
+}

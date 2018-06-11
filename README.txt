@@ -6,7 +6,7 @@ Tested up to: 4.9.5
 Requires PHP: 5.6
 Stable tag: trunk
 WC requires at least: 3.0.0
-WC tested up to: 3.3.5
+WC tested up to: 3.4.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,13 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+
+= 0.6.2 		- 2018.06.12 =
+* Tweak			- Add error message as order note + revert status to Processing if AfterPay capture fails.
+* Tweak			- Changed url to Swedish afterpay terms URL.
+* Tweak			- Added link to AfterPay privacy policy next to get address field (for Sweden).
+* Fix			- Fixed PHP warning that caused refunds to not work in some environments.
+
 
 = 0.6.1 		- 2018.05.09 =
 * Tweak			- Improved messaging to customer in checkout when purchase (Authorize request) is denied by AfterPay.

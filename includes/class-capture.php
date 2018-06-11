@@ -37,7 +37,6 @@ class WC_AfterPay_Capture {
 	 
 	public function capture_full( $order_id ) {
 		$order = wc_get_order( $order_id );
-		
 		// If this order wasn't created using an AfterPay payment method, bail.
 		if ( ! $this->check_if_afterpay_order( $order_id ) ) {
 			return;
@@ -70,7 +69,8 @@ class WC_AfterPay_Capture {
 				
 			$order->add_order_note( sprintf( __( 'Payment captured with AfterPay with capture number %s', 'afterpay-nordics-for-woocommerce' ), $response->captureNumber ) );
 		} else {
-			$order->add_order_note( sprintf( __( 'Payment failed to be captured by AfterPay', 'afterpay-nordics-for-woocommerce' ) ) );
+			$order->add_order_note( sprintf( __( 'Payment failed to be captured by AfterPay. Error message: %s', 'afterpay-nordics-for-woocommerce' ), $response[0]->message ) );
+			$order->update_status( 'processing' );
 		}
 	}
 	
