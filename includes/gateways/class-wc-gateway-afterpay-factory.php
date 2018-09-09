@@ -377,6 +377,9 @@ function init_wc_gateway_afterpay_factory_class() {
 				} else {
 					$response_message = $formatted_response->message;
 				}
+				if('Value out of range.' == $response_message ) {
+					$response_message = __( 'Something was wrong with the entered <strong>Personal number</strong>. Correct format should be YYMMDDNNNN. Please try again.', 'afterpay-nordics-for-woocommerce' );
+				}
 
 				wc_add_notice( sprintf( __( '%s', 'afterpay-nordics-for-woocommerce' ), $response_message ), 'error' );
 
