@@ -107,10 +107,11 @@ function init_wc_gateway_afterpay_part_payment_class() {
 		public function payment_fields() {
 			parent::payment_fields();
 			
+			// Print AfterPay Terms & Conditions link
+			echo $this->get_afterpay_info();
 			
 			$this->get_available_installment_plans();
 			
-			echo $this->get_afterpay_info();
 		}
 
 		/**
@@ -199,7 +200,7 @@ function init_wc_gateway_afterpay_part_payment_class() {
 								echo '<br>';	
 							}
 						}
-						
+
 						// Print payment plan details					
 						echo $payment_options_details_output;
 						
