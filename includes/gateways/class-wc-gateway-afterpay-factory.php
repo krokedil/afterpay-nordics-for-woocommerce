@@ -591,28 +591,14 @@ function init_wc_gateway_afterpay_factory_class() {
 					$afterpay_info  .= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
 					break;
 				case 'SEK':
-					$terms_url      = 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
-					$terms_content  = wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
-					$terms_readmore = 'Läs mer om AfterPay <a href="' . $terms_url . '" target="_blank">här</a>.';
-					$short_readmore = 'Läs mer här';
-					$afterpay_info  = '<div id="afterpay-terms-content" style="display:none;">';
-					$afterpay_info  .= $terms_content;
-					$afterpay_info  .= '</div>';
-					$afterpay_info  .= '<a href="#TB_inline?width=600&height=550&inlineId=afterpay-terms-content" class="thickbox">' . $short_readmore . '</a>';
+					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
+					$afterpay_info .= '<p class="afterpay-terms-link"><a href="' . $terms_url . '" target="_blank">' . __( 'Read AfterPay Terms & Conditions', 'afterpay-nordics-for-woocommerce' ) . '</a>.</p>';
 					break;
 				default:
-					$terms_url      = 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
-					$terms_content  = wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
-					$terms_readmore = 'Läs mer om AfterPay <a href="' . $terms_url . '" target="_blank">här</a>.';
-					$short_readmore = 'Läs mer här';
-					$afterpay_info  = '<div id="afterpay-terms-content" style="display:none;">';
-					$afterpay_info  .= $terms_content;
-					$afterpay_info  .= '</div>';
-					$afterpay_info  .= '<a href="#TB_inline?width=600&height=550&inlineId=afterpay-terms-content" class="thickbox">' . $short_readmore . '</a>';
+				$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
+				$afterpay_info .= ' <a href="' . $terms_url . '" target="_blank">' . __( 'Read AfterPay Terms & Conditions', 'afterpay-nordics-for-woocommerce' ) . '</a>.';
 					break;
 			}
-
-			add_thickbox();
 
 			return $afterpay_info;
 		}
