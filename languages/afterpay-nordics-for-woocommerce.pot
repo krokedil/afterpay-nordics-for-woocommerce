@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: AfterPay Nordics for WooCommerce\n"
-"POT-Creation-Date: 2018-09-09 15:56+0000\n"
+"POT-Creation-Date: 2018-09-12 05:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Niklas Högefjord <info@krokedil.se>\n"
 "Language-Team: Niklas Högefjord <info@krokedil.se>\n"
@@ -31,17 +31,24 @@ msgid ""
 "cancelled."
 msgstr ""
 
-#: includes/class-cancel-reservation.php:74
+#: includes/class-cancel-reservation.php:63
+msgid ""
+"Could not cancel AfterPay reservation, AfterPay reservation is already "
+"captured. Order needs to be refunded for changes to be reflected in "
+"AfterPays system."
+msgstr ""
+
+#: includes/class-cancel-reservation.php:82
 msgid "AfterPay reservation was successfully cancelled."
 msgstr ""
 
-#: includes/class-cancel-reservation.php:76
+#: includes/class-cancel-reservation.php:84
 msgid "AfterPay reservation could not be cancelled."
 msgstr ""
 
 #: includes/class-capture.php:53
 msgid ""
-"Could not capture AfterPar reservation, AfterPay reservation is already "
+"Could not capture AfterPay reservation, AfterPay reservation is already "
 "captured."
 msgstr ""
 

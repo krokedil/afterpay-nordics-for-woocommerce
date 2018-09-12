@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AfterPay for WooCommerce\n"
-"POT-Creation-Date: 2018-09-09 15:56+0000\n"
-"PO-Revision-Date: 2018-09-09 16:00+0000\n"
+"POT-Creation-Date: 2018-09-12 05:40+0000\n"
+"PO-Revision-Date: 2018-09-12 05:42+0000\n"
 "Last-Translator: Krokedil Produktionsbyrå <info@krokedil.se>\n"
-"Language-Team: Swedish\n"
+"Language-Team: Svenska\n"
 "Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,17 +32,27 @@ msgid ""
 msgstr ""
 "Kunde inte avbryta reservationen, AfterPay reservationen är redan avbruten."
 
-#: includes/class-cancel-reservation.php:74
+#: includes/class-cancel-reservation.php:63
+msgid ""
+"Could not cancel AfterPay reservation, AfterPay reservation is already "
+"captured. Order needs to be refunded for changes to be reflected in "
+"AfterPays system."
+msgstr ""
+"Kunde inte avbryta AfterPay reservationen, AfterPay reservationen redan "
+"aktiverad. Ordern behöver återbetalas för att ändringar ska reflekteras i "
+"AfterPays system."
+
+#: includes/class-cancel-reservation.php:82
 msgid "AfterPay reservation was successfully cancelled."
 msgstr "AfterPay reservationen avbröts framgångsrikt."
 
-#: includes/class-cancel-reservation.php:76
+#: includes/class-cancel-reservation.php:84
 msgid "AfterPay reservation could not be cancelled."
 msgstr "AfterPay reservationen kunde inte avbrytas."
 
 #: includes/class-capture.php:53
 msgid ""
-"Could not capture AfterPar reservation, AfterPay reservation is already "
+"Could not capture AfterPay reservation, AfterPay reservation is already "
 "captured."
 msgstr ""
 "Kunde inte aktivera AfterPay reservationen, AfterPay reservationen redan "
