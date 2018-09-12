@@ -2,11 +2,11 @@
 Contributors: krokedil, arvato, NiklasHogefjord, slobodanmanic
 Tags: ecommerce, e-commerce, woocommerce, afterpay, arvato
 Requires at least: 4.2
-Tested up to: 4.9.5
+Tested up to: 4.9.8
 Requires PHP: 5.6
 Stable tag: trunk
 WC requires at least: 3.0.0
-WC tested up to: 3.4.2
+WC tested up to: 3.4.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,17 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+
+= 0.6.3 		- 2018.09.12 =
+* Tweak			- Improved messaging when entered personal number is in wrong format.
+* Tweak			- Display part payment example for all countries (previously only displayed for Norway).
+* Tweak			- Updated default Norwegian account payyment method description.
+* Tweak			- Translation updates.
+* Tweak			- Change AfterPay terms page link for SE.
+* Tweak			- Change order of when AfterPay terms link is displayed next to payment method.
+* Fix			- CSS change - make sure get address response is displayed after a linebreak.
+* Fix			- Make sure TotalNetAmount is sent with 2 decimals.
+* Fix			- Add order note that order hasn't been cancelled in AfterPays system when trying to cancel order after it already being captured.
 
 = 0.6.2 		- 2018.06.12 =
 * Tweak			- Add error message as order note + revert status to Processing if AfterPay capture fails.

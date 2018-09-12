@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AfterPay for WooCommerce\n"
-"POT-Creation-Date: 2018-06-11 20:30+0000\n"
-"PO-Revision-Date: 2018-06-11 20:31+0000\n"
+"POT-Creation-Date: 2018-09-12 05:40+0000\n"
+"PO-Revision-Date: 2018-09-12 05:42+0000\n"
 "Last-Translator: Krokedil Produktionsbyrå <info@krokedil.se>\n"
 "Language-Team: Svenska\n"
 "Language: sv_SE\n"
@@ -32,17 +32,27 @@ msgid ""
 msgstr ""
 "Kunde inte avbryta reservationen, AfterPay reservationen är redan avbruten."
 
-#: includes/class-cancel-reservation.php:74
+#: includes/class-cancel-reservation.php:63
+msgid ""
+"Could not cancel AfterPay reservation, AfterPay reservation is already "
+"captured. Order needs to be refunded for changes to be reflected in "
+"AfterPays system."
+msgstr ""
+"Kunde inte avbryta AfterPay reservationen, AfterPay reservationen redan "
+"aktiverad. Ordern behöver återbetalas för att ändringar ska reflekteras i "
+"AfterPays system."
+
+#: includes/class-cancel-reservation.php:82
 msgid "AfterPay reservation was successfully cancelled."
 msgstr "AfterPay reservationen avbröts framgångsrikt."
 
-#: includes/class-cancel-reservation.php:76
+#: includes/class-cancel-reservation.php:84
 msgid "AfterPay reservation could not be cancelled."
 msgstr "AfterPay reservationen kunde inte avbrytas."
 
 #: includes/class-capture.php:53
 msgid ""
-"Could not capture AfterPar reservation, AfterPay reservation is already "
+"Could not capture AfterPay reservation, AfterPay reservation is already "
 "captured."
 msgstr ""
 "Kunde inte aktivera AfterPay reservationen, AfterPay reservationen redan "
@@ -75,17 +85,17 @@ msgid "Personal/organization number is a required field."
 msgstr "Person-/organisationsnummer är ett obligatoriskt fält."
 
 #: includes/class-pre-check-customer.php:80
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:415
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:418
 msgid "Personal/organization number"
 msgstr "Person-/organisationsnummer"
 
 #: includes/class-pre-check-customer.php:85
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:417
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:420
 msgid "Personal number"
 msgstr "Personnummer"
 
 #: includes/class-pre-check-customer.php:90
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:419
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:422
 msgid "Organization number"
 msgstr "Organisationsnummer"
 
@@ -109,8 +119,8 @@ msgid "Get address"
 msgstr "Hämta adress"
 
 #: includes/class-pre-check-customer.php:188
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:429
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:557
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:432
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:560
 msgid "YYMMDDNNNN"
 msgstr "ÅÅMMDDNNNN"
 
@@ -128,7 +138,7 @@ msgstr ""
 
 #: includes/class-pre-check-customer.php:317
 #: includes/class-pre-check-customer.php:469
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:381
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:384
 #, php-format
 msgid "%s"
 msgstr ""
@@ -148,6 +158,8 @@ msgid ""
 "No address was found (%s). Please check your %s or choose another payment "
 "method."
 msgstr ""
+"Ingen adress hittades (%s). Vänligen kontrollers ditt %s alternativt välj "
+"ett annat betalsätt."
 
 #: includes/gateways/class-wc-gateway-afterpay-part-payment.php:33
 msgid "AfterPay Part Payment"
@@ -158,19 +170,19 @@ msgstr "AfterPay delbetalning"
 msgid "."
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-part-payment.php:162
+#: includes/gateways/class-wc-gateway-afterpay-part-payment.php:163
 msgid "Please select a payment plan:"
 msgstr "Välj en betalningsplan:"
 
-#: includes/gateways/class-wc-gateway-afterpay-part-payment.php:171
+#: includes/gateways/class-wc-gateway-afterpay-part-payment.php:172
 msgid "months"
 msgstr "månader"
 
-#: includes/gateways/class-wc-gateway-afterpay-part-payment.php:173
+#: includes/gateways/class-wc-gateway-afterpay-part-payment.php:174
 msgid "mo"
 msgstr "mån"
 
-#: includes/gateways/class-wc-gateway-afterpay-part-payment.php:188
+#: includes/gateways/class-wc-gateway-afterpay-part-payment.php:189
 #, php-format
 msgid ""
 "Start fee: %1$s. Monthly fee: %2$s. Rate: %3$s%5$s. Annual effective rate: "
@@ -299,7 +311,7 @@ msgid "Log AfterPay events in <code>%s</code>"
 msgstr ""
 
 #: includes/gateways/class-wc-gateway-afterpay-factory.php:346
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:794
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:783
 #, php-format
 msgid "AfterPay reservation created, reservation ID: %s."
 msgstr "AfterPay reservation skapad, reservations-ID: %s."
@@ -309,7 +321,15 @@ msgstr "AfterPay reservation skapad, reservations-ID: %s."
 msgid "The payment was %s."
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:560
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:381
+msgid ""
+"Something was wrong with the entered <strong>Personal number</strong>. "
+"Correct format should be YYMMDDNNNN. Please try again."
+msgstr ""
+"Något var fel med det angivna <strong>personnumret</strong>. Korrekt format "
+"är ÅÅMMDDNNNN. Var god försök igen."
+
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:563
 #, php-format
 msgid ""
 "<strong>Personal/organization number</strong> needs to be numeric and in the "
@@ -317,6 +337,11 @@ msgid ""
 msgstr ""
 "<strong>Person/organisationsnummer</strong> behöver vara numeriskt och "
 "angivet i följande format: %s."
+
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:595
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:599
+msgid "Read AfterPay Terms & Conditions"
+msgstr "Läs AfterPay's villkor"
 
 #: includes/gateways/class-wc-gateway-afterpay-invoice.php:33
 msgid "AfterPay Invoice"

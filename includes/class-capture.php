@@ -50,7 +50,7 @@ class WC_AfterPay_Capture {
 		// If this reservation was already captured, do nothing.
 		if ( get_post_meta( $order_id, '_afterpay_reservation_captured', true ) ) {
 			$order->add_order_note(
-				__( 'Could not capture AfterPar reservation, AfterPay reservation is already captured.', 'afterpay-nordics-for-woocommerce' )
+				__( 'Could not capture AfterPay reservation, AfterPay reservation is already captured.', 'afterpay-nordics-for-woocommerce' )
 			);
 			return;
 		}

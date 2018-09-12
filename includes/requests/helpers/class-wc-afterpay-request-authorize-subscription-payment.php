@@ -66,6 +66,7 @@ class WC_AfterPay_Request_Authorize_Subscription_Payment extends WC_AfterPay_Req
 		foreach ( $order_lines as $key => $value ) {
 			$net_total_amount = $net_total_amount + ( round( $value['netUnitPrice'] * $value['quantity'], 2 ) );
 		}
+		$net_total_amount = round( $net_total_amount, 2 );
 
 		$customer_category      = get_post_meta( $order_id, '_afterpay_customer_category', true );
 		$formatted_request_body = array(

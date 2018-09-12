@@ -40,3 +40,8 @@ input#afterpay-pre-check-customer-number,
 button.afterpay-customer-lookup-button.button {
   margin-bottom: 0.2em;
 }
+#afterpay-pre-check-customer-response {
+  content: "";
+  display: table;
+  clear: both;
+}

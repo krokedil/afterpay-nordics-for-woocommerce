@@ -56,6 +56,14 @@ class WC_AfterPay_Cancel_Reservation {
 			);
 			return;
 		}
+
+		// If this reservation was already captured, do nothing.
+		if ( get_post_meta( $order_id, '_afterpay_reservation_captured', true ) ) {
+			$order->add_order_note(
+				__( 'Could not cancel AfterPay reservation, AfterPay reservation is already captured. Order needs to be refunded for changes to be reflected in AfterPays system.', 'afterpay-nordics-for-woocommerce' )
+			);
+			return;
+		}
 		
 		$payment_method 			= krokedil_get_order_property( $order_id, 'payment_method' );
 		$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );

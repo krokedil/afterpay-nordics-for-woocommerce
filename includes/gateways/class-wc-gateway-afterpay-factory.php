@@ -377,6 +377,9 @@ function init_wc_gateway_afterpay_factory_class() {
 				} else {
 					$response_message = $formatted_response->message;
 				}
+				if('Value out of range.' == $response_message ) {
+					$response_message = __( 'Something was wrong with the entered <strong>Personal number</strong>. Correct format should be YYMMDDNNNN. Please try again.', 'afterpay-nordics-for-woocommerce' );
+				}
 
 				wc_add_notice( sprintf( __( '%s', 'afterpay-nordics-for-woocommerce' ), $response_message ), 'error' );
 
@@ -588,28 +591,14 @@ function init_wc_gateway_afterpay_factory_class() {
 					$afterpay_info  .= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
 					break;
 				case 'SEK':
-					$terms_url      = 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
-					$terms_content  = wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
-					$terms_readmore = 'Läs mer om AfterPay <a href="' . $terms_url . '" target="_blank">här</a>.';
-					$short_readmore = 'Läs mer här';
-					$afterpay_info  = '<div id="afterpay-terms-content" style="display:none;">';
-					$afterpay_info  .= $terms_content;
-					$afterpay_info  .= '</div>';
-					$afterpay_info  .= '<a href="#TB_inline?width=600&height=550&inlineId=afterpay-terms-content" class="thickbox">' . $short_readmore . '</a>';
+					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
+					$afterpay_info .= '<p class="afterpay-terms-link"><a href="' . $terms_url . '" target="_blank">' . __( 'Read AfterPay Terms & Conditions', 'afterpay-nordics-for-woocommerce' ) . '</a>.</p>';
 					break;
 				default:
-					$terms_url      = 'https://www.arvato.com/content/dam/arvato/documents/norway-ecomm-terms-and-conditions/Vilk%C3%A5r%20for%20AfterPay%20Faktura.pdf';
-					$terms_content  = wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-terms-' . $this->afterpay_country . '.html' ) );
-					$terms_readmore = 'Läs mer om AfterPay <a href="' . $terms_url . '" target="_blank">här</a>.';
-					$short_readmore = 'Läs mer här';
-					$afterpay_info  = '<div id="afterpay-terms-content" style="display:none;">';
-					$afterpay_info  .= $terms_content;
-					$afterpay_info  .= '</div>';
-					$afterpay_info  .= '<a href="#TB_inline?width=600&height=550&inlineId=afterpay-terms-content" class="thickbox">' . $short_readmore . '</a>';
+				$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
+				$afterpay_info .= ' <a href="' . $terms_url . '" target="_blank">' . __( 'Read AfterPay Terms & Conditions', 'afterpay-nordics-for-woocommerce' ) . '</a>.';
 					break;
 			}
-
-			add_thickbox();
 
 			return $afterpay_info;
 		}
@@ -644,7 +633,7 @@ function init_wc_gateway_afterpay_factory_class() {
 					$description = 'Betal varene om 14 dager.';
 					break;
 				case 'afterpay_account':
-					$description = '<h4>Detaljer:</h4>Månedspris: <strong>Minimum 100 NOK eller 1/24 av totalbeløp</strong><br>Etableringsgebyr: <strong>0 Kr</strong><br>Rente: <strong>19.95%</strong></p><p><small>Ved et kjøp på 5000 NOK der netbetalingen foregår over 1 år, der betalingen har et fakturagebyr på 39 NOK med en rente på 19.95% vil du få en årlig sammenlignbar rente på 45,18%. Den totale kredittkjøpsprisen vil være 6084 NOK.</small></p>';
+					$description = '<h4>Detaljer:</h4>Månedspris: <strong>Minimum kr 100 eller ca 12% av totalbeløpet</strong><br>Etableringsgebyr: <strong>0 Kr</strong><br>Rente: <strong>19.95%</strong></p><p><small>Ved et kjøp på 5000 NOK der netbetalingen foregår over 1 år, der betalingen har et fakturagebyr på 39 NOK med en rente på 19.95% vil du få en årlig sammenlignbar rente på 45,18%. Den totale kredittkjøpsprisen vil være 6084 NOK.</small></p>';
 					break;
 				case 'afterpay_part_payment':
 					$description = 'Del opp betalingen i faste avdrag.';
