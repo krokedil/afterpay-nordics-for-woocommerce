@@ -46,7 +46,7 @@ class WC_AfterPay_Request_Capture_Payment extends WC_AfterPay_Request {
 		$customer_category = get_post_meta( $order_id, '_afterpay_customer_category', true );
 		if( 'Company' == $customer_category ) {
 			$request_body['references'] = array(
-				'yourReference' => krokedil_get_order_property( $order_id, 'billing_first_name' ) . ' ' . krokedil_get_order_property( $order_id, 'billing_last_name' ),
+				'yourReference' => substr( krokedil_get_order_property( $order_id, 'billing_first_name' ) . ' ' . krokedil_get_order_property( $order_id, 'billing_last_name' ), 0, 20),
 			);
 		}
 		return wp_json_encode( $request_body );
