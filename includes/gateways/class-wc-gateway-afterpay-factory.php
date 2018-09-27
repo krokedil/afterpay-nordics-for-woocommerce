@@ -578,14 +578,10 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function get_afterpay_info() {
 
+			$afterpay_info = '';
+
 			switch ( get_woocommerce_currency() ) {
-
 				case 'NOK':
-					$afterpay_info = '';
-
-					//if( 'afterpay_account' == $this->id ) {
-					//$afterpay_info		= wp_remote_retrieve_body( wp_remote_get( plugins_url() . '/afterpay-nordics-for-woocommerce/templates/afterpay-account-content-' . $this->afterpay_country . '.html' ) );
-					//}
 					$afterpay_info  = '<p class="afterpay-credit-check-info"><small>Ved bruk av denne tjenesten gjøres en kredittsjekk. Gjenpartsbrev sendes fortrinnsvis elektronisk. Varene sendes kun till folkeregistret adresse.</small></p>';
 					$short_readmore = 'Les mer her';
 					$afterpay_info  .= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
