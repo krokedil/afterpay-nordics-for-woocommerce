@@ -69,8 +69,13 @@ class WC_AfterPay_Capture {
 				
 			$order->add_order_note( sprintf( __( 'Payment captured with AfterPay with capture number %s', 'afterpay-nordics-for-woocommerce' ), $response->captureNumber ) );
 		} else {
-			$order->add_order_note( sprintf( __( 'Payment failed to be captured by AfterPay. Error message: %s', 'afterpay-nordics-for-woocommerce' ), $response[0]->message ) );
-			$order->update_status( 'processing' );
+			if( is_array( $response ) ) {
+				$response_message = $response[0]->message;
+			} else {
+				$response_message = json_encode( $response );
+			}
+			$order->add_order_note( sprintf( __( 'Payment failed to be captured by AfterPay. Error message: %s', 'afterpay-nordics-for-woocommerce' ), $response_message ) );
+			$order->update_status( apply_filters( 'afterpay_failed_capture_status', 'processing', $order_id ) );
 		}
 	}
 	
