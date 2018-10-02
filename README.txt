@@ -41,6 +41,11 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 == Changelog ==
 
+= 0.6.5 		- 2018.10.02 =
+* Tweak			- Added filter afterpay_failed_capture_status.
+* Tweak			- Send free shipping  info to AfterPay as well (previously only shipping with a price where sent).
+* Fix			- Tax rate fix if multiple shipping methods exist in order.
+
 = 0.6.4 		- 2018.09.27 =
 * Fix			- Limit yourReference to 20 characters (sent to AfterPy for B2B purchases in order capture request).
 * Fix			- PHP notice fix.
