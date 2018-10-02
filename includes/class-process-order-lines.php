@@ -64,9 +64,10 @@ class WC_AfterPay_Process_Order_Lines {
 		// Process shipping
 		if ( $order->get_shipping_method() ) {
 			$shipping_methods = $order->get_shipping_methods();
-			$shipping_method_tax = 0;
 			foreach ( $shipping_methods as $shipping_method_key => $shipping_method_value ) {
 				
+				$shipping_method_tax = 0;
+
 				// WC 2.6 vs 3.x check
 				if( krokedil_wc_gte_3_0() ) {
 					$shipping_method_taxes = $shipping_method_value['taxes']['total'];
