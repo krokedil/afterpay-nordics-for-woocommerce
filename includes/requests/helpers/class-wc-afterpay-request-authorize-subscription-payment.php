@@ -73,8 +73,8 @@ class WC_AfterPay_Request_Authorize_Subscription_Payment extends WC_AfterPay_Req
 			'payment'  => array( 'type' => $payment_method_name ),
 			'customer' => array(
 				'customerCategory'     => $customer_category,
-				'firstName'            => krokedil_get_order_property( $order_id, 'billing_first_name' ),
-				'lastName'             => krokedil_get_order_property( $order_id, 'billing_last_name' ),
+				'firstName'            => substr( krokedil_get_order_property( $order_id, 'billing_first_name' ), 0, 50),
+				'lastName'             => substr( krokedil_get_order_property( $order_id, 'billing_last_name' ), 0, 50),
 				'email'                => krokedil_get_order_property( $order_id, 'billing_email' ),
 				'mobilePhone'          => krokedil_get_order_property( $order_id, 'billing_phone' ),
 				'address'              => array(
