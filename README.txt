@@ -6,7 +6,7 @@ Tested up to: 4.9.8
 Requires PHP: 5.6
 Stable tag: trunk
 WC requires at least: 3.0.0
-WC tested up to: 3.4.5
+WC tested up to: 3.4.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,12 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+
+= 0.6.6 		- 2018.10.19 =
+* Tweak			- Limit first and last name to max 50 characters when sending them to AfterPay.
+* Tweak			- Changed the limit for yourReference to max 19 characters when sending it to AfterPay.
+* Tweak			- Add support for multiple subscriptions.
+* Tweak			- Keep address fields disabled in checkout for SE after get address request (even if checkout page is reloaded).
 
 = 0.6.5 		- 2018.10.02 =
 * Tweak			- Added filter afterpay_failed_capture_status.
