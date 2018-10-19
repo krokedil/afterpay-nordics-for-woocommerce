@@ -208,9 +208,15 @@ class WC_AfterPay_Pre_Check_Customer {
 		
 
 		if( is_checkout() && ( 'yes' == $this->enabled_invoice || 'yes' == $this->enabled_part_payment || 'yes' == $this->enabled_account ) ) {
+			if( WC()->session->get( 'afterpay_personal_no' ) ) {
+				$se_address_fetched = 'yes';
+			} else {
+				$se_address_fetched = 'no';
+			}
 			wp_register_script( 'afterpay_pre_check_customer', plugins_url( 'assets/js/pre-check-customer.js', __DIR__ ), array( 'jquery' ), AFTERPAY_VERSION, true );
 			wp_localize_script( 'afterpay_pre_check_customer', 'WC_AfterPay', array(
 				'ajaxurl'                           => admin_url( 'admin-ajax.php' ),
+				'se_address_fetched'                => $se_address_fetched,
 				'afterpay_pre_check_customer_nonce' => wp_create_nonce( 'afterpay_pre_check_customer_nonce' ),
 			) );
 			wp_enqueue_script( 'afterpay_pre_check_customer' );
