@@ -101,7 +101,8 @@ function init_wc_gateway_afterpay_invoice_class() {
             	'subscription_amount_changes',
 				'subscription_date_changes',
 				'subscription_payment_method_change_admin',
-            	'subscription_payment_method_change'
+				'subscription_payment_method_change',
+				'multiple_subscriptions'
 			);
 
 			// Actions
