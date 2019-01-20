@@ -27,8 +27,11 @@ jQuery(function ($) {
 
 	function maybe_show_pre_checkout_form(do_focus) {
 		//console.log(do_focus);
+		console.log('maybe_show_pre_checkout_form');
 		var selected_payment_method = $('input[name="payment_method"]:checked').val();
         if (selected_payment_method.indexOf('afterpay') >= 0) {
+	        
+	        jQuery('#afterpay-pre-check-customer').fadeIn();
 	        check_separate_shipping_address(do_focus);
 	
 			// Only display the Get Address button if Sweden is the selected country
@@ -46,6 +49,15 @@ jQuery(function ($) {
 				jQuery( '.personal-number-norway' ).show();
 				//jQuery('.afterpay-get-address-button').fadeOut();
 			}
+			
+			// Hide/show customer lookup button
+			if ( $( '#afterpay-customer-category-company' ).is(":checked") ) {
+				jQuery( '.afterpay-customer-lookup-button' ).hide();
+			} else {
+				jQuery( '.afterpay-customer-lookup-button' ).show();
+			}
+		} else {
+			jQuery('#afterpay-pre-check-customer').fadeOut();
 		}
 	}
 
@@ -176,6 +188,15 @@ jQuery(function ($) {
     $(document).on('click', '#afterpay-pre-check-customer', function () {
 		check_separate_shipping_address('no');
     });
+    
+    // Hide/show customer lookup button when customer category radio button is changed
+    $(document).on('change', 'input[name="afterpay_customer_category"]', function (event) {
+		if ( $( '#afterpay-customer-category-company' ).is(":checked") ) {
+			jQuery( '.afterpay-customer-lookup-button' ).hide();
+		} else {
+			jQuery( '.afterpay-customer-lookup-button' ).show();
+		}
+	});
 	
 	// Display of info about selected part payment method
 	//$(document).on('change', 'input[type=radio][name=afterpay_installment_plan]', function () {

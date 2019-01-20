@@ -65,11 +65,11 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 		if ( 'Installment' === $payment_method_name	) {
 			$payment_method_name = 'Account';
 		}
-		
+		$customer_category = get_post_meta( $order_id, '_afterpay_customer_category', true );
 		$formatted_request_body = array(
 			'payment'       	=> array( 'type' => $payment_method_name ),
 			'customer'       	=> array(
-				'customerCategory'	=> 'Person',
+				'customerCategory'	=> $customer_category,
 				'firstName' 		=> $order->get_billing_first_name(),
 				'lastName' 			=> $order->get_billing_last_name(),
 				'email' 			=> $order->get_billing_email(),

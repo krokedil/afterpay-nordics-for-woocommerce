@@ -54,11 +54,11 @@ class WC_AfterPay_Refund {
 		if ( $response->totalCapturedAmount ) {
 			// Add time stamp, used to prevent duplicate cancellations for the same order.
 			update_post_meta( $this->order_id, '_afterpay_invoice_refunded', current_time( 'mysql' ) );
-			$order->add_order_note( __( 'AfterPay refund was successfully processed.', 'woocommerce-gateway-afterpay' ) );
+			$order->add_order_note( __( 'AfterPay refund was successfully processed.', 'afterpay-nordics-for-woocommerce' ) );
 			return $response;
 		} else {
-			$order->add_order_note( __( 'AfterPay refund could not be processed.', 'woocommerce-gateway-afterpay' ) );
-			return new WP_Error( 'afterpay-refund', __( 'Refund failed.', 'woocommerce-gateway-afterpay' ) );
+			$order->add_order_note( __( 'AfterPay refund could not be processed.', 'afterpay-nordics-for-woocommerce' ) );
+			return new WP_Error( 'afterpay-refund', __( 'Refund failed.', 'afterpay-nordics-for-woocommerce' ) );
 		}
 			
 	}

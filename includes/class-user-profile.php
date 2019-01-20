@@ -34,7 +34,7 @@ class WC_AfterPay_User_Profile {
 
 		<table class="form-table">
 			<tr>
-				<th><label for="afterpay_profile"><?php _e( 'AfterPay Personal ID', 'woocommerce-gateway-afterpay' ); ?></label></th>
+				<th><label for="afterpay_profile"><?php _e( 'AfterPay Personal ID', 'afterpay-nordics-for-woocommerce' ); ?></label></th>
 				<td><input type="text" name="afterpay_profile" value="<?php echo $personal_number[0]; ?>" class="regular-text" /></td>
 			</tr>
 		</table>
