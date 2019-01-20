@@ -61,6 +61,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 		{
 			$net_total_amount = $net_total_amount + ( floatval( $value['netUnitPrice'] * $value['quantity'] ) );
 		}
+		
 		if ( 'Installment' === $payment_method_name	) {
 			$payment_method_name = 'Account';
 		}
