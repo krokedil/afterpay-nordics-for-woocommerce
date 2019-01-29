@@ -58,9 +58,9 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 	private function get_request_body( $order_id, $amount, $reason ) {
 		$order = wc_get_order( $order_id );
 
-		// Only refund if the order contains one tax rate. 
+		// Only refund if the order contains one tax rate.
 		// @todo - improve this.
-		if ( 1 == count( $order->get_taxes() ) ) {
+		if ( 1 >= count( $order->get_taxes() ) ) {
 			$tax_rate                 = (int) ( $order->get_total_tax() / ( $order->get_total() - $order->get_total_tax() ) * 100 );
 			$tax_rate_for_calculation = 1 . '.' . $tax_rate;
 
@@ -71,10 +71,10 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 					'NetUnitPrice'   => round( $amount / $tax_rate_for_calculation, 2 ),
 					'vatPercent'     => $tax_rate,
 					'quantity'       => 1,
-					'productId'      => 'test'
+					'productId'      => 'test',
 				),
 				'captureNumber' => $order->get_transaction_id(),
-				'refundType'    => 'Refund'
+				'refundType'    => 'Refund',
 			);
 
 			return wp_json_encode( $request_body );
