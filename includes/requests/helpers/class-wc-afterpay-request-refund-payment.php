@@ -56,8 +56,8 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 	}
 
 	private function get_request_body( $order_id, $amount, $reason ) {
-		$order = wc_get_order( $order_id );
-
+		$order                   = wc_get_order( $order_id );
+		'' === $reason ? $reason = __( 'No reason given', 'afterpay-nordics-for-woocommerce' ) : $reason;
 		// Only refund if the order contains one tax rate.
 		// @todo - improve this.
 		if ( 1 >= count( $order->get_taxes() ) ) {

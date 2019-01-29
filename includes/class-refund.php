@@ -46,7 +46,8 @@ class WC_AfterPay_Refund {
 		$country                 = strtolower( krokedil_get_order_property( $order_id, 'billing_country' ) );
 		$this->x_auth_key        = $payment_method_settings[ 'x_auth_key_' . $country ];
 
-		$request  = new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );
+		$request = new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );
+
 		$response = $request->response( $order_id, $amount, $reason );
 		$response = json_decode( $response );
 
