@@ -26,7 +26,7 @@ function init_wc_gateway_afterpay_factory_class() {
 
 		/** @var WC_Logger Logger instance */
 		public static $log = false;
-		public $testmode = '';
+		public $testmode   = '';
 
 		/**
 		 * Logging method.
@@ -60,7 +60,7 @@ function init_wc_gateway_afterpay_factory_class() {
 
 			// Is the payment method enabled?
 			$enabled = $payment_method_settings['enabled'];
-			if ( "yes" !== $enabled ) {
+			if ( 'yes' !== $enabled ) {
 				return false;
 			}
 
@@ -71,15 +71,15 @@ function init_wc_gateway_afterpay_factory_class() {
 
 			if ( WC()->customer ) {
 				// Only activate the payment gateway if the customers country is the same as the shop country ($this->afterpay_country)
-                if ( is_callable( array( WC()->customer, 'get_billing_country' ) ) ) {
-	                if ( WC()->customer->get_billing_country() == true && WC()->customer->get_billing_country() != $this->afterpay_country ) {
-		                return false;
-	                }
-                } else {
-	                if ( WC()->customer->get_country() == true && WC()->customer->get_country() != $this->afterpay_country ) {
-		                return false;
-	                }
-                }
+				if ( is_callable( array( WC()->customer, 'get_billing_country' ) ) ) {
+					if ( WC()->customer->get_billing_country() == true && WC()->customer->get_billing_country() != $this->afterpay_country ) {
+						return false;
+					}
+				} else {
+					if ( WC()->customer->get_country() == true && WC()->customer->get_country() != $this->afterpay_country ) {
+						return false;
+					}
+				}
 
 				// Don't display part payment and Account for Norwegian customers
 				/*
@@ -101,7 +101,7 @@ function init_wc_gateway_afterpay_factory_class() {
 					'title'   => __( 'Enable/Disable', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable ' . $this->method_title, 'afterpay-nordics-for-woocommerce' ),
-					'default' => 'yes'
+					'default' => 'yes',
 				),
 				'title'          => array(
 					'title'       => __( 'Title', 'afterpay-nordics-for-woocommerce' ),
@@ -140,7 +140,6 @@ function init_wc_gateway_afterpay_factory_class() {
 					'description' => __( 'This controls the description which Norwegian customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => $this->get_default_description_norway(),
 				),
-
 
 			);
 
@@ -260,7 +259,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				$personal_number = str_replace( '-', '', $personal_number );
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
 			}
-			
+
 			// Is this a subscription payment
 			/*
 			if ( class_exists( 'WC_Subscriptions_Order' ) && WC_Subscriptions_Order::order_contains_subscription( $order_id ) ) {
@@ -331,7 +330,7 @@ function init_wc_gateway_afterpay_factory_class() {
 					update_post_meta( $order_id, '_afterpay_reservation_id', $response->reservationId );
 
 					// Save AfterPay customer Number
-					if( $response->customer->customerNumber ) {
+					if ( $response->customer->customerNumber ) {
 						update_post_meta( $order_id, 'afterpay_customer_number', $response->customer->customerNumber );
 						if ( email_exists( krokedil_get_order_property( $order_id, 'billing_email' ) ) ) {
 							$user    = get_user_by( 'email', krokedil_get_order_property( $order_id, 'billing_email' ) );
@@ -351,12 +350,12 @@ function init_wc_gateway_afterpay_factory_class() {
 						)
 					);
 				} else {
-					if( $response->riskCheckMessages[0]->customerFacingMessage ) {
+					if ( $response->riskCheckMessages[0]->customerFacingMessage ) {
 						$error_message = $response->riskCheckMessages[0]->customerFacingMessage;
 					} else {
 						$error_message = sprintf( __( 'The payment was %s.', 'afterpay-nordics-for-woocommerce' ), $response->outcome );
 					}
-					wc_add_notice( $error_message , 'error' );
+					wc_add_notice( $error_message, 'error' );
 
 					return false;
 				}
@@ -377,7 +376,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				} else {
 					$response_message = $formatted_response->message;
 				}
-				if('Value out of range.' == $response_message ) {
+				if ( 'Value out of range.' == $response_message ) {
 					$response_message = __( 'Something was wrong with the entered <strong>Personal number</strong>. Correct format should be YYMMDDNNNN. Please try again.', 'afterpay-nordics-for-woocommerce' );
 				}
 
@@ -416,21 +415,21 @@ function init_wc_gateway_afterpay_factory_class() {
 			$customer_type     = $afterpay_settings['customer_type'];
 			if ( $customer_type === 'both' ) {
 				$label = __( 'Personal/organization number', 'afterpay-nordics-for-woocommerce' );
-			} else if ( $customer_type === 'private' ) {
+			} elseif ( $customer_type === 'private' ) {
 				$label = __( 'Personal number', 'afterpay-nordics-for-woocommerce' );
-			} else if ( $customer_type === 'company' ) {
+			} elseif ( $customer_type === 'company' ) {
 				$label = __( 'Organization number', 'afterpay-nordics-for-woocommerce' );
 			}
 			?>
-            <p class="personal-number-norway">
-                <label for="<?php echo $this->id; ?>-check-customer-number-norway"><?php echo $label; ?> <span
-                            class="required">*</span></label>
-                <input type="text" name="<?php echo $this->id; ?>-check-customer-number-norway"
-                       id="<?php echo $this->id; ?>-check-customer-number-norway"
-                       class="afterpay-pre-check-customer-number norway"
-                       value=""
-                       placeholder="<?php _e( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' ); ?>"/>
-            </p>
+			<p class="personal-number-norway">
+				<label for="<?php echo $this->id; ?>-check-customer-number-norway"><?php echo $label; ?> <span
+							class="required">*</span></label>
+				<input type="text" name="<?php echo $this->id; ?>-check-customer-number-norway"
+					   id="<?php echo $this->id; ?>-check-customer-number-norway"
+					   class="afterpay-pre-check-customer-number norway"
+					   value=""
+					   placeholder="<?php _e( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' ); ?>"/>
+			</p>
 			<?php
 		}
 
@@ -526,16 +525,22 @@ function init_wc_gateway_afterpay_factory_class() {
 		/**
 		 * Process a refund if supported.
 		 *
-		 * @param  int $order_id
-		 * @param  float $amount
+		 * @param  int    $order_id
+		 * @param  float  $amount
 		 * @param  string $reason
 		 *
 		 * @return bool True or false based on success, or a WP_Error object
 		 */
 		public function process_refund( $order_id, $amount = null, $reason = '' ) {
+
 			$order = wc_get_order( $order_id );
-			
-			include_once( plugin_dir_path( __DIR__ ) . 'class-refund.php' );
+
+			$order_status = $order->get_status();
+			if ( 'completed' !== $order_status ) {
+				return new WP_Error( 'error', __( 'Status error. Status need to be completed. Current status is: ' . $order_status, 'woocommerce' ) );
+			}
+
+			include_once plugin_dir_path( __DIR__ ) . 'class-refund.php';
 
 			$wc_afterpay_refund = new WC_AfterPay_Refund( $order_id, $this->id );
 
@@ -552,7 +557,6 @@ function init_wc_gateway_afterpay_factory_class() {
 
 		/**
 		 * Check entered personal/organisation number
-		 *
 		 **/
 		public function process_checkout_fields() {
 			if ( 'afterpay_invoice' === $_POST['payment_method'] || 'afterpay_account' === $_POST['payment_method'] || 'afterpay_part_payment' === $_POST['payment_method'] ) { // Input var okay.
@@ -572,7 +576,6 @@ function init_wc_gateway_afterpay_factory_class() {
 			}
 		}
 
-
 		/**
 		 * Helper function for displaying the AfterPay Invoice terms
 		 */
@@ -584,21 +587,20 @@ function init_wc_gateway_afterpay_factory_class() {
 				case 'NOK':
 					$afterpay_info  = '<p class="afterpay-credit-check-info"><small>Ved bruk av denne tjenesten gjøres en kredittsjekk. Gjenpartsbrev sendes fortrinnsvis elektronisk. Varene sendes kun till folkeregistret adresse.</small></p>';
 					$short_readmore = 'Les mer her';
-					$afterpay_info  .= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
+					$afterpay_info .= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
 					break;
 				case 'SEK':
 					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
 					$afterpay_info .= '<p class="afterpay-terms-link"><a href="' . $terms_url . '" target="_blank">' . __( 'Read AfterPay Terms & Conditions', 'afterpay-nordics-for-woocommerce' ) . '</a>.</p>';
 					break;
 				default:
-				$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
-				$afterpay_info .= ' <a href="' . $terms_url . '" target="_blank">' . __( 'Read AfterPay Terms & Conditions', 'afterpay-nordics-for-woocommerce' ) . '</a>.';
+					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
+					$afterpay_info .= ' <a href="' . $terms_url . '" target="_blank">' . __( 'Read AfterPay Terms & Conditions', 'afterpay-nordics-for-woocommerce' ) . '</a>.';
 					break;
 			}
 
 			return $afterpay_info;
 		}
-
 
 		/**
 		 * Helper function - get Invoice fee price
@@ -686,7 +688,7 @@ function init_wc_gateway_afterpay_factory_class() {
 		}
 
 		public function afterpay_order_completed( $order_id ) {
-			$request = new WC_AfterPay_Request_Capture_Payment;
+			$request = new WC_AfterPay_Request_Capture_Payment();
 			$request->response( $order_id );
 		}
 
@@ -699,10 +701,10 @@ function init_wc_gateway_afterpay_factory_class() {
 		function scheduled_subscription_payment( $amount_to_charge, $order ) {
 			// This function may get triggered multiple times because the class is instantiated one time per payment method (card, invoice & mobile pay). Only run it for card payments.
 			// TODO: Restructure the classes so this doesn't happen.
-			if( 'afterpay_invoice' != $this->id ) {
+			if ( 'afterpay_invoice' != $this->id ) {
 				return;
 			}
-			
+
 			$result = $this->process_subscription_payment( $order, $amount_to_charge );
 			if ( false == $result ) {
 				// Debug
@@ -727,7 +729,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			if ( 0 == $amount_to_charge ) {
 				return true;
 			}
-			$order_id = $order->get_id();
+			$order_id      = $order->get_id();
 			$subscriptions = wcs_get_subscriptions_for_renewal_order( $order->get_id() );
 			reset( $subscriptions );
 			$subscription_id = key( $subscriptions );
@@ -735,8 +737,8 @@ function init_wc_gateway_afterpay_factory_class() {
 			// Reccuring token
 			$afterpay_customer_number = get_post_meta( $order_id, 'afterpay_customer_number', true );
 			// If the recurring token isn't stored in the subscription, grab it from parent order.
-			if( empty( $afterpay_customer_number ) ) {
-				$afterpay_customer_number = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), 'afterpay_customer_number', true );
+			if ( empty( $afterpay_customer_number ) ) {
+				$afterpay_customer_number   = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), 'afterpay_customer_number', true );
 				$afterpay_customer_category = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_afterpay_customer_category', true );
 				update_post_meta( $order_id, 'afterpay_customer_number', $afterpay_customer_number );
 				update_post_meta( $order_id, '_afterpay_customer_category', $afterpay_customer_category );
@@ -744,7 +746,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				update_post_meta( $subscription_id, '_afterpay_customer_category', $afterpay_customer_category );
 				$this->log( 'AfterPay subscription token could not be retrieved from subscription. Grabbing it from parent order instead. Order ID: ' . $order->get_id() );
 			}
-			if( empty( $afterpay_customer_number ) ) {
+			if ( empty( $afterpay_customer_number ) ) {
 				$order->add_order_note( __( 'AfterPay subscription token could not be retrieved.', 'woocommerce-gateway-klarna' ) );
 				$this->log( 'AfterPay subscription token could not be retrieved. Order ID: ' . $order->get_id() );
 				return false;
@@ -753,14 +755,14 @@ function init_wc_gateway_afterpay_factory_class() {
 			// Check order currency to be able to send correct x_auth_key
 			$currency = krokedil_get_order_property( $order_id, 'order_currency' );
 			switch ( $currency ) {
-				case 'NOK' :
-					$this->x_auth_key			= $this->x_auth_key_no;
+				case 'NOK':
+					$this->x_auth_key = $this->x_auth_key_no;
 					break;
-				case 'SEK' :
-					$this->x_auth_key			= $this->x_auth_key_se;
+				case 'SEK':
+					$this->x_auth_key = $this->x_auth_key_se;
 					break;
 				default:
-					$this->x_auth_key			= '';
+					$this->x_auth_key = '';
 			}
 
 			$request  = new WC_AfterPay_Request_Authorize_Subscription_Payment( $this->x_auth_key, $this->testmode );
@@ -801,7 +803,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				$this->log( 'AfterPay subscription authorization error. Response message: ' . $response_message );
 				return false;
 			}
-			
+
 		}
 
 	}

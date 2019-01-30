@@ -30,7 +30,7 @@ class WC_AfterPay_Refund {
 	 */
 	public function __construct() {
 		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
-		$this->testmode = 'yes' == $afterpay_settings['testmode'] ? true : false;
+		$this->testmode    = 'yes' == $afterpay_settings['testmode'] ? true : false;
 	}
 
 	/**
@@ -40,16 +40,17 @@ class WC_AfterPay_Refund {
 	 * @return boolean
 	 */
 	public function refund_invoice( $order_id, $amount = null, $reason = '' ) {
-		$order 						= wc_get_order( $order_id );
-		$payment_method 			= $order->payment_method;
-		$payment_method_settings 	= get_option( 'woocommerce_' . $payment_method . '_settings' );
-		$country  					= strtolower( krokedil_get_order_property( $order_id, 'billing_country' ) );
-		$this->x_auth_key 			= $payment_method_settings['x_auth_key_' . $country];
+		$order                   = wc_get_order( $order_id );
+		$payment_method          = $order->payment_method;
+		$payment_method_settings = get_option( 'woocommerce_' . $payment_method . '_settings' );
+		$country                 = strtolower( krokedil_get_order_property( $order_id, 'billing_country' ) );
+		$this->x_auth_key        = $payment_method_settings[ 'x_auth_key_' . $country ];
 
-		$request      				= new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );
-		$response 					= $request->response( $order_id, $amount, $reason );
-		$response 					= json_decode( $response );
-		
+		$request = new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );
+
+		$response = $request->response( $order_id, $amount, $reason );
+		$response = json_decode( $response );
+
 		if ( $response->totalCapturedAmount ) {
 			// Add time stamp, used to prevent duplicate cancellations for the same order.
 			update_post_meta( $this->order_id, '_afterpay_invoice_refunded', current_time( 'mysql' ) );
@@ -59,8 +60,8 @@ class WC_AfterPay_Refund {
 			$order->add_order_note( __( 'AfterPay refund could not be processed.', 'afterpay-nordics-for-woocommerce' ) );
 			return new WP_Error( 'afterpay-refund', __( 'Refund failed.', 'afterpay-nordics-for-woocommerce' ) );
 		}
-			
+
 	}
 
 }
-$wc_afterpay_refund = new WC_AfterPay_Refund;
+$wc_afterpay_refund = new WC_AfterPay_Refund();
