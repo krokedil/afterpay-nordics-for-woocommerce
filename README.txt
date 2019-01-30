@@ -40,6 +40,10 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+= 0.6.7 		- 2019.01.30 =
+* Fix           - Fixed refunds on order with no tax rate.
+* Fix           - Description on refund no longer required.
+* Fix           - Improved error handling of refunds.
 
 = 0.6.6 		- 2018.10.19 =
 * Tweak			- Limit first and last name to max 50 characters when sending them to AfterPay.
