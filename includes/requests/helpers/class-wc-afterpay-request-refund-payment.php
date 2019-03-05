@@ -58,30 +58,209 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 	private function get_request_body( $order_id, $amount, $reason ) {
 		$order                   = wc_get_order( $order_id );
 		'' === $reason ? $reason = __( 'No reason given', 'afterpay-nordics-for-woocommerce' ) : $reason;
-		// Only refund if the order contains one tax rate.
-		// @todo - improve this.
-		if ( 1 >= count( $order->get_taxes() ) ) {
-			$tax_rate                 = (int) ( $order->get_total_tax() / ( $order->get_total() - $order->get_total_tax() ) * 100 );
-			$tax_rate_for_calculation = 1 . '.' . $tax_rate;
 
-			$request_body = array(
-				'orderItems'    => array(
-					'description'    => $reason,
-					'grossUnitPrice' => round( $amount, 2 ),
-					'NetUnitPrice'   => round( $amount / $tax_rate_for_calculation, 2 ),
-					'vatPercent'     => $tax_rate,
-					'quantity'       => 1,
-					'productId'      => 'test',
-				),
-				'captureNumber' => $order->get_transaction_id(),
-				'refundType'    => 'Refund',
-			);
+		$request_body = array(
+			'orderItems'    => self::get_items( $order_id, $amount, $reason ),
+			'captureNumber' => $order->get_transaction_id(),
+			'refundType'    => 'Refund',
+		);
 
-			return wp_json_encode( $request_body );
+		return wp_json_encode( $request_body );
+	}
+
+
+	/**
+	 * Gets items.
+	 *
+	 * @param int $order_id
+	 * @return array
+	 */
+	public static function get_items( $order_id, $amount, $reason ) {
+
+		$refund_id = self::get_refunded_order_id( $order_id );
+		if ( '' === $reason ) {
+			$reason = '';
 		} else {
-			$order->add_order_note( __( 'Order contains multiple tax rates. This is not supported in the AfterPay plugin when making a refund in AfterPays system from WooCommerce. Aborting refund.', 'afterpay-nordics-for-woocommerce' ) );
-
-			return new WP_Error( 'error', __( 'Order contains multiple tax rates. This is not supported in the AfterPay plugin. Aborting refund.', 'afterpay-nordics-for-woocommerce' ) );
+			$reason = ' (' . $reason . ')';
 		}
+
+		$order       = wc_get_order( $order_id );
+		$line_number = 0;
+		$items       = array();
+
+		if ( null !== $refund_id ) {
+			$refund_order   = wc_get_order( $refund_id );
+			$refunded_items = $refund_order->get_items();
+
+			if ( $refunded_items || $refund_order->get_shipping_total() < 0 || ! empty( $refund_order->get_fees() ) ) {
+				// Cart.
+				foreach ( $refunded_items as $item ) {
+					$formated_item = self::get_item( $item );
+					array_push( $items, $formated_item );
+				}
+				// Shipping.
+				if ( $refund_order->get_shipping_total() < 0 ) {
+					$formated_shipping = self::get_shipping( $refund_order );
+					array_push( $items, $formated_shipping );
+				}
+				// Fees.
+				foreach ( $refund_order->get_fees() as $fee ) {
+					$formated_fee = self::get_fee( $fee );
+					array_push( $items, $formated_fee );
+				}
+			} else {
+				$formated_item = array(
+					'productId'      => 'ref1',
+					'description'    => 'Refund #' . $refund_id . $reason,
+					'grossUnitPrice' => round( $amount ),
+					'vatRate'        => 0,
+					'quantity'       => 1,
+				);
+				array_push( $items, $formated_item );
+			}
+			update_post_meta( $refund_id, '_krokedil_refunded', 'true' );
+		} else {
+			// Log empty response?
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Gets single item.
+	 *
+	 * @param array $item
+	 * @return array
+	 */
+	private static function get_item( $item ) {
+		$product = $item->get_product();
+
+		if ( $item['variation_id'] ) {
+			$product_id = $item['variation_id'];
+		} else {
+			$product_id = $item['product_id'];
+		}
+		return array(
+			'productId'      => self::get_sku( $product, $product_id ),
+			'description'    => $product->get_name(),
+			'grossUnitPrice' => round( ( $item->get_total() + $item->get_total_tax() ) / $item['qty'] ),
+			'vatPercent'     => self::product_vat_rate( $item ),
+			'quantity'       => abs( $item['qty'] ),
+		);
+	}
+
+	/**
+	 * Gets shipping
+	 *
+	 * @param string $shipping_method
+	 * @param int    $line_number
+	 * @return array
+	 */
+	private static function get_shipping( $refund_order ) {
+
+		return array(
+			'productId'      => 'shipping',
+			'description'    => $refund_order->get_shipping_method(),
+			'grossUnitPrice' => abs( round( $refund_order->get_shipping_total() + $refund_order->get_shipping_tax(), 2 ) ),
+			'vatPercent'     => self::get_shipping_vat_rate( $refund_order ),
+			'quantity'       => 1,
+		);
+	}
+
+	/**
+	 * Gets order Fee.
+	 *
+	 * @param array $fee
+	 * @param int   $line_number
+	 * @return array
+	 */
+	private static function get_fee( $fee ) {
+		if ( $fee->get_total_tax() ) {
+			$fee_tax_rate = round( abs( $fee->get_total_tax() ) / abs( $fee->get_total() ) * 100 );
+			$fee_vat_code = $fee_tax_rate;
+		} else {
+			$fee_vat_code = 0;
+		}
+
+		return array(
+			'description'    => $fee->get_name(),
+			'productId'      => $fee->get_id(),
+			'grossUnitPrice' => abs( round( $fee->get_total() + $fee->get_total_tax(), 2 ) ),
+			'vatPercent'     => $fee_vat_code,
+			'quantity'       => 1,
+		);
+	}
+
+
+	/**
+	 * Gets SKU
+	 *
+	 * @param array $product
+	 * @param int   $product_id
+	 * @return string
+	 */
+	private static function get_sku( $product, $product_id ) {
+		if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
+			$part_number = $product->get_sku();
+		} else {
+			$part_number = $product->get_id();
+		}
+		return substr( $part_number, 0, 32 );
+	}
+
+	/**
+	 * @param $cart_item
+	 *
+	 * @TODO: Add tax rates for other countries once they are available.
+	 * @return string|WP_Error
+	 */
+	private static function product_vat_rate( $item ) {
+		if ( $item['line_subtotal_tax'] ) {
+			$tax_rate = round( abs( $item['line_subtotal_tax'] ) / abs( $item['line_subtotal'] ) * 100 );
+			return $tax_rate;
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * @param $refund_order
+	 *
+	 * @TODO: Add tax rates for other countries once they are available.
+	 * @return string|WP_Error
+	 */
+	private static function get_shipping_vat_rate( $refund_order ) {
+		if ( $refund_order->get_shipping_tax() ) {
+			$tax_rate = round( abs( $refund_order->get_shipping_tax() ) / abs( $refund_order->get_shipping_total() ) * 100 );
+			return $tax_rate;
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * Gets refunded order
+	 *
+	 * @param int $order_id
+	 * @return string
+	 */
+	public static function get_refunded_order_id( $order_id ) {
+		$query_args = array(
+			'fields'         => 'id=>parent',
+			'post_type'      => 'shop_order_refund',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+		);
+		$refunds    = get_posts( $query_args );
+		$refund_id  = array_search( $order_id, $refunds );
+		if ( is_array( $refund_id ) ) {
+			foreach ( $refund_id as $key => $value ) {
+				if ( ! get_post_meta( $value, '_krokedil_refunded' ) ) {
+					$refund_id = $value;
+					break;
+				}
+			}
+		}
+		return $refund_id;
 	}
 }

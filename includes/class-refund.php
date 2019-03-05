@@ -48,13 +48,14 @@ class WC_AfterPay_Refund {
 
 		$request = new WC_AfterPay_Request_Refund_Payment( $this->x_auth_key, $this->testmode );
 
-		$response = $request->response( $order_id, $amount, $reason );
-		$response = json_decode( $response );
+		$response       = $request->response( $order_id, $amount, $reason );
+		$response       = json_decode( $response );
+		$refund_numbers = implode( ',', $response->refundNumbers );
 
-		if ( $response->totalCapturedAmount ) {
+		if ( ! empty( $refund_numbers ) ) {
 			// Add time stamp, used to prevent duplicate cancellations for the same order.
 			update_post_meta( $this->order_id, '_afterpay_invoice_refunded', current_time( 'mysql' ) );
-			$order->add_order_note( __( 'AfterPay refund was successfully processed.', 'afterpay-nordics-for-woocommerce' ) );
+			$order->add_order_note( sprintf( __( 'AfterPay order sucessfully refunded with %1$s. Refund number %2$s.', 'afterpay-nordics-for-woocommerce' ), wc_price( $amount ), $refund_numbers ) );
 			return $response;
 		} else {
 			$order->add_order_note( __( 'AfterPay refund could not be processed.', 'afterpay-nordics-for-woocommerce' ) );

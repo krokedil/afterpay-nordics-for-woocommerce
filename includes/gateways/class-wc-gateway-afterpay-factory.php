@@ -413,11 +413,11 @@ function init_wc_gateway_afterpay_factory_class() {
 		public function get_afterpay_dob_field() {
 			$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 			$customer_type     = $afterpay_settings['customer_type'];
-			if ( $customer_type === 'both' ) {
+			if ( 'both' === $customer_type ) {
 				$label = __( 'Personal/organization number', 'afterpay-nordics-for-woocommerce' );
-			} elseif ( $customer_type === 'private' ) {
-				$label = __( 'Personal number', 'afterpay-nordics-for-woocommerce' );
-			} elseif ( $customer_type === 'company' ) {
+			} elseif ( 'private' === $customer_type ) {
+				$label = __( 'pPersonal number', 'afterpay-nordics-for-woocommerce' );
+			} elseif ( 'company' === $customer_type ) {
 				$label = __( 'Organization number', 'afterpay-nordics-for-woocommerce' );
 			}
 			?>

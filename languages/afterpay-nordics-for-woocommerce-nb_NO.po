@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AfterPay for WooCommerce\n"
-"POT-Creation-Date: 2018-09-09 15:56+0000\n"
-"PO-Revision-Date: 2018-09-10 11:32+0000\n"
+"POT-Creation-Date: 2019-02-07 16:31+0000\n"
+"PO-Revision-Date: 2019-02-08 10:42+0000\n"
 "Last-Translator: Krokedil Produktionsbyrå <info@krokedil.se>\n"
-"Language-Team: Norsk bokmål\n"
+"Language-Team: Norwegian (Bokmål)\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +19,8 @@ msgstr ""
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
-"Report-Msgid-Bugs-To: "
+"Report-Msgid-Bugs-To: \n"
+"X-Loco-Version: 2.2.0; wp-5.0.3"
 
 #: includes/class-user-profile.php:37
 msgid "AfterPay Personal ID"
@@ -31,17 +32,24 @@ msgid ""
 "cancelled."
 msgstr ""
 
-#: includes/class-cancel-reservation.php:74
+#: includes/class-cancel-reservation.php:63
+msgid ""
+"Could not cancel AfterPay reservation, AfterPay reservation is already "
+"captured. Order needs to be refunded for changes to be reflected in "
+"AfterPays system."
+msgstr ""
+
+#: includes/class-cancel-reservation.php:82
 msgid "AfterPay reservation was successfully cancelled."
 msgstr ""
 
-#: includes/class-cancel-reservation.php:76
+#: includes/class-cancel-reservation.php:84
 msgid "AfterPay reservation could not be cancelled."
 msgstr ""
 
 #: includes/class-capture.php:53
 msgid ""
-"Could not capture AfterPar reservation, AfterPay reservation is already "
+"Could not capture AfterPay reservation, AfterPay reservation is already "
 "captured."
 msgstr ""
 
@@ -50,20 +58,20 @@ msgstr ""
 msgid "Payment captured with AfterPay with capture number %s"
 msgstr ""
 
-#: includes/class-capture.php:72
+#: includes/class-capture.php:77
 #, php-format
 msgid "Payment failed to be captured by AfterPay. Error message: %s"
 msgstr ""
 
-#: includes/class-refund.php:56
+#: includes/class-refund.php:57
 msgid "AfterPay refund was successfully processed."
 msgstr ""
 
-#: includes/class-refund.php:59
+#: includes/class-refund.php:60
 msgid "AfterPay refund could not be processed."
 msgstr ""
 
-#: includes/class-refund.php:60
+#: includes/class-refund.php:61
 msgid "Refund failed."
 msgstr ""
 
@@ -72,27 +80,26 @@ msgid "Personal/organization number is a required field."
 msgstr "Personnummer er et obligatorisk felt"
 
 #: includes/class-pre-check-customer.php:80
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:418
 msgid "Personal/organization number"
-msgstr "Personnummer"
+msgstr "person-/organisasjonsnummer"
 
 #: includes/class-pre-check-customer.php:85
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:420
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:419
 msgid "Personal number"
 msgstr "Personnummer"
 
 #: includes/class-pre-check-customer.php:90
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:422
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:421
 msgid "Organization number"
-msgstr ""
+msgstr "Organisasjonsnummer"
 
 #: includes/class-pre-check-customer.php:113
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:178
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:177
 msgid "Person"
 msgstr "Person"
 
 #: includes/class-pre-check-customer.php:118
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:179
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:178
 msgid "Company"
 msgstr "Selskap"
 
@@ -106,8 +113,8 @@ msgid "Get address"
 msgstr "Hent adresse"
 
 #: includes/class-pre-check-customer.php:188
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:432
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:560
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:434
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:567
 msgid "YYMMDDNNNN"
 msgstr "DDMMYYNNNNN"
 
@@ -115,7 +122,7 @@ msgstr "DDMMYYNNNNN"
 msgid "This is how your data is used."
 msgstr ""
 
-#: includes/class-pre-check-customer.php:314
+#: includes/class-pre-check-customer.php:320
 msgid ""
 "No address was found. Please check your personal number or choose another "
 "payment method."
@@ -123,23 +130,23 @@ msgstr ""
 "Ingen adresse ble funnet. Vennligst sjekk din personnummer eller velge en "
 "annen betalingsmåte."
 
-#: includes/class-pre-check-customer.php:317
-#: includes/class-pre-check-customer.php:469
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:384
+#: includes/class-pre-check-customer.php:323
+#: includes/class-pre-check-customer.php:475
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:383
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: includes/class-pre-check-customer.php:329
-#: includes/class-pre-check-customer.php:481
+#: includes/class-pre-check-customer.php:335
+#: includes/class-pre-check-customer.php:487
 msgid "Fel"
 msgstr ""
 
-#: includes/class-pre-check-customer.php:393
+#: includes/class-pre-check-customer.php:399
 msgid "Address found and added to checkout form."
 msgstr ""
 
-#: includes/class-pre-check-customer.php:467
+#: includes/class-pre-check-customer.php:473
 #, php-format
 msgid ""
 "No address was found (%s). Please check your %s or choose another payment "
@@ -226,81 +233,81 @@ msgid ""
 "This controls the description which Norwegian customers sees during checkout."
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:150
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:149
 msgid "Account profile number"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:153
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:152
 msgid ""
 "ID number for sent to AfterPay for Account purchases. Defaults to 1. Should "
 "usually not be changed."
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:163
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:162
 msgid "Invoice Fee"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:165
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:164
 msgid ""
 "Create a hidden (simple) product that acts as the invoice fee. Enter the ID "
 "number in this textfield. Leave blank to disable."
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:173
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:172
 msgid "Customer type"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:175
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:174
 msgid "Select the type of customer that can make purchases through AfterPay"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:177
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:176
 msgid "Both person and company"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:192
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:191
 msgid "Enable Order Management"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:194
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:193
 msgid ""
 "Enable AfterPay order capture on WooCommerce order completion and AfterPay "
 "order cancellation on WooCommerce order cancellation"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:203
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:202
 msgid "AfterPay testmode"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:205
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:204
 msgid "Enable AfterPay testmode"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:209
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:208
 msgid "Debug Log"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:211
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:210
 msgid "Enable logging"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:214
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:213
 #, php-format
 msgid "Log AfterPay events in <code>%s</code>"
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:346
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:783
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:345
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:784
 #, php-format
 msgid "AfterPay reservation created, reservation ID: %s."
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:357
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:356
 #, php-format
 msgid "The payment was %s."
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:381
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:380
 msgid ""
 "Something was wrong with the entered <strong>Personal number</strong>. "
 "Correct format should be YYMMDDNNNN. Please try again."
@@ -308,20 +315,28 @@ msgstr ""
 "Noe er feil med <strong>Personnummeret</strong> som er oppgitt. Formatet som "
 "skal brukes er DDMMYYNNNNN. Vennligst prøv igjen."
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:563
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:417
+msgid "Personal/organization number g"
+msgstr ""
+
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:570
 #, php-format
 msgid ""
 "<strong>Personal/organization number</strong> needs to be numeric and in the "
 "following format: %s."
 msgstr ""
 
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:595
-#: includes/gateways/class-wc-gateway-afterpay-factory.php:599
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:597
+#: includes/gateways/class-wc-gateway-afterpay-factory.php:601
 msgid "Read AfterPay Terms & Conditions"
 msgstr ""
 
 #: includes/gateways/class-wc-gateway-afterpay-invoice.php:33
 msgid "AfterPay Invoice"
+msgstr ""
+
+#: includes/requests/helpers/class-wc-afterpay-request-refund-payment.php:60
+msgid "No reason given"
 msgstr ""
 
 #: includes/requests/helpers/class-wc-afterpay-request-refund-payment.php:82
