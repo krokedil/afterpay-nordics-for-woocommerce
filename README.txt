@@ -41,7 +41,7 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 == Changelog ==
 = 0.7.0 		- 2019.03.05 =
-* Feature       - Improved handfling of refunds (allow order line refunds).
+* Feature       - Improved handling of refunds (allow order line refunds).
 * Fix           - Updated/corrected Norwegian translation.
 
 = 0.6.7 		- 2019.01.30 =
