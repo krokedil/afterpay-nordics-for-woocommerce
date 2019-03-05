@@ -2,11 +2,11 @@
 Contributors: krokedil, arvato, NiklasHogefjord, slobodanmanic
 Tags: ecommerce, e-commerce, woocommerce, afterpay, arvato
 Requires at least: 4.2
-Tested up to: 4.9.8
+Tested up to: 5.1
 Requires PHP: 5.6
 Stable tag: trunk
 WC requires at least: 3.0.0
-WC tested up to: 3.4.7
+WC tested up to: 3.5.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,10 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+= 0.7.0 		- 2019.03.05 =
+* Feature       - Improved handfling of refunds (allow order line refunds).
+* Fix           - Updated/corrected Norwegian translation.
+
 = 0.6.7 		- 2019.01.30 =
 * Fix           - Fixed refunds on order with no tax rate.
 * Fix           - Description on refund no longer required.
