@@ -140,6 +140,21 @@ function init_wc_gateway_afterpay_factory_class() {
 					'description' => __( 'This controls the description which Norwegian customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => $this->get_default_description_norway(),
 				),
+				'x_auth_key_de'  => array(
+					'title'       => __( 'AfterPay X-Auth-Key Germany', 'afterpay-nordics-for-woocommerce' ),
+					'type'        => 'text',
+					'description' => __(
+						'Please enter your AfterPay X-Auth-Key for Germany; this is needed in order to take payment',
+						'afterpay-nordics-for-woocommerce'
+					),
+				),
+				'description_de' => array(
+					'title'       => __( 'Description Germany', 'afterpay-nordics-for-woocommerce' ),
+					'type'        => 'textarea',
+					'desc_tip'    => true,
+					'description' => __( 'This controls the description which Norwegian customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
+					'default'     => $this->get_default_description_norway(),
+				),
 
 			);
 
