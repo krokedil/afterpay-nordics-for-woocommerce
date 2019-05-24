@@ -630,7 +630,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				case 'EUR':
 					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/de_de/';
 					$privacy_url    = 'https://documents.myafterpay.com/privacy-statement/de_de/';
-					$afterpay_info .= '<p class="afterpay-terms-link"><input type="checkbox" name="afterpay-de-terms-and-conditions" value="yes"> ' . sprintf( __( 'Ich habe die <a href="%1$s" target="_blank">Allgemeinen Geschäftsbedingungen</a> und die <a href="%2$s" target="_blank">Datenschutzerklärung</a> von AfterPay gelesen und akzeptiere diese.', 'afterpay-nordics-for-woocommerce' ), $terms_url, $privacy_url ) . ' <span class="required">*</span>.</p>';
+					$afterpay_info .= '<p class="afterpay-terms-link"> ' . sprintf( __( '<a href="%1$s" target="_blank">Allgemeinen Geschäftsbedingungen</a> und die <a href="%2$s" target="_blank">Datenschutzerklärung</a> von AfterPay.', 'afterpay-nordics-for-woocommerce' ), $terms_url, $privacy_url ) . '</p>';
 					break;
 				default:
 					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
