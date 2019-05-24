@@ -136,7 +136,7 @@ class WC_AfterPay_Process_Order_Lines {
 				$_product = wc_get_product( $item['product_id'] );
 
 				$order_lines[] = array(
-					'grossUnitPrice' => ( $item['line_tax'] + $item['line_total'] ) / $item['quantity'],
+					'grossUnitPrice' => round( ( $item['line_tax'] + $item['line_total'] ) / $item['quantity'], 2 ),
 					'description'    => get_the_title( $item['product_id'] ),
 					'productId'      => $this->get_item_reference( $_product ),
 					'lineNumber'     => $item_key,
