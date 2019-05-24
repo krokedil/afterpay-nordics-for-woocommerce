@@ -412,6 +412,9 @@ function init_wc_gateway_afterpay_factory_class() {
 				case 'NOK':
 					$description = $this->description_no;
 					break;
+				case 'EUR':
+					$description = $this->description_de;
+					break;
 				default:
 					$description = '';
 			}
