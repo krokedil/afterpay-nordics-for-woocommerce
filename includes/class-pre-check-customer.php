@@ -51,12 +51,22 @@ class WC_AfterPay_Pre_Check_Customer {
 	 */
 	public function confirm_pre_check_customer() {
 		$chosen_payment_method = WC()->session->chosen_payment_method;
+		// Check Personal/organization number.
 		if ( strpos( $chosen_payment_method, 'afterpay' ) !== false && 'DE' !== $_POST['billing_country'] ) {
 			// Check if personal/organization number field is empty
 			if ( empty( $_POST['afterpay-pre-check-customer-number'] ) && empty( $_POST['afterpay_invoice-check-customer-number-norway'] ) && empty( $_POST['afterpay_part_payment-check-customer-number-norway'] ) && empty( $_POST['afterpay_account-check-customer-number-norway'] ) ) {
 				wc_add_notice( __( 'Personal/organization number is a required field.', 'afterpay-nordics-for-woocommerce' ), 'error' );
 			}
 		}
+
+		// Check Personal/organization number.
+		if ( strpos( $chosen_payment_method, 'afterpay' ) !== false && 'DE' === $_POST['billing_country'] ) {
+			// Check if personal/organization number field is empty
+			if ( empty( $_POST['afterpay-de-terms-and-conditions'] ) ) {
+				wc_add_notice( __( 'Bitte stimme den AGB von AfterPay zu.', 'afterpay-nordics-for-woocommerce' ), 'error' );
+			}
+		}
+
 	}
 
 	/**

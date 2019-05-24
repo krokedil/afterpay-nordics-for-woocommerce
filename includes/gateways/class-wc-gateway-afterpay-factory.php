@@ -81,12 +81,10 @@ function init_wc_gateway_afterpay_factory_class() {
 					}
 				}
 
-				// Don't display part payment and Account for Norwegian customers
-				/*
-				if ( WC()->customer->get_billing_country() == true && 'NO' == WC()->customer->get_billing_country() && ( 'afterpay_part_payment' == $this->id || 'afterpay_account' == $this->id ) ) {
+				// Don't display part payment and Account for German customers
+				if ( is_callable( array( WC()->customer, 'get_billing_country' ) ) && 'DE' === WC()->customer->get_billing_country() && ( 'afterpay_part_payment' === $this->id || 'afterpay_account' === $this->id ) ) {
 					return false;
 				}
-				*/
 			}
 
 			return true;
@@ -140,23 +138,25 @@ function init_wc_gateway_afterpay_factory_class() {
 					'description' => __( 'This controls the description which Norwegian customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => $this->get_default_description_norway(),
 				),
-				'x_auth_key_de'  => array(
+			);
+			// Only invoice payments for DE.
+			if ( 'afterpay_invoice' === $this->id ) {
+				$form_fields['x_auth_key_de']  = array(
 					'title'       => __( 'AfterPay X-Auth-Key Germany', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
 						'Please enter your AfterPay X-Auth-Key for Germany; this is needed in order to take payment',
 						'afterpay-nordics-for-woocommerce'
 					),
-				),
-				'description_de' => array(
+				);
+				$form_fields['description_de'] = array(
 					'title'       => __( 'Description Germany', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'textarea',
 					'desc_tip'    => true,
 					'description' => __( 'This controls the description which Norwegian customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
-					'default'     => $this->get_default_description_norway(),
-				),
-
-			);
+					'default'     => '',
+				);
+			}
 
 			// Installment plan for Account (Account Profile number).
 			if ( 'afterpay_account' === $this->id ) {
@@ -363,6 +363,22 @@ function init_wc_gateway_afterpay_factory_class() {
 							),
 							$response->reservationId
 						)
+					);
+				} elseif ( '200.103' == $response->riskCheckMessages[0]->code ) {
+					$error_message = $response->riskCheckMessages[0]->customerFacingMessage;
+					$address       = array(
+						'first_name' => $response->customer->firstName,
+						'last_name'  => $response->customer->lastName,
+						'address1'   => $response->customer->addressList[0]->street,
+						'postcode'   => $response->customer->addressList[0]->postalCode,
+						'city'       => $response->customer->addressList[0]->postalPlace,
+						'country'    => $response->customer->addressList[0]->countryCode,
+						'message'    => $error_message,
+
+					);
+					return array(
+						'result'   => 'success',
+						'redirect' => wc_get_checkout_url() . '#afterpay=' . base64_encode( wp_json_encode( $address ) ),
 					);
 				} else {
 					if ( $response->riskCheckMessages[0]->customerFacingMessage ) {
@@ -610,6 +626,11 @@ function init_wc_gateway_afterpay_factory_class() {
 				case 'SEK':
 					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
 					$afterpay_info .= '<p class="afterpay-terms-link"><a href="' . $terms_url . '" target="_blank">' . __( 'Read AfterPay Terms & Conditions', 'afterpay-nordics-for-woocommerce' ) . '</a>.</p>';
+					break;
+				case 'EUR':
+					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/de_de/';
+					$privacy_url    = 'https://documents.myafterpay.com/privacy-statement/de_de/';
+					$afterpay_info .= '<p class="afterpay-terms-link"><input type="checkbox" name="afterpay-de-terms-and-conditions" value="yes"> ' . sprintf( __( 'Ich habe die <a href="%1$s" target="_blank">Allgemeinen Geschäftsbedingungen</a> und die <a href="%2$s" target="_blank">Datenschutzerklärung</a> von AfterPay gelesen und akzeptiere diese.', 'afterpay-nordics-for-woocommerce' ), $terms_url, $privacy_url ) . ' <span class="required">*</span>.</p>';
 					break;
 				default:
 					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
