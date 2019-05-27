@@ -374,6 +374,7 @@ function init_wc_gateway_afterpay_factory_class() {
 						'city'       => $response->customer->addressList[0]->postalPlace,
 						'country'    => $response->customer->addressList[0]->countryCode,
 						'message'    => $error_message,
+						'time'       => time(),
 
 					);
 					return array(
