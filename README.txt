@@ -40,6 +40,9 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+= 0.8.1 		- 2019.05.27 =
+* Fix           - Don't trigger numeric Date of birth check in checkout for DE.
+
 = 0.8.0 		- 2019.05.27 =
 * Feature       - Add support for invoice payments for German customers.
 
