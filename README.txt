@@ -41,7 +41,7 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 == Changelog ==
 = 0.8.0 		- 2019.05.27 =
-- Feature       - Add support for invoice payments for German customers.
+* Feature       - Add support for invoice payments for German customers.
 
 = 0.7.0 		- 2019.03.05 =
 * Feature       - Improved handling of refunds (allow order line refunds).
