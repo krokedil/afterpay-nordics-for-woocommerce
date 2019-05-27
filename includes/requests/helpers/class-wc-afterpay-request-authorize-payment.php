@@ -44,7 +44,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 			'headers' => $this->request_header(),
 			'body'    => $this->get_request_body( $order_id, $payment_method_name, $profile_no ),
 			'timeout' => 15,
-			'method'  => $this->request_method
+			'method'  => $this->request_method,
 		);
 		WC_Gateway_AfterPay_Factory::log( 'Authorize payment request args: ' . var_export( $request_args, true ) );
 
@@ -73,8 +73,8 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 			'payment'  => array( 'type' => $payment_method_name ),
 			'customer' => array(
 				'customerCategory'     => $customer_category,
-				'firstName'            => substr( krokedil_get_order_property( $order_id, 'billing_first_name' ), 0, 50),
-				'lastName'             => substr( krokedil_get_order_property( $order_id, 'billing_last_name' ), 0, 50),
+				'firstName'            => substr( krokedil_get_order_property( $order_id, 'billing_first_name' ), 0, 50 ),
+				'lastName'             => substr( krokedil_get_order_property( $order_id, 'billing_last_name' ), 0, 50 ),
 				'email'                => krokedil_get_order_property( $order_id, 'billing_email' ),
 				'mobilePhone'          => krokedil_get_order_property( $order_id, 'billing_phone' ),
 				'identificationNumber' => WC()->session->get( 'afterpay_personal_no' ),
@@ -87,8 +87,8 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 			),
 			'order'    => array(
 				'number'           => $order->get_order_number(),
-				'totalGrossAmount' => $order->get_total(),
-				'TotalNetAmount'   => $net_total_amount,
+				'totalGrossAmount' => round( $order->get_total(), 2 ),
+				'TotalNetAmount'   => round( $net_total_amount, 2 ),
 				'currency'         => krokedil_get_order_property( $order_id, 'order_currency' ),
 				'items'            => $order_lines,
 			),
@@ -96,12 +96,12 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 
 		// Customer name or company name depending on type of customer.
 		// Contact person name for B2B is sent in capture call
-		if( 'Company' == $customer_category ) {
+		if ( 'Company' == $customer_category ) {
 			$formatted_request_body['customer']['firstName'] = '';
-			$formatted_request_body['customer']['lastName'] = substr( krokedil_get_order_property( $order_id, 'billing_company' ), 0, 50);
+			$formatted_request_body['customer']['lastName']  = substr( krokedil_get_order_property( $order_id, 'billing_company' ), 0, 50 );
 		} else {
-			$formatted_request_body['customer']['firstName'] = substr( krokedil_get_order_property( $order_id, 'billing_first_name' ), 0, 50);
-			$formatted_request_body['customer']['lastName'] = substr( krokedil_get_order_property( $order_id, 'billing_last_name' ), 0, 50);
+			$formatted_request_body['customer']['firstName'] = substr( krokedil_get_order_property( $order_id, 'billing_first_name' ), 0, 50 );
+			$formatted_request_body['customer']['lastName']  = substr( krokedil_get_order_property( $order_id, 'billing_last_name' ), 0, 50 );
 		}
 		// Add profileNo for Account
 		if ( isset( $profile_no ) && 'Account' === $payment_method_name ) {
