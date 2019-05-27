@@ -2,11 +2,11 @@
 Contributors: krokedil, arvato, NiklasHogefjord, slobodanmanic
 Tags: ecommerce, e-commerce, woocommerce, afterpay, arvato
 Requires at least: 4.2
-Tested up to: 5.1
+Tested up to: 5.2.1
 Requires PHP: 5.6
 Stable tag: trunk
 WC requires at least: 3.0.0
-WC tested up to: 3.5.5
+WC tested up to: 3.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,9 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+= 0.8.0 		- 2019.05.27 =
+- Feature       - Add support for invoice payments for German customers.
+
 = 0.7.0 		- 2019.03.05 =
 * Feature       - Improved handling of refunds (allow order line refunds).
 * Fix           - Updated/corrected Norwegian translation.

@@ -41,6 +41,10 @@ jQuery(function ($) {
 				//jQuery( '#billing_email_field' ).fadeOut();
 				jQuery( '.personal-number-norway' ).hide();
 				//jQuery('.afterpay-get-address-button').fadeIn();
+			} else if ( selected_customer_country == 'DE' ) {
+				jQuery('.afterpay-pre-check-se').fadeOut();
+				jQuery('.afterpay-pre-check-no').fadeOut();
+				jQuery( '.personal-number-norway' ).hide();
 			} else {
 				jQuery( '.afterpay-pre-check-no' ).fadeIn();
 				jQuery( '.afterpay-pre-check-se' ).fadeOut();
@@ -433,5 +437,43 @@ jQuery(function ($) {
 		// Maybe make customer fields readonly
 		maybe_readonly_afterpay_fields();
 	});
+
+	// Fixed Address for German customers.
+	var AfterpayFixedAddress = {
+        handleHashChange : function(event){
+			
+			var currentHash = location.hash;
+			var splittedHash = currentHash.split("=");
+            if(splittedHash[0] === "#afterpay"){
+				console.log('AfterPay hashchange');
+				$response = JSON.parse( atob( splittedHash[1] ) );
+				$('form[name="checkout"]').removeClass( 'processing' ).unblock();
+				console.log($response);
+				$('#billing_first_name').val($response.first_name);
+				$('#billing_last_name').val($response.first_name);
+				$('#billing_address_1').val($response.address1);
+				$('#billing_postcode').val($response.postcode);
+				$('#billing_city').val($response.city);
+				$('#shipping_first_name').val($response.first_name);
+				$('#shipping_last_name').val($response.first_name);
+				$('#shipping_address_1').val($response.address1);
+				$('#shipping_postcode').val($response.postcode);
+				$('#shipping_city').val($response.city);
+				// Maybe remove old message.
+				if ($('#afterpay-address-changed-message').length) {
+					$('#afterpay-address-changed-message').remove();
+				}
+				// Add notice telling customer that the address have been changed.
+				$('form.checkout').prepend( '<div id="afterpay-address-changed-message" class="woocommerce-NoticeGroup woocommerce-NoticeGroup-updateOrderReview"><ul class="woocommerce-error" role="alert"><li>' +  $response.message + '</li></ul></div>' );
+				var etop = $('form.checkout').offset().top -100;
+				console.log(etop);
+				$('html, body').animate({
+					scrollTop: etop
+					}, 1000);
+            }
+        }
+	};
+	// Hash change listener for German Fixed address change.
+	window.addEventListener("hashchange",AfterpayFixedAddress.handleHashChange);
 
 });

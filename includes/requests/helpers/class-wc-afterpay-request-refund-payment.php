@@ -104,6 +104,8 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 					array_push( $items, $formated_shipping );
 				}
 				// Fees.
+				WC_Gateway_AfterPay_Factory::log( '$refund_order->get_fees(): ' . var_export( $refund_order->get_fees(), true ) );
+				WC_Gateway_AfterPay_Factory::log( '$refund_order: ' . var_export( $refund_order, true ) );
 				foreach ( $refund_order->get_fees() as $fee ) {
 					$formated_fee = self::get_fee( $fee );
 					array_push( $items, $formated_fee );
@@ -143,7 +145,7 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 		return array(
 			'productId'      => self::get_sku( $product, $product_id ),
 			'description'    => $product->get_name(),
-			'grossUnitPrice' => round( ( $item->get_total() + $item->get_total_tax() ) / $item['qty'] ),
+			'grossUnitPrice' => round( ( $item->get_total() + $item->get_total_tax() ) / $item['qty'], 2 ),
 			'vatPercent'     => self::product_vat_rate( $item ),
 			'quantity'       => abs( $item['qty'] ),
 		);
@@ -176,7 +178,7 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 	 */
 	private static function get_fee( $fee ) {
 		if ( $fee->get_total_tax() ) {
-			$fee_tax_rate = round( abs( $fee->get_total_tax() ) / abs( $fee->get_total() ) * 100 );
+			$fee_tax_rate = abs( round( $fee->get_total_tax() / $fee->get_total(), 2, PHP_ROUND_HALF_UP ) );
 			$fee_vat_code = $fee_tax_rate;
 		} else {
 			$fee_vat_code = 0;
@@ -185,7 +187,7 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 		return array(
 			'description'    => $fee->get_name(),
 			'productId'      => $fee->get_id(),
-			'grossUnitPrice' => abs( round( $fee->get_total() + $fee->get_total_tax(), 2 ) ),
+			'grossUnitPrice' => abs( round( $fee->get_total() + $fee->get_total_tax(), 2, PHP_ROUND_HALF_UP ) ),
 			'vatPercent'     => $fee_vat_code,
 			'quantity'       => 1,
 		);

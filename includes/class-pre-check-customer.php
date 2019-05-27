@@ -21,21 +21,20 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * WC_AfterPay_Pre_Check_Customer constructor.
 	 */
 	public function __construct() {
-		$afterpay_settings 			= get_option( 'woocommerce_afterpay_invoice_settings' );
-		$this->testmode    			= 'yes' == $afterpay_settings['testmode'] ? true : false;
+		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
+		$this->testmode    = 'yes' == $afterpay_settings['testmode'] ? true : false;
 
-		$invoice_settings 			= get_option( 'woocommerce_afterpay_invoice_settings' );
-		$part_payment_settings 		= get_option( 'woocommerce_afterpay_part_payment_settings' );
-		$account_settings 			= get_option( 'woocommerce_afterpay_account_settings' );
-		$this->enabled_invoice 		= $invoice_settings['enabled'];
-		$this->enabled_part_payment	= $part_payment_settings['enabled'];
-		$this->enabled_account 		= $account_settings['enabled'];
+		$invoice_settings           = get_option( 'woocommerce_afterpay_invoice_settings' );
+		$part_payment_settings      = get_option( 'woocommerce_afterpay_part_payment_settings' );
+		$account_settings           = get_option( 'woocommerce_afterpay_account_settings' );
+		$this->enabled_invoice      = $invoice_settings['enabled'];
+		$this->enabled_part_payment = $part_payment_settings['enabled'];
+		$this->enabled_account      = $account_settings['enabled'];
 
 		// Enqueue JS file
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		// Register AJAX callback
-
 		add_action( 'wp_ajax_afterpay_customer_lookup', array( $this, 'customer_lookup' ) );
 		add_action( 'wp_ajax_nopriv_afterpay_customer_lookup', array( $this, 'customer_lookup' ) );
 
@@ -52,7 +51,8 @@ class WC_AfterPay_Pre_Check_Customer {
 	 */
 	public function confirm_pre_check_customer() {
 		$chosen_payment_method = WC()->session->chosen_payment_method;
-		if ( strpos( $chosen_payment_method, 'afterpay' ) !== false ) {
+		// Check Personal/organization number.
+		if ( strpos( $chosen_payment_method, 'afterpay' ) !== false && 'DE' !== $_POST['billing_country'] ) {
 			// Check if personal/organization number field is empty
 			if ( empty( $_POST['afterpay-pre-check-customer-number'] ) && empty( $_POST['afterpay_invoice-check-customer-number-norway'] ) && empty( $_POST['afterpay_part_payment-check-customer-number-norway'] ) && empty( $_POST['afterpay_account-check-customer-number-norway'] ) ) {
 				wc_add_notice( __( 'Personal/organization number is a required field.', 'afterpay-nordics-for-woocommerce' ), 'error' );
@@ -64,7 +64,7 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * Display AfterPay PreCheckCustomer fields
 	 */
 	public function display_pre_check_form() {
-		if( 'yes' == $this->enabled_invoice || 'yes' == $this->enabled_part_payment || 'yes' == $this->enabled_account ) {
+		if ( 'yes' == $this->enabled_invoice || 'yes' == $this->enabled_part_payment || 'yes' == $this->enabled_account ) {
 			$personal_number = WC()->session->get( 'afterpay_personal_no' ) ? WC()->session->get( 'afterpay_personal_no' ) : '';
 
 			// Check settings for what customer type is wanted, and print the form according to that.
@@ -79,12 +79,12 @@ class WC_AfterPay_Pre_Check_Customer {
 					echo $this->get_radiobutton_customer_type_both( $separate_shipping_companies );
 					$label = __( 'Personal/organization number', 'afterpay-nordics-for-woocommerce' );
 
-				} else if ( $customer_type === 'private' ) {
+				} elseif ( $customer_type === 'private' ) {
 
 					echo $this->get_radiobutton_customer_type_private();
 					$label = __( 'Personal number', 'afterpay-nordics-for-woocommerce' );
 
-				} else if ( $customer_type === 'company' ) {
+				} elseif ( $customer_type === 'company' ) {
 
 					echo $this->get_radiobutton_customer_type_company( $separate_shipping_companies );
 					$label = __( 'Organization number', 'afterpay-nordics-for-woocommerce' );
@@ -107,16 +107,16 @@ class WC_AfterPay_Pre_Check_Customer {
 	 */
 	public function get_radiobutton_customer_type_both( $separate_shipping_companies ) {
 		?>
-        <p>
-            <input type="radio" class="input-radio" value="Person" name="afterpay_customer_category"
-                   id="afterpay-customer-category-person" checked/>
-            <label for="afterpay-customer-category-person"><?php _e( 'Person', 'afterpay-nordics-for-woocommerce' ); ?></label>
-            <input type="hidden" id="separate_shipping_companies" value="<?php echo $separate_shipping_companies ?>">
-            <input type="radio" class="input-radio" value="Company" name="afterpay_customer_category"
-                   id="afterpay-customer-category-company"/>
-            <label
-                    for="afterpay-customer-category-company"><?php _e( 'Company', 'afterpay-nordics-for-woocommerce' ); ?></label>
-        </p>
+		<p>
+			<input type="radio" class="input-radio" value="Person" name="afterpay_customer_category"
+				   id="afterpay-customer-category-person" checked/>
+			<label for="afterpay-customer-category-person"><?php _e( 'Person', 'afterpay-nordics-for-woocommerce' ); ?></label>
+			<input type="hidden" id="separate_shipping_companies" value="<?php echo $separate_shipping_companies; ?>">
+			<input type="radio" class="input-radio" value="Company" name="afterpay_customer_category"
+				   id="afterpay-customer-category-company"/>
+			<label
+					for="afterpay-customer-category-company"><?php _e( 'Company', 'afterpay-nordics-for-woocommerce' ); ?></label>
+		</p>
 		<?php
 	}
 
@@ -126,13 +126,13 @@ class WC_AfterPay_Pre_Check_Customer {
 	 */
 	public function get_radiobutton_customer_type_private() {
 		?>
-        <p>
-            <input type="radio" value="Person" name="afterpay_customer_category"
-                   id="afterpay-customer-category-person" checked style="display:none;"/>
-        </p>
-        <style> #billing_company_field {
-                display: none;
-            } </style>
+		<p>
+			<input type="radio" value="Person" name="afterpay_customer_category"
+				   id="afterpay-customer-category-person" checked style="display:none;"/>
+		</p>
+		<style> #billing_company_field {
+				display: none;
+			} </style>
 		<?php
 	}
 
@@ -142,61 +142,59 @@ class WC_AfterPay_Pre_Check_Customer {
 	 */
 	public function get_radiobutton_customer_type_company( $separate_shipping_companies ) {
 		?>
-        <p>
-            <input type="radio" value="Company" name="afterpay_customer_category"
-                   id="afterpay-customer-category-company" checked style="display:none;"/>
-            <input type="hidden" id="separate_shipping_companies" value="<?php echo $separate_shipping_companies ?>">
-        </p>
+		<p>
+			<input type="radio" value="Company" name="afterpay_customer_category"
+				   id="afterpay-customer-category-company" checked style="display:none;"/>
+			<input type="hidden" id="separate_shipping_companies" value="<?php echo $separate_shipping_companies; ?>">
+		</p>
 		<?php
 	}
 
 	/**
 	 * Get html for displaying mobile number field
-	 *
 	 */
 	public function get_fields_no() {
 		?>
-        <div class="afterpay-pre-check-no">
-            <p class="form-row form-row-first validate-required">
-                <label for="afterpay-pre-check-mobile-number"><?php _e( 'Mobile phone number', 'afterpay-nordics-for-woocommerce' ); ?></label>
-                <input type="text" name="afterpay-pre-check-mobile-number" id="afterpay-pre-check-mobile-number"
-                       class="afterpay-pre-check-mobile-number"/>
-            </p>
-            <p class="form-row form-row-last afterpay-get-address-button-row">
-                <label for="afterpay-customer-lookup-button button"> &nbsp;</label>
-                <button type="button"
-                        class="afterpay-customer-lookup-button button"><?php _e( 'Get address', 'afterpay-nordics-for-woocommerce' ); ?></button>
-            </p>
+		<div class="afterpay-pre-check-no">
+			<p class="form-row form-row-first validate-required">
+				<label for="afterpay-pre-check-mobile-number"><?php _e( 'Mobile phone number', 'afterpay-nordics-for-woocommerce' ); ?></label>
+				<input type="text" name="afterpay-pre-check-mobile-number" id="afterpay-pre-check-mobile-number"
+					   class="afterpay-pre-check-mobile-number"/>
+			</p>
+			<p class="form-row form-row-last afterpay-get-address-button-row">
+				<label for="afterpay-customer-lookup-button button"> &nbsp;</label>
+				<button type="button"
+						class="afterpay-customer-lookup-button button"><?php _e( 'Get address', 'afterpay-nordics-for-woocommerce' ); ?></button>
+			</p>
 
 
-        </div>
+		</div>
 		<?php
 	}
 
 	/**
 	 * Get html for displaying personal number field
-	 *
 	 */
 	public function get_fields_se( $label, $personal_number ) {
 		?>
-        <div class="afterpay-pre-check-se">
-            <p class="form-row form-row-first afterpay-dob-field">
-                <label for="afterpay-pre-check-customer-number"><?php echo $label; ?> <span
-                            class="required">*</span></label>
-                <input type="text" name="afterpay-pre-check-customer-number" id="afterpay-pre-check-customer-number"
-                       class="afterpay-pre-check-customer-number"
-                       placeholder="<?php _e( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' ); ?>"
-                       value="<?php echo $personal_number; ?>"/>
-            </p>
-            <p class="form-row form-row-last afterpay-get-address-button-row">
-                <label for="afterpay-customer-lookup-button button"> &nbsp;</label>
-                <button type="button"
-                        class="afterpay-customer-lookup-button button"><?php _e( 'Get address', 'afterpay-nordics-for-woocommerce' ); ?></button>
+		<div class="afterpay-pre-check-se">
+			<p class="form-row form-row-first afterpay-dob-field">
+				<label for="afterpay-pre-check-customer-number"><?php echo $label; ?> <span
+							class="required">*</span></label>
+				<input type="text" name="afterpay-pre-check-customer-number" id="afterpay-pre-check-customer-number"
+					   class="afterpay-pre-check-customer-number"
+					   placeholder="<?php _e( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' ); ?>"
+					   value="<?php echo $personal_number; ?>"/>
+			</p>
+			<p class="form-row form-row-last afterpay-get-address-button-row">
+				<label for="afterpay-customer-lookup-button button"> &nbsp;</label>
+				<button type="button"
+						class="afterpay-customer-lookup-button button"><?php _e( 'Get address', 'afterpay-nordics-for-woocommerce' ); ?></button>
 			</p>
 			<p class="form-row form-row-wide afterpay-privacy-info">
 				<a href="https://documents.myafterpay.com/privacy-statement/sv_se/" target="_blank"><?php _e( 'This is how your data is used.', 'afterpay-nordics-for-woocommerce' ); ?></a>
 			</p>
-        </div>
+		</div>
 		<?php
 	}
 
@@ -205,20 +203,23 @@ class WC_AfterPay_Pre_Check_Customer {
 	 * Load the JS & CSS file(s).
 	 */
 	public function enqueue_scripts() {
-		
 
-		if( is_checkout() && ( 'yes' == $this->enabled_invoice || 'yes' == $this->enabled_part_payment || 'yes' == $this->enabled_account ) ) {
-			if( WC()->session->get( 'afterpay_personal_no' ) ) {
+		if ( is_checkout() && ( 'yes' == $this->enabled_invoice || 'yes' == $this->enabled_part_payment || 'yes' == $this->enabled_account ) ) {
+			if ( WC()->session->get( 'afterpay_personal_no' ) ) {
 				$se_address_fetched = 'yes';
 			} else {
 				$se_address_fetched = 'no';
 			}
 			wp_register_script( 'afterpay_pre_check_customer', plugins_url( 'assets/js/pre-check-customer.js', __DIR__ ), array( 'jquery' ), AFTERPAY_VERSION, true );
-			wp_localize_script( 'afterpay_pre_check_customer', 'WC_AfterPay', array(
-				'ajaxurl'                           => admin_url( 'admin-ajax.php' ),
-				'se_address_fetched'                => $se_address_fetched,
-				'afterpay_pre_check_customer_nonce' => wp_create_nonce( 'afterpay_pre_check_customer_nonce' ),
-			) );
+			wp_localize_script(
+				'afterpay_pre_check_customer',
+				'WC_AfterPay',
+				array(
+					'ajaxurl'                           => admin_url( 'admin-ajax.php' ),
+					'se_address_fetched'                => $se_address_fetched,
+					'afterpay_pre_check_customer_nonce' => wp_create_nonce( 'afterpay_pre_check_customer_nonce' ),
+				)
+			);
 			wp_enqueue_script( 'afterpay_pre_check_customer' );
 
 			wp_register_style( 'afterpay_pre_check_customer', plugins_url( 'assets/css/afterpay-pre-check-customer.css', __DIR__ ), array(), AFTERPAY_VERSION );
@@ -264,24 +265,26 @@ class WC_AfterPay_Pre_Check_Customer {
 	 *
 	 * @param $personal_number
 	 * @param $payment_method
-	 * @param string $customer_category
+	 * @param string          $customer_category
 	 *
 	 * @return bool
 	 */
 	public function pre_check_customer_request( $personal_number, $email, $payment_method, $customer_category, $billing_country, $order = false ) {
 		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 		switch ( get_woocommerce_currency() ) {
-			case 'SEK' :
+			case 'SEK':
 				$this->x_auth_key = $afterpay_settings['x_auth_key_se'];
 				break;
-			case 'NOK' :
+			case 'NOK':
 				$this->x_auth_key = $afterpay_settings['x_auth_key_no'];
 				break;
-			default :
+			case 'EUR':
+				$this->x_auth_key = $afterpay_settings['x_auth_key_de'];
+				break;
+			default:
 				$this->x_auth_key = $afterpay_settings['x_auth_key_se'];
 				break;
 		}
-
 
 		$request  = new WC_AfterPay_Request_Available_Payment_Methods( $this->x_auth_key, $this->testmode );
 		$response = $request->response( $personal_number, $email, $customer_category );
@@ -304,7 +307,6 @@ class WC_AfterPay_Pre_Check_Customer {
 				WC()->session->set( 'afterpay_customer_details', $afterpay_customer_details );
 				WC()->session->set( 'afterpay_cart_total', WC()->cart->total );
 
-
 				// Set session data
 				WC()->session->set( 'afterpay_allowed_payment_methods', $response->paymentMethods );
 				WC()->session->set( 'afterpay_checkout_id', $response->checkoutId );
@@ -322,8 +324,6 @@ class WC_AfterPay_Pre_Check_Customer {
 
 				return new WP_Error( 'failure', sprintf( __( '%s', 'afterpay-nordics-for-woocommerce' ), $error_meassage ) );
 			}
-
-
 		} else {
 			WC()->session->__unset( 'afterpay_checkout_id' );
 			WC()->session->__unset( 'afterpay_customer_no' );
@@ -350,10 +350,14 @@ class WC_AfterPay_Pre_Check_Customer {
 		$chosen_payment_method = WC()->session->get( 'chosen_payment_method' );
 		if ( strpos( $chosen_payment_method, 'afterpay' ) !== false ) {
 			$current_filter   = current_filter();
-			$current_field    = str_replace( array(
-				'woocommerce_process_checkout_field_billing_',
-				'woocommerce_process_checkout_field_shipping_'
-			), '', $current_filter );
+			$current_field    = str_replace(
+				array(
+					'woocommerce_process_checkout_field_billing_',
+					'woocommerce_process_checkout_field_shipping_',
+				),
+				'',
+				$current_filter
+			);
 			$customer_details = WC()->session->get( 'afterpay_customer_details' );
 			if ( isset( $customer_details[ $current_field ] ) && '' != $customer_details[ $current_field ] ) {
 				return $customer_details[ $current_field ];
@@ -413,20 +417,23 @@ class WC_AfterPay_Pre_Check_Customer {
 	 *
 	 * @param $personal_number
 	 * @param $payment_method
-	 * @param string $customer_category
+	 * @param string          $customer_category
 	 *
 	 * @return bool
 	 */
 	public function customer_lookup_request( $mobile_number, $personal_number, $payment_method, $customer_category, $billing_country, $order = false ) {
 		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 		switch ( get_woocommerce_currency() ) {
-			case 'SEK' :
+			case 'SEK':
 				$this->x_auth_key = $afterpay_settings['x_auth_key_se'];
 				break;
-			case 'NOK' :
+			case 'NOK':
 				$this->x_auth_key = $afterpay_settings['x_auth_key_no'];
 				break;
-			default :
+			case 'EUR':
+				$this->x_auth_key = $afterpay_settings['x_auth_key_de'];
+				break;
+			default:
 				$this->x_auth_key = $afterpay_settings['x_auth_key_se'];
 				break;
 		}
@@ -470,12 +477,10 @@ class WC_AfterPay_Pre_Check_Customer {
 					$response_message = $response->message;
 				}
 
-				$error_meassage = sprintf( __( 'No address was found (%s). Please check your %s or choose another payment method.', 'afterpay-nordics-for-woocommerce' ), $response_message, $identifier );
+				$error_meassage = sprintf( __( 'No address was found (%1$s). Please check your %2$s or choose another payment method.', 'afterpay-nordics-for-woocommerce' ), $response_message, $identifier );
 
 				return new WP_Error( 'failure', sprintf( __( '%s', 'afterpay-nordics-for-woocommerce' ), $error_meassage ) );
 			}
-
-
 		} else {
 			WC()->session->__unset( 'afterpay_checkout_id' );
 			WC()->session->__unset( 'afterpay_customer_no' );
