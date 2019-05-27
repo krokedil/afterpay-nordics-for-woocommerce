@@ -595,7 +595,8 @@ function init_wc_gateway_afterpay_factory_class() {
 		 **/
 		public function process_checkout_fields() {
 			if ( 'afterpay_invoice' === $_POST['payment_method'] || 'afterpay_account' === $_POST['payment_method'] || 'afterpay_part_payment' === $_POST['payment_method'] ) { // Input var okay.
-				if ( ! is_numeric( $_POST['afterpay-pre-check-customer-number'] ) ) { // Input var okay.
+
+				if ( ! is_numeric( $_POST['afterpay-pre-check-customer-number'] ) && 'DE' !== $_POST['billing_country'] ) { // Input var okay.
 					$format = __( 'YYMMDDNNNN', 'afterpay-nordics-for-woocommerce' );
 					wc_add_notice(
 						sprintf(
