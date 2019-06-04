@@ -451,7 +451,9 @@ jQuery(function ($) {
 				console.log($response);
 				$('#billing_first_name').val($response.first_name);
 				$('#billing_last_name').val($response.first_name);
-				$('#billing_address_1').val($response.address1);
+
+				
+				$('#billing_address_2').val($response.address2);
 				$('#billing_postcode').val($response.postcode);
 				$('#billing_city').val($response.city);
 				$('#shipping_first_name').val($response.first_name);
@@ -459,6 +461,14 @@ jQuery(function ($) {
 				$('#shipping_address_1').val($response.address1);
 				$('#shipping_postcode').val($response.postcode);
 				$('#shipping_city').val($response.city);
+
+				// Street number logic.
+				if( WC_AfterPay.street_number_field ) {
+					$('#billing_address_1').val($response.address1);
+					$('#' + WC_AfterPay.street_number_field).val($response.street_number);
+				} else {
+					$('#billing_address_1').val($response.address1 + ' ' + $response.street_number);
+				}
 				// Maybe remove old message.
 				if ($('#afterpay-address-changed-message').length) {
 					$('#afterpay-address-changed-message').remove();

@@ -109,6 +109,12 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 			$formatted_request_body['customer']['mobilePhone'] = substr( $phone_number, 0, 50 );
 		}
 
+		// Street number.
+		if ( ! empty( $this->street_number_field ) ) {
+			$street_number = ( ! empty( get_post_meta( $order_id, $this->street_number_field, true ) ) ) ? get_post_meta( $order_id, $this->street_number_field, true ) : get_post_meta( $order_id, '_' . $this->street_number_field, true );
+			$formatted_request_body['customer']['address']['streetNumber'] = $street_number;
+		}
+
 		// Add profileNo for Account
 		if ( isset( $profile_no ) && 'Account' === $payment_method_name ) {
 			$formatted_request_body['payment']['account'] = array(
