@@ -36,8 +36,8 @@ class WC_AfterPay_Request {
 	 * @param boolean $test_mode Test mode.
 	 */
 	public function __construct( $x_auth_key = '', $test_mode = false ) {
-		$this->x_auth_key  = $x_auth_key;
-		$this->base_url = ( 'yes' == $test_mode ) ? 'https://sandboxapi.horizonafs.com/eCommerceServicesWebApi' : 'https://api.afterpay.io';
+		$this->x_auth_key = $x_auth_key;
+		$this->base_url   = ( 'yes' == $test_mode ) ? 'https://sandboxapi.horizonafs.com/eCommerceServicesWebApi' : 'https://api.afterpay.io';
 	}
 	/**
 	 * Returns formatted request header.
@@ -75,4 +75,4 @@ class WC_AfterPay_Request {
 		}
 	}
 }
-//$wc_afterpay_request = new WC_AfterPay_Request();
+// $wc_afterpay_request = new WC_AfterPay_Request();
