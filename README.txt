@@ -40,6 +40,9 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+= 0.8.2 		- 2019.05.28 =
+* Fix           - Don't send mobilePhone param to AfterPay if billing phone is not added to WC order.
+
 = 0.8.1 		- 2019.05.27 =
 * Fix           - Don't trigger numeric Date of birth check in checkout for DE.
 
