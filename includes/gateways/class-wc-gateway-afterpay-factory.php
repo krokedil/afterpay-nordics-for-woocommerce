@@ -375,7 +375,7 @@ function init_wc_gateway_afterpay_factory_class() {
 						'city'          => $response->customer->addressList[0]->postalPlace,
 						'country'       => $response->customer->addressList[0]->countryCode,
 						'message'       => $error_message,
-						'street_number' => '22',
+						'street_number' => '',
 						'address2'      => '',
 						'time'          => time(),
 
@@ -384,7 +384,7 @@ function init_wc_gateway_afterpay_factory_class() {
 						$address['street_number'] = $response->customer->addressList[0]->streetNumber;
 					}
 					if ( isset( $response->customer->addressList[0]->streetNumberAdditional ) ) {
-						// $address['street_number'] .= ' ' . $response->customer->addressList[0]->streetNumberAdditional;
+						$address['street_number'] .= ' ' . $response->customer->addressList[0]->streetNumberAdditional;
 					}
 					if ( isset( $response->customer->addressList[0]->careOf ) ) {
 						$address['address2'] = $response->customer->addressList[0]->careOf;
