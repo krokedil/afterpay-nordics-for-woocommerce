@@ -450,14 +450,14 @@ jQuery(function ($) {
 				$('form[name="checkout"]').removeClass( 'processing' ).unblock();
 				console.log($response);
 				$('#billing_first_name').val($response.first_name);
-				$('#billing_last_name').val($response.first_name);
+				$('#billing_last_name').val($response.last_name);
 
 				
 				$('#billing_address_2').val($response.address2);
 				$('#billing_postcode').val($response.postcode);
 				$('#billing_city').val($response.city);
 				$('#shipping_first_name').val($response.first_name);
-				$('#shipping_last_name').val($response.first_name);
+				$('#shipping_last_name').val($response.last_name);
 				$('#shipping_address_1').val($response.address1);
 				$('#shipping_postcode').val($response.postcode);
 				$('#shipping_city').val($response.city);
