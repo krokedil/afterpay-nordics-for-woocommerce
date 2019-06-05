@@ -365,7 +365,7 @@ function init_wc_gateway_afterpay_factory_class() {
 							$response->reservationId
 						)
 					);
-				} elseif ( '200.103' == $response->riskCheckMessages[0]->code ) {
+				} elseif ( '200.103' == $response->riskCheckMessages[0]->code || '200.104' == $response->riskCheckMessages[0]->code ) {
 					$error_message = $response->riskCheckMessages[0]->customerFacingMessage;
 					$address       = array(
 						'first_name'    => $response->customer->firstName,
