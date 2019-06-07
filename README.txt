@@ -42,7 +42,7 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 == Changelog ==
 = 0.8.4 		- 2019.06.05 =
 * Fix           - Add response code 200.104 (Address Correction) during Authorize request response as valid response to adjust WooCommerce checkout address.
-* Fix           - Fied customer last name not being set correctly during address adjustement for DE customers.
+* Fix           - Fixed customer last name not being set correctly during address adjustement for DE customers.
 
 = 0.8.3 		- 2019.06.04 =
 * Feature       - Added setting for allowing Street number to be a separate field in WooCommerce checkout. That input field will be sent as streetNumber to AfterPay. 
