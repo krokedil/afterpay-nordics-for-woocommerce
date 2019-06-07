@@ -40,6 +40,9 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+= 0.8.5 		- 2019.06.07 =
+* Fix           - Don't check and correct billing address in Woo order for DE customers. This is handled by AfterPay before order is approved in checkout.
+
 = 0.8.4 		- 2019.06.05 =
 * Fix           - Add response code 200.104 (Address Correction) during Authorize request response as valid response to adjust WooCommerce checkout address.
 * Fix           - Fixed customer last name not being set correctly during address adjustement for DE customers.
