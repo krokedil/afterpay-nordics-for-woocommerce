@@ -182,8 +182,17 @@ function init_wc_gateway_afterpay_factory_class() {
 					),
 				);
 
+				$form_fields['street_number_field'] = array(
+					'title'       => __( 'Street number field', 'afterpay-nordics-for-woocommerce' ),
+					'type'        => 'text',
+					'description' => __(
+						'Enter the checkout form field name used for <strong>Street number</strong> if your store has a separate field for this. Enter the name without the # sign. Leave blank to disable.',
+						'afterpay-nordics-for-woocommerce'
+					),
+				);
+
 				// Customer type, separate shipping address fand order management or all payment methods are in AfterPay Invoice settings.
-				$form_fields['customer_type'] = array(
+				$form_fields['customer_type']    = array(
 					'title'       => __( 'Customer type', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'select',
 					'description' => __( 'Select the type of customer that can make purchases through AfterPay', 'afterpay-nordics-for-woocommerce' ),
@@ -194,14 +203,6 @@ function init_wc_gateway_afterpay_factory_class() {
 					),
 					'default'     => 'both',
 				);
-				/*
-				$form_fields['separate_shipping_companies'] = array(
-					'title'   => __( 'Separate shipping address', 'afterpay-nordics-for-woocommerce' ),
-					'type'    => 'checkbox',
-					'label'   => __( 'Enable separate shipping address for companies', 'afterpay-nordics-for-woocommerce' ),
-					'default' => 'no',
-				);
-				*/
 				$form_fields['order_management'] = array(
 					'title'   => __( 'Enable Order Management', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
@@ -364,19 +365,30 @@ function init_wc_gateway_afterpay_factory_class() {
 							$response->reservationId
 						)
 					);
-				} elseif ( '200.103' == $response->riskCheckMessages[0]->code ) {
+				} elseif ( '200.103' == $response->riskCheckMessages[0]->code || '200.104' == $response->riskCheckMessages[0]->code ) {
 					$error_message = $response->riskCheckMessages[0]->customerFacingMessage;
 					$address       = array(
-						'first_name' => $response->customer->firstName,
-						'last_name'  => $response->customer->lastName,
-						'address1'   => $response->customer->addressList[0]->street,
-						'postcode'   => $response->customer->addressList[0]->postalCode,
-						'city'       => $response->customer->addressList[0]->postalPlace,
-						'country'    => $response->customer->addressList[0]->countryCode,
-						'message'    => $error_message,
-						'time'       => time(),
+						'first_name'    => $response->customer->firstName,
+						'last_name'     => $response->customer->lastName,
+						'address1'      => $response->customer->addressList[0]->street,
+						'postcode'      => $response->customer->addressList[0]->postalCode,
+						'city'          => $response->customer->addressList[0]->postalPlace,
+						'country'       => $response->customer->addressList[0]->countryCode,
+						'message'       => $error_message,
+						'street_number' => '',
+						'address2'      => '',
+						'time'          => time(),
 
 					);
+					if ( isset( $response->customer->addressList[0]->streetNumber ) ) {
+						$address['street_number'] = $response->customer->addressList[0]->streetNumber;
+					}
+					if ( isset( $response->customer->addressList[0]->streetNumberAdditional ) ) {
+						$address['street_number'] .= ' ' . $response->customer->addressList[0]->streetNumberAdditional;
+					}
+					if ( isset( $response->customer->addressList[0]->careOf ) ) {
+						$address['address2'] = $response->customer->addressList[0]->careOf;
+					}
 					return array(
 						'result'   => 'success',
 						'redirect' => wc_get_checkout_url() . '#afterpay=' . base64_encode( wp_json_encode( $address ) ),

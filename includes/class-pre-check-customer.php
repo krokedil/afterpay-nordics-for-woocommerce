@@ -30,6 +30,7 @@ class WC_AfterPay_Pre_Check_Customer {
 		$this->enabled_invoice      = $invoice_settings['enabled'];
 		$this->enabled_part_payment = $part_payment_settings['enabled'];
 		$this->enabled_account      = $account_settings['enabled'];
+		$this->street_number_field  = ( isset( $invoice_settings['street_number_field'] ) ) ? $invoice_settings['street_number_field'] : '';
 
 		// Enqueue JS file
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -218,6 +219,7 @@ class WC_AfterPay_Pre_Check_Customer {
 					'ajaxurl'                           => admin_url( 'admin-ajax.php' ),
 					'se_address_fetched'                => $se_address_fetched,
 					'afterpay_pre_check_customer_nonce' => wp_create_nonce( 'afterpay_pre_check_customer_nonce' ),
+					'street_number_field'               => $this->street_number_field,
 				)
 			);
 			wp_enqueue_script( 'afterpay_pre_check_customer' );

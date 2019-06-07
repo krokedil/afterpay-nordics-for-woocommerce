@@ -6,7 +6,7 @@ Tested up to: 5.2.1
 Requires PHP: 5.6
 Stable tag: trunk
 WC requires at least: 3.0.0
-WC tested up to: 3.6.3
+WC tested up to: 3.6.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,17 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+= 0.8.4 		- 2019.06.05 =
+* Fix           - Add response code 200.104 (Address Correction) during Authorize request response as valid response to adjust WooCommerce checkout address.
+* Fix           - Fixed customer last name not being set correctly during address adjustement for DE customers.
+
+= 0.8.3 		- 2019.06.04 =
+* Feature       - Added setting for allowing Street number to be a separate field in WooCommerce checkout. That input field will be sent as streetNumber to AfterPay. 
+* Tweak         - Improved handling of Street number, Additional street number & Care of returned from AfterPay. Mainly for DE customers.
+
+= 0.8.2 		- 2019.05.28 =
+* Fix           - Don't send mobilePhone param to AfterPay if billing phone is not added to WC order.
+
 = 0.8.1 		- 2019.05.27 =
 * Fix           - Don't trigger numeric Date of birth check in checkout for DE.
 
