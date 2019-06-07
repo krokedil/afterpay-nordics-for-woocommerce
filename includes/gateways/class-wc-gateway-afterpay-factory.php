@@ -332,8 +332,11 @@ function init_wc_gateway_afterpay_factory_class() {
 			$response = $request->response( $order_id, $this->get_formatted_payment_method_name(), $profile_no );
 
 			// Compare the received address (from AfterPay) with the one entered by the customer in checkout.
-			// Change it if they don't match
-			$this->check_used_address( $response, $order_id );
+			// Change it if they don't match.
+			// Don't use this for DE customers. Address controll is done directly in the Authorize request for them.
+			if ( 'DE' !== $order->get_billing_country() ) {
+				$this->check_used_address( $response, $order_id );
+			}
 
 			if ( ! is_wp_error( $response ) ) {
 				$response = json_decode( $response );
