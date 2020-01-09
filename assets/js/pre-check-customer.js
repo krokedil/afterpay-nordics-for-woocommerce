@@ -7,6 +7,7 @@ jQuery(function ($) {
 	var customer_address_2    	= '';
 	var customer_postcode     	= '';
 	var customer_city         	= '';
+	var display_get_address_no = WC_AfterPay.display_get_address_no;
 
 	function mask_form_field(field) {
 		if (field != null) {
@@ -28,13 +29,21 @@ jQuery(function ($) {
 	function maybe_show_pre_checkout_form(do_focus) {
 		//console.log(do_focus);
 		console.log('maybe_show_pre_checkout_form');
+
+		var selected_customer_country = $("#billing_country").val();
+
+		// Don't show the get address field if the country is NO and the the feature is disable in settings.
+		if ( 'NO' === selected_customer_country && 'no' === display_get_address_no ) {
+			return;
+		}
+		
 		var selected_payment_method = $('input[name="payment_method"]:checked').val();
 		if ($("#payment_method_afterpay_invoice").length > 0) {
 	        jQuery('#afterpay-pre-check-customer').fadeIn();
 	        check_separate_shipping_address(do_focus);
 	
 			// Only display the Get Address button if Sweden is the selected country
-			var selected_customer_country = $("#billing_country").val();
+			
 			if (selected_customer_country == 'SE') {
 				jQuery('.afterpay-pre-check-se').fadeIn();
 				jQuery('.afterpay-pre-check-no').fadeOut();

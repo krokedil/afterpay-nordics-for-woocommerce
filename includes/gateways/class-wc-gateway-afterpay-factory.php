@@ -95,20 +95,24 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function init_form_fields() {
 			$form_fields = array(
-				'enabled'        => array(
+				'enabled'                => array(
 					'title'   => __( 'Enable/Disable', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable ' . $this->method_title, 'afterpay-nordics-for-woocommerce' ),
 					'default' => 'yes',
 				),
-				'title'          => array(
+				'title'                  => array(
 					'title'       => __( 'Title', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __( 'This controls the title which the user sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => __( $this->method_title, 'afterpay-nordics-for-woocommerce' ),
 					'desc_tip'    => true,
 				),
-				'x_auth_key_se'  => array(
+				'section_sweden'         => array(
+					'title' => __( 'Sweden', 'afterpay-nordics-for-woocommerce' ),
+					'type'  => 'title',
+				),
+				'x_auth_key_se'          => array(
 					'title'       => __( 'AfterPay X-Auth-Key Sweden', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
@@ -116,14 +120,18 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				),
-				'description_se' => array(
+				'description_se'         => array(
 					'title'       => __( 'Description Sweden', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'textarea',
 					'desc_tip'    => true,
 					'description' => __( 'This controls the description which Swedish customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => $this->get_default_description_sweden(),
 				),
-				'x_auth_key_no'  => array(
+				'section_norway'         => array(
+					'title' => __( 'Norway', 'afterpay-nordics-for-woocommerce' ),
+					'type'  => 'title',
+				),
+				'x_auth_key_no'          => array(
 					'title'       => __( 'AfterPay X-Auth-Key Norway', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
@@ -131,17 +139,30 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				),
-				'description_no' => array(
+				'description_no'         => array(
 					'title'       => __( 'Description Norway', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'textarea',
 					'desc_tip'    => true,
 					'description' => __( 'This controls the description which Norwegian customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => $this->get_default_description_norway(),
 				),
+				'display_get_address_no' => array(
+					'title'   => __( 'Display Customer Lookup', 'afterpay-nordics-for-woocommerce' ),
+					'type'    => 'checkbox',
+					'label'   => __(
+						'Display Customer Lookup / Get Address field in checkout',
+						'afterpay-nordics-for-woocommerce'
+					),
+					'default' => 'yes',
+				),
 			);
 			// Only invoice payments for DE.
 			if ( 'afterpay_invoice' === $this->id ) {
-				$form_fields['x_auth_key_de']  = array(
+				$form_fields['section_germany'] = array(
+					'title' => __( 'Germany', 'afterpay-nordics-for-woocommerce' ),
+					'type'  => 'title',
+				);
+				$form_fields['x_auth_key_de']   = array(
 					'title'       => __( 'AfterPay X-Auth-Key Germany', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
@@ -149,7 +170,7 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				);
-				$form_fields['description_de'] = array(
+				$form_fields['description_de']  = array(
 					'title'       => __( 'Description Germany', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'textarea',
 					'desc_tip'    => true,
