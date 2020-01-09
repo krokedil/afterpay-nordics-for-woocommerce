@@ -213,7 +213,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				);
 
 				// Customer type, separate shipping address fand order management or all payment methods are in AfterPay Invoice settings.
-				$form_fields['customer_type']    = array(
+				$form_fields['customer_type']              = array(
 					'title'       => __( 'Customer type', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'select',
 					'description' => __( 'Select the type of customer that can make purchases through AfterPay', 'afterpay-nordics-for-woocommerce' ),
@@ -224,11 +224,20 @@ function init_wc_gateway_afterpay_factory_class() {
 					),
 					'default'     => 'both',
 				);
-				$form_fields['order_management'] = array(
+				$form_fields['order_management']           = array(
 					'title'   => __( 'Enable Order Management', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __(
 						'Enable AfterPay order capture on WooCommerce order completion and AfterPay order cancellation on WooCommerce order cancellation',
+						'afterpay-nordics-for-woocommerce'
+					),
+					'default' => 'yes',
+				);
+				$form_fields['always_display_get_address'] = array(
+					'title'   => __( 'Always display Customer Lookup', 'afterpay-nordics-for-woocommerce' ),
+					'type'    => 'checkbox',
+					'label'   => __(
+						'Display Customer Lookup field in checkout even when AfterPay isn\'t the selected payment gateway',
 						'afterpay-nordics-for-woocommerce'
 					),
 					'default' => 'yes',

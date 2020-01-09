@@ -8,6 +8,7 @@ jQuery(function ($) {
 	var customer_postcode     	= '';
 	var customer_city         	= '';
 	var display_get_address_no = WC_AfterPay.display_get_address_no;
+	var always_display_get_address = WC_AfterPay.always_display_get_address;
 
 	function mask_form_field(field) {
 		if (field != null) {
@@ -29,15 +30,20 @@ jQuery(function ($) {
 	function maybe_show_pre_checkout_form(do_focus) {
 		//console.log(do_focus);
 		console.log('maybe_show_pre_checkout_form');
-
+		var selected_payment_method = $('input[name="payment_method"]:checked').val();
 		var selected_customer_country = $("#billing_country").val();
+		
+		// Don't show the get address field if payment method isn't AfterPay and settings is set to only display it for AP.
+		if (selected_payment_method.indexOf('afterpay') < 0 && 'no' === always_display_get_address ) {
+			jQuery('#afterpay-pre-check-customer').fadeOut();
+			return;
+		}
 
 		// Don't show the get address field if the country is NO and the the feature is disable in settings.
 		if ( 'NO' === selected_customer_country && 'no' === display_get_address_no ) {
 			return;
 		}
-		
-		var selected_payment_method = $('input[name="payment_method"]:checked').val();
+				
 		if ($("#payment_method_afterpay_invoice").length > 0) {
 	        jQuery('#afterpay-pre-check-customer').fadeIn();
 	        check_separate_shipping_address(do_focus);
