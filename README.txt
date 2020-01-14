@@ -2,11 +2,11 @@
 Contributors: krokedil, arvato, NiklasHogefjord, slobodanmanic
 Tags: ecommerce, e-commerce, woocommerce, afterpay, arvato
 Requires at least: 4.2
-Tested up to: 5.2.1
+Tested up to: 5.3.2
 Requires PHP: 5.6
 Stable tag: trunk
-WC requires at least: 3.0.0
-WC tested up to: 3.6.4
+WC requires at least: 3.2.0
+WC tested up to: 3.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,14 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+= 0.9.0 		- 2020.01.14 =
+* Feature       - Add setting for display/hide Get Address field in checkout for Norwegian customers.
+* Feature       - Add setting for wether or not to display Get address field if AfterPay isn't the selected payment method.
+* Tweak         - Send vatAmount in requests to AfterPay.
+
+= 0.8.5 		- 2019.06.07 =
+* Fix           - Don't check and correct billing address in Woo order for DE customers. This is handled by AfterPay before order is approved in checkout.
+
 = 0.8.4 		- 2019.06.05 =
 * Fix           - Add response code 200.104 (Address Correction) during Authorize request response as valid response to adjust WooCommerce checkout address.
 * Fix           - Fixed customer last name not being set correctly during address adjustement for DE customers.

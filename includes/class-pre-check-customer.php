@@ -24,13 +24,15 @@ class WC_AfterPay_Pre_Check_Customer {
 		$afterpay_settings = get_option( 'woocommerce_afterpay_invoice_settings' );
 		$this->testmode    = 'yes' == $afterpay_settings['testmode'] ? true : false;
 
-		$invoice_settings           = get_option( 'woocommerce_afterpay_invoice_settings' );
-		$part_payment_settings      = get_option( 'woocommerce_afterpay_part_payment_settings' );
-		$account_settings           = get_option( 'woocommerce_afterpay_account_settings' );
-		$this->enabled_invoice      = $invoice_settings['enabled'];
-		$this->enabled_part_payment = $part_payment_settings['enabled'];
-		$this->enabled_account      = $account_settings['enabled'];
-		$this->street_number_field  = ( isset( $invoice_settings['street_number_field'] ) ) ? $invoice_settings['street_number_field'] : '';
+		$invoice_settings                 = get_option( 'woocommerce_afterpay_invoice_settings' );
+		$part_payment_settings            = get_option( 'woocommerce_afterpay_part_payment_settings' );
+		$account_settings                 = get_option( 'woocommerce_afterpay_account_settings' );
+		$this->enabled_invoice            = $invoice_settings['enabled'];
+		$this->display_get_address_no     = ( isset( $invoice_settings['display_get_address_no'] ) ) ? $invoice_settings['display_get_address_no'] : 'yes';
+		$this->always_display_get_address = ( isset( $invoice_settings['always_display_get_address'] ) ) ? $invoice_settings['always_display_get_address'] : 'yes';
+		$this->enabled_part_payment       = $part_payment_settings['enabled'];
+		$this->enabled_account            = $account_settings['enabled'];
+		$this->street_number_field        = ( isset( $invoice_settings['street_number_field'] ) ) ? $invoice_settings['street_number_field'] : '';
 
 		// Enqueue JS file
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -220,6 +222,8 @@ class WC_AfterPay_Pre_Check_Customer {
 					'se_address_fetched'                => $se_address_fetched,
 					'afterpay_pre_check_customer_nonce' => wp_create_nonce( 'afterpay_pre_check_customer_nonce' ),
 					'street_number_field'               => $this->street_number_field,
+					'display_get_address_no'            => $this->display_get_address_no,
+					'always_display_get_address'        => $this->always_display_get_address,
 				)
 			);
 			wp_enqueue_script( 'afterpay_pre_check_customer' );

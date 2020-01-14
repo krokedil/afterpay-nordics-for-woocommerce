@@ -55,6 +55,7 @@ class WC_AfterPay_Process_Order_Lines {
 					'groupId'        => $_product->get_id(),
 					'lineNumber'     => $item_key,
 					'netUnitPrice'   => round( $order->get_item_total( $item, false ), 2 ),
+					'vatAmount'      => round( $order->get_item_total( $item, true ) - $order->get_item_total( $item, false ), 2 ),
 					'quantity'       => $item['qty'],
 					'vatPercent'     => $vat,
 				);
@@ -91,6 +92,7 @@ class WC_AfterPay_Process_Order_Lines {
 					'groupId'        => $shipping_method_value['type'],
 					'lineNumber'     => $shipping_method_key,
 					'netUnitPrice'   => round( $shipping_method_value['cost'], 2 ),
+					'vatAmount'      => round( $shipping_method_tax, 2 ),
 					'quantity'       => 1,
 					'vatPercent'     => $vat,
 				);
@@ -114,6 +116,7 @@ class WC_AfterPay_Process_Order_Lines {
 					'groupId'        => $order_fee_value['type'],
 					'lineNumber'     => $order_fee_key,
 					'netUnitPrice'   => round( $order_fee_value['line_total'], 2 ),
+					'vatAmount'      => round( $order_fee_value['line_tax'], 2 ),
 					'quantity'       => 1,
 					'vatPercent'     => $vat,
 				);
@@ -141,6 +144,7 @@ class WC_AfterPay_Process_Order_Lines {
 					'productId'      => $this->get_item_reference( $_product ),
 					'lineNumber'     => $item_key,
 					'netUnitPrice'   => round( $item['line_total'] / $item['quantity'], 2 ),
+					'vatAmount'      => round( $item['line_tax'], 2 ),
 					'quantity'       => $item['quantity'],
 					'vatPercent'     => round( $item['line_tax'] / $item['line_total'], 4 ) * 100,
 				);
@@ -163,11 +167,12 @@ class WC_AfterPay_Process_Order_Lines {
 						}
 
 						$order_lines[] = array(
-							'grossUnitPrice' => $shipping_tax + $shipping_rate_value->cost,
+							'grossUnitPrice' => round( $shipping_tax + $shipping_rate_value->cost, 2 ),
 							'description'    => $shipping_rate_value->label,
 							'productId'      => $shipping_rate_value->id,
 							'lineNumber'     => $shipping_rate_key,
-							'netUnitPrice'   => $shipping_rate_value->cost,
+							'netUnitPrice'   => round( $shipping_rate_value->cost, 2 ),
+							'vatAmount'      => round( $shipping_tax, 2 ),
 							'quantity'       => 1,
 							'vatPercent'     => $vat_percent,
 						);
@@ -187,6 +192,7 @@ class WC_AfterPay_Process_Order_Lines {
 					'productId'      => $cart_fee->id,
 					'lineNumber'     => $cart_fee->id,
 					'netUnitPrice'   => $cart_fee->amount,
+					'vatAmount'      => round( $cart_fee_tax, 2 ),
 					'quantity'       => 1,
 					'vatPercent'     => round( $cart_fee_tax / $cart_fee->amount, 4 ) * 100,
 				);

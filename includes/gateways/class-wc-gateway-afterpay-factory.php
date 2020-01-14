@@ -95,20 +95,24 @@ function init_wc_gateway_afterpay_factory_class() {
 		 */
 		public function init_form_fields() {
 			$form_fields = array(
-				'enabled'        => array(
+				'enabled'                => array(
 					'title'   => __( 'Enable/Disable', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable ' . $this->method_title, 'afterpay-nordics-for-woocommerce' ),
 					'default' => 'yes',
 				),
-				'title'          => array(
+				'title'                  => array(
 					'title'       => __( 'Title', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __( 'This controls the title which the user sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => __( $this->method_title, 'afterpay-nordics-for-woocommerce' ),
 					'desc_tip'    => true,
 				),
-				'x_auth_key_se'  => array(
+				'section_sweden'         => array(
+					'title' => __( 'Sweden', 'afterpay-nordics-for-woocommerce' ),
+					'type'  => 'title',
+				),
+				'x_auth_key_se'          => array(
 					'title'       => __( 'AfterPay X-Auth-Key Sweden', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
@@ -116,14 +120,18 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				),
-				'description_se' => array(
+				'description_se'         => array(
 					'title'       => __( 'Description Sweden', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'textarea',
 					'desc_tip'    => true,
 					'description' => __( 'This controls the description which Swedish customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => $this->get_default_description_sweden(),
 				),
-				'x_auth_key_no'  => array(
+				'section_norway'         => array(
+					'title' => __( 'Norway', 'afterpay-nordics-for-woocommerce' ),
+					'type'  => 'title',
+				),
+				'x_auth_key_no'          => array(
 					'title'       => __( 'AfterPay X-Auth-Key Norway', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
@@ -131,17 +139,30 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				),
-				'description_no' => array(
+				'description_no'         => array(
 					'title'       => __( 'Description Norway', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'textarea',
 					'desc_tip'    => true,
 					'description' => __( 'This controls the description which Norwegian customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
 					'default'     => $this->get_default_description_norway(),
 				),
+				'display_get_address_no' => array(
+					'title'   => __( 'Display Customer Lookup', 'afterpay-nordics-for-woocommerce' ),
+					'type'    => 'checkbox',
+					'label'   => __(
+						'Display Customer Lookup / Get Address field in checkout',
+						'afterpay-nordics-for-woocommerce'
+					),
+					'default' => 'yes',
+				),
 			);
 			// Only invoice payments for DE.
 			if ( 'afterpay_invoice' === $this->id ) {
-				$form_fields['x_auth_key_de']  = array(
+				$form_fields['section_germany'] = array(
+					'title' => __( 'Germany', 'afterpay-nordics-for-woocommerce' ),
+					'type'  => 'title',
+				);
+				$form_fields['x_auth_key_de']   = array(
 					'title'       => __( 'AfterPay X-Auth-Key Germany', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'text',
 					'description' => __(
@@ -149,7 +170,7 @@ function init_wc_gateway_afterpay_factory_class() {
 						'afterpay-nordics-for-woocommerce'
 					),
 				);
-				$form_fields['description_de'] = array(
+				$form_fields['description_de']  = array(
 					'title'       => __( 'Description Germany', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'textarea',
 					'desc_tip'    => true,
@@ -192,7 +213,7 @@ function init_wc_gateway_afterpay_factory_class() {
 				);
 
 				// Customer type, separate shipping address fand order management or all payment methods are in AfterPay Invoice settings.
-				$form_fields['customer_type']    = array(
+				$form_fields['customer_type']              = array(
 					'title'       => __( 'Customer type', 'afterpay-nordics-for-woocommerce' ),
 					'type'        => 'select',
 					'description' => __( 'Select the type of customer that can make purchases through AfterPay', 'afterpay-nordics-for-woocommerce' ),
@@ -203,11 +224,20 @@ function init_wc_gateway_afterpay_factory_class() {
 					),
 					'default'     => 'both',
 				);
-				$form_fields['order_management'] = array(
+				$form_fields['order_management']           = array(
 					'title'   => __( 'Enable Order Management', 'afterpay-nordics-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __(
 						'Enable AfterPay order capture on WooCommerce order completion and AfterPay order cancellation on WooCommerce order cancellation',
+						'afterpay-nordics-for-woocommerce'
+					),
+					'default' => 'yes',
+				);
+				$form_fields['always_display_get_address'] = array(
+					'title'   => __( 'Always display Customer Lookup', 'afterpay-nordics-for-woocommerce' ),
+					'type'    => 'checkbox',
+					'label'   => __(
+						'Display Customer Lookup field in checkout even when AfterPay isn\'t the selected payment gateway',
 						'afterpay-nordics-for-woocommerce'
 					),
 					'default' => 'yes',
@@ -332,8 +362,11 @@ function init_wc_gateway_afterpay_factory_class() {
 			$response = $request->response( $order_id, $this->get_formatted_payment_method_name(), $profile_no );
 
 			// Compare the received address (from AfterPay) with the one entered by the customer in checkout.
-			// Change it if they don't match
-			$this->check_used_address( $response, $order_id );
+			// Change it if they don't match.
+			// Don't use this for DE customers. Address controll is done directly in the Authorize request for them.
+			if ( 'DE' !== $order->get_billing_country() ) {
+				$this->check_used_address( $response, $order_id );
+			}
 
 			if ( ! is_wp_error( $response ) ) {
 				$response = json_decode( $response );
