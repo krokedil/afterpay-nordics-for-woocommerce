@@ -34,11 +34,19 @@ class WC_AfterPay_Request_Capture_Payment extends WC_AfterPay_Request {
 	}
 
 	private function get_request_body( $order_id ) {
-		$order        = wc_get_order( $order_id );
+		$order                  = wc_get_order( $order_id );
+		$order_total_net_amount = $order->get_total() - $order->get_total_tax();
+
+		// Prepare order lines for AfterPay
+		$order_lines_processor = new WC_AfterPay_Process_Order_Lines();
+		$order_lines           = $order_lines_processor->get_order_lines( $order_id );
+
 		$request_body = array(
 			'orderDetails' => array(
-				'totalGrossAmount' => $order->get_total(),
+				'totalGrossAmount' => round( $order->get_total(), 2 ),
+				'totalNetAmount'   => round( $order_total_net_amount, 2 ),
 				'currency'         => krokedil_get_order_property( $order_id, 'order_currency' ),
+				'items'            => $order_lines,
 			),
 		);
 
