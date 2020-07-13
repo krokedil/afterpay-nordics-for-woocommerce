@@ -105,7 +105,6 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 				}
 				// Fees.
 				WC_Gateway_AfterPay_Factory::log( '$refund_order->get_fees(): ' . var_export( $refund_order->get_fees(), true ) );
-				WC_Gateway_AfterPay_Factory::log( '$refund_order: ' . var_export( $refund_order, true ) );
 				foreach ( $refund_order->get_fees() as $fee ) {
 					$formated_fee = self::get_fee( $fee );
 					array_push( $items, $formated_fee );
