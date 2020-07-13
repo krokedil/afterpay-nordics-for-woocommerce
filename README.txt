@@ -2,11 +2,11 @@
 Contributors: krokedil, arvato, NiklasHogefjord, slobodanmanic
 Tags: ecommerce, e-commerce, woocommerce, afterpay, arvato
 Requires at least: 4.2
-Tested up to: 5.3.2
+Tested up to: 5.4.2
 Requires PHP: 5.6
 Stable tag: trunk
 WC requires at least: 3.2.0
-WC tested up to: 3.8.1
+WC tested up to: 4.3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,11 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+= 1.0.0 		- 2020.07.13 =
+* Feature       - Adds support for invoice payments for Danish customers.
+* Tweak         - Adds totalNetAmount & order lines to capture payment request.
+* Tweak         - Adds netUnitPrice & vatAmount to refund payment requests.
+
 = 0.9.0 		- 2020.01.14 =
 * Feature       - Add setting for display/hide Get Address field in checkout for Norwegian customers.
 * Feature       - Add setting for wether or not to display Get address field if AfterPay isn't the selected payment method.
