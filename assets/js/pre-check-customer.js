@@ -60,6 +60,9 @@ jQuery(function ($) {
 				jQuery('.afterpay-pre-check-se').fadeOut();
 				jQuery('.afterpay-pre-check-no').fadeOut();
 				jQuery( '.personal-number-norway' ).hide();
+			} else if ( selected_customer_country == 'DK' ) {
+				jQuery('.afterpay-pre-check-se').fadeOut();
+				jQuery('.afterpay-pre-check-no').fadeOut();
 			} else {
 				jQuery( '.afterpay-pre-check-no' ).fadeIn();
 				jQuery( '.afterpay-pre-check-se' ).fadeOut();

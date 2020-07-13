@@ -155,6 +155,25 @@ function init_wc_gateway_afterpay_factory_class() {
 					),
 					'default' => 'yes',
 				),
+				'section_denmark'        => array(
+					'title' => __( 'Denmark', 'afterpay-nordics-for-woocommerce' ),
+					'type'  => 'title',
+				),
+				'x_auth_key_dk'          => array(
+					'title'       => __( 'AfterPay X-Auth-Key Denmark', 'afterpay-nordics-for-woocommerce' ),
+					'type'        => 'text',
+					'description' => __(
+						'Please enter your AfterPay X-Auth-Key for Denmark; this is needed in order to take payment',
+						'afterpay-nordics-for-woocommerce'
+					),
+				),
+				'description_dk'         => array(
+					'title'       => __( 'Description Denmark', 'afterpay-nordics-for-woocommerce' ),
+					'type'        => 'textarea',
+					'desc_tip'    => true,
+					'description' => __( 'This controls the description which Danish customers sees during checkout.', 'afterpay-nordics-for-woocommerce' ),
+					'default'     => $this->get_default_description_denmark(),
+				),
 			);
 			// Only invoice payments for DE.
 			if ( 'afterpay_invoice' === $this->id ) {
@@ -294,7 +313,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			// @Todo - check if this is needed (for Norway) since we don't do Available payment methods there
 			$customer_number_norway = $this->id . '-check-customer-number-norway';
 
-			if ( isset( $_POST[ $customer_number_norway ] ) && 'NO' == $_POST['billing_country'] ) {
+			if ( isset( $_POST[ $customer_number_norway ] ) && in_array( $_POST['billing_country'], array( 'NO', 'DK' ), true ) ) {
 				$personal_number = wc_clean( $_POST[ $customer_number_norway ] );
 				$personal_number = str_replace( '-', '', $personal_number );
 				WC()->session->set( 'afterpay_personal_no', $personal_number );
@@ -473,6 +492,9 @@ function init_wc_gateway_afterpay_factory_class() {
 					break;
 				case 'NOK':
 					$description = $this->description_no;
+					break;
+				case 'DKK':
+					$description = $this->description_dk;
 					break;
 				case 'EUR':
 					$description = $this->description_de;
@@ -670,6 +692,11 @@ function init_wc_gateway_afterpay_factory_class() {
 					$short_readmore = 'Les mer her';
 					$afterpay_info .= '<a target="_blank" href="https://www.afterpay.no/nb/vilkar">' . $short_readmore . '</a>';
 					break;
+				case 'DKK':
+					$afterpay_info  = '<p class="afterpay-credit-check-info"><small>Ved bruk av denne tjenesten gjøres en kredittsjekk. Gjenpartsbrev sendes fortrinnsvis elektronisk. Varene sendes kun till folkeregistret adresse.</small></p>';
+					$short_readmore = 'Les mer her';
+					$afterpay_info .= '<a target="_blank" href="https://www.afterpay.dk/da/vilkaar-og-betingelser">' . $short_readmore . '</a>';
+					break;
 				case 'SEK':
 					$terms_url      = 'https://documents.myafterpay.com/consumer-terms-conditions/sv_se/';
 					$afterpay_info .= '<p class="afterpay-terms-link"><a href="' . $terms_url . '" target="_blank">' . __( 'Read AfterPay Terms & Conditions', 'afterpay-nordics-for-woocommerce' ) . '</a>.</p>';
@@ -744,6 +771,29 @@ function init_wc_gateway_afterpay_factory_class() {
 					break;
 				case 'afterpay_part_payment':
 					$description = '• Samma belopp varje månad<br> •Du kan även betala det totala beloppet när du vill';
+					break;
+				default:
+					$description = '';
+			}
+
+			return $description;
+		}
+
+		/**
+		 * Denmark function.
+		 *
+		 * @return string
+		 */
+		public function get_default_description_denmark() {
+			switch ( $this->id ) {
+				case 'afterpay_invoice':
+					$description = 'Betal varene om 14 dager.';
+					break;
+				case 'afterpay_account':
+					$description = '<h4>Detaljer:</h4>Månedspris: <strong>Minimum kr 100 eller ca 12% av totalbeløpet</strong><br>Etableringsgebyr: <strong>0 Kr</strong><br>Rente: <strong>19.95%</strong></p><p><small>Ved et kjøp på 5000 DKK der netbetalingen foregår over 1 år, der betalingen har et fakturagebyr på 39 DKK med en rente på 19.95% vil du få en årlig sammenlignbar rente på 45,18%. Den totale kredittkjøpsprisen vil være 6084 DKK.</small></p>';
+					break;
+				case 'afterpay_part_payment':
+					$description = 'Del opp betalingen i faste avdrag.';
 					break;
 				default:
 					$description = '';

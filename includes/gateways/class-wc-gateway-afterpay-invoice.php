@@ -39,6 +39,7 @@ function init_wc_gateway_afterpay_invoice_class() {
 			$this->description_se = $this->get_option( 'description_se' );
 			$this->description_no = $this->get_option( 'description_no' );
 			$this->description_de = $this->get_option( 'description_de' );
+			$this->description_dk = $this->get_option( 'description_dk' );
 			$this->debug          = $this->get_option( 'debug' );
 			$this->client_id_se   = $this->get_option( 'client_id_se' );
 			$this->username_se    = $this->get_option( 'username_se' );
@@ -52,6 +53,7 @@ function init_wc_gateway_afterpay_invoice_class() {
 			$this->x_auth_key_se  = $this->get_option( 'x_auth_key_se' );
 			$this->x_auth_key_no  = $this->get_option( 'x_auth_key_no' );
 			$this->x_auth_key_de  = $this->get_option( 'x_auth_key_de' );
+			$this->x_auth_key_dk  = $this->get_option( 'x_auth_key_dk' );
 			$this->testmode       = $this->get_option( 'testmode' );
 
 			// Invoice fee
@@ -74,6 +76,10 @@ function init_wc_gateway_afterpay_invoice_class() {
 					$this->username         = $this->username_se;
 					$this->password         = $this->password_se;
 					$this->x_auth_key       = $this->x_auth_key_se;
+					break;
+				case 'DKK':
+					$this->afterpay_country = 'DK';
+					$this->x_auth_key       = $this->x_auth_key_dk;
 					break;
 				case 'EUR':
 					$this->afterpay_country = 'DE';
