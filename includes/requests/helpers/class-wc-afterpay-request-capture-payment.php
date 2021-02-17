@@ -45,7 +45,7 @@ class WC_AfterPay_Request_Capture_Payment extends WC_AfterPay_Request {
 			'orderDetails' => array(
 				'totalGrossAmount' => round( $order->get_total(), 2 ),
 				'totalNetAmount'   => round( $order_total_net_amount, 2 ),
-				'currency'         => krokedil_get_order_property( $order_id, 'order_currency' ),
+				'currency'         => $order->get_currency(),
 				'items'            => $order_lines,
 			),
 		);

@@ -888,8 +888,8 @@ function init_wc_gateway_afterpay_factory_class() {
 				return false;
 			}
 
-			// Check order currency to be able to send correct x_auth_key
-			$currency = krokedil_get_order_property( $order_id, 'order_currency' );
+			// Check order currency to be able to send correct x_auth_key.
+			$currency = $order->get_currency();
 			switch ( $currency ) {
 				case 'NOK':
 					$this->x_auth_key = $this->x_auth_key_no;
