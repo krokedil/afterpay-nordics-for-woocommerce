@@ -570,8 +570,8 @@ function init_wc_gateway_afterpay_factory_class() {
 				update_post_meta( $order->id, '_billing_city', $billing_city );
 			}
 
-			// Person check
-			if ( 'Person' == $customer_category ) {
+			// Person check.
+			if ( 'Person' === $customer_category ) {
 				// First name.
 				if ( ! empty( $billing_first_name ) && mb_strtoupper( $billing_first_name ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_first_name' ) ) ) {
 					$changed_fields['billing_first_name'] = $billing_first_name . ' (' . krokedil_get_order_property( $order_id, 'billing_first_name' ) . ')';
@@ -586,8 +586,8 @@ function init_wc_gateway_afterpay_factory_class() {
 				}
 			}
 
-			// Company check
-			if ( 'Company' == $customer_category ) {
+			// Company check.
+			if ( 'Company' === $customer_category ) {
 				// Company name.
 				if ( ! empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_company' ) ) ) {
 					$changed_fields['billing_company'] = $billing_last_name . ' (' . krokedil_get_order_property( $order_id, 'billing_company' ) . ')';
