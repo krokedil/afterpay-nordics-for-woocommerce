@@ -547,24 +547,24 @@ function init_wc_gateway_afterpay_factory_class() {
 
 			$billing_first_name = sanitize_text_field( $response->customer->firstName );
 			$billing_last_name  = sanitize_text_field( $response->customer->lastName );
-			$billing_address    = sanitize_text_field( $response->customer->addressList[0]->street );
-			$billing_postcode   = sanitize_text_field( $response->customer->addressList[0]->postalCode );
-			$billing_city       = sanitize_text_field( $response->customer->addressList[0]->postalPlace );
+			$billing_address    = isset( $response->customer->addressList[0]->street ) ? sanitize_text_field( $response->customer->addressList[0]->street ) : '';
+			$billing_postcode   = isset( $response->customer->addressList[0]->postalCode ) ? sanitize_text_field( $response->customer->addressList[0]->postalCode ) : '';
+			$billing_city       = isset( $response->customer->addressList[0]->postalPlace ) ? sanitize_text_field( $response->customer->addressList[0]->postalPlace ) : '';
 
 			// Shipping address.
-			if ( ! empty( $billing_address ) && mb_strtoupper( $billing_address ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_address_1' ) ) ) {
+			if ( ! empty( $billing_address ) && mb_strtoupper( $billing_address ) !== mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_address_1' ) ) ) {
 				$changed_fields['billing_address_1'] = $billing_address . ' (' . krokedil_get_order_property( $order_id, 'billing_address_1' ) . ')';
 				update_post_meta( $order->id, '_shipping_address_1', $billing_address );
 				update_post_meta( $order->id, '_billing_address_1', $billing_address );
 			}
 			// Post number.
-			if ( ! empty( $billing_postcode ) && mb_strtoupper( $billing_postcode ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_postcode' ) ) ) {
+			if ( ! empty( $billing_postcode ) && mb_strtoupper( $billing_postcode ) !== mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_postcode' ) ) ) {
 				$changed_fields['billing_postcode'] = $billing_postcode . ' (' . krokedil_get_order_property( $order_id, 'billing_postcode' ) . ')';
 				update_post_meta( $order->id, '_shipping_postcode', $billing_postcode );
 				update_post_meta( $order->id, '_billing_postcode', $billing_postcode );
 			}
 			// City.
-			if ( ! empty( $billing_city ) && mb_strtoupper( $billing_city ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_city' ) ) ) {
+			if ( ! empty( $billing_city ) && mb_strtoupper( $billing_city ) !== mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_city' ) ) ) {
 				$changed_fields['billing_city'] = $billing_city . ' (' . $order->get_billing_city() . ')';
 				update_post_meta( $order->id, '_shipping_city', $billing_city );
 				update_post_meta( $order->id, '_billing_city', $billing_city );
@@ -573,13 +573,13 @@ function init_wc_gateway_afterpay_factory_class() {
 			// Person check.
 			if ( 'Person' === $customer_category ) {
 				// First name.
-				if ( ! empty( $billing_first_name ) && mb_strtoupper( $billing_first_name ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_first_name' ) ) ) {
+				if ( ! empty( $billing_first_name ) && mb_strtoupper( $billing_first_name ) !== mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_first_name' ) ) ) {
 					$changed_fields['billing_first_name'] = $billing_first_name . ' (' . krokedil_get_order_property( $order_id, 'billing_first_name' ) . ')';
 					update_post_meta( $order->id, '_shipping_first_name', $billing_first_name );
 					update_post_meta( $order->id, '_billing_first_name', $billing_first_name );
 				}
 				// Last name.
-				if ( ! empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_last_name' ) ) ) {
+				if ( ! empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) !== mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_last_name' ) ) ) {
 					$changed_fields['billing_last_name'] = $billing_last_name . ' (' . krokedil_get_order_property( $order_id, 'billing_last_name' ) . ')';
 					update_post_meta( $order->id, '_shipping_last_name', $billing_last_name );
 					update_post_meta( $order->id, '_billing_last_name', $billing_last_name );
@@ -589,7 +589,7 @@ function init_wc_gateway_afterpay_factory_class() {
 			// Company check.
 			if ( 'Company' === $customer_category ) {
 				// Company name.
-				if ( ! empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) != mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_company' ) ) ) {
+				if ( ! empty( $billing_last_name ) && mb_strtoupper( $billing_last_name ) !== mb_strtoupper( krokedil_get_order_property( $order_id, 'billing_company' ) ) ) {
 					$changed_fields['billing_company'] = $billing_last_name . ' (' . krokedil_get_order_property( $order_id, 'billing_company' ) . ')';
 					update_post_meta( $order->id, '_billing_company', $billing_last_name );
 					update_post_meta( $order->id, '_shipping_company', $billing_last_name );
