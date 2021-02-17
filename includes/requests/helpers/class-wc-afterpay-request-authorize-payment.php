@@ -59,7 +59,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 	private function get_request_body( $order_id, $payment_method_name, $profile_no = false ) {
 		$order = wc_get_order( $order_id );
 
-		// Prepare order lines for AfterPay
+		// Prepare order lines for AfterPay.
 		$order_lines_processor = new WC_AfterPay_Process_Order_Lines();
 		$order_lines           = $order_lines_processor->get_order_lines( $order_id );
 		$net_total_amount      = 0;
@@ -88,7 +88,7 @@ class WC_AfterPay_Request_Authorize_Payment extends WC_AfterPay_Request {
 				'number'           => $order->get_order_number(),
 				'totalGrossAmount' => round( $order->get_total(), 2 ),
 				'TotalNetAmount'   => round( $net_total_amount, 2 ),
-				'currency'         => krokedil_get_order_property( $order_id, 'order_currency' ),
+				'currency'         => $order->get_currency(),
 				'items'            => $order_lines,
 			),
 		);
