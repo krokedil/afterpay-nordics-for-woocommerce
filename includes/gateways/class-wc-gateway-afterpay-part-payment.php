@@ -150,9 +150,10 @@ function init_wc_gateway_afterpay_part_payment_class() {
 					$country_code = 'SE';
 			}
 
-			$request  = new WC_AfterPay_Request_Available_Installment_Plans( $this->x_auth_key, $this->testmode );
-			$response = $request->response( WC()->cart->total, get_woocommerce_currency(), $country_code );
-			$response = json_decode( $response );
+			$request                        = new WC_AfterPay_Request_Available_Installment_Plans( $this->x_auth_key, $this->testmode );
+			$response                       = $request->response( WC()->cart->total, get_woocommerce_currency(), $country_code );
+			$response                       = json_decode( $response );
+			$payment_options_details_output = '';
 			/*
 			echo '<pre>';
 			print_r( $response );

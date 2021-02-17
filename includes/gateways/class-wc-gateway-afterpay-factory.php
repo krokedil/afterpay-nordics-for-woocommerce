@@ -545,8 +545,8 @@ function init_wc_gateway_afterpay_factory_class() {
 			$customer_category = get_post_meta( $order_id, '_afterpay_customer_category', true );
 			$changed_fields    = array();
 
-			$billing_first_name = sanitize_text_field( $response->customer->firstName );
-			$billing_last_name  = sanitize_text_field( $response->customer->lastName );
+			$billing_first_name = isset( $response->customer->firstName ) ? sanitize_text_field( $response->customer->firstName ) : '';
+			$billing_last_name  = isset( $response->customer->lastName ) ? sanitize_text_field( $response->customer->lastName ) : '';
 			$billing_address    = isset( $response->customer->addressList[0]->street ) ? sanitize_text_field( $response->customer->addressList[0]->street ) : '';
 			$billing_postcode   = isset( $response->customer->addressList[0]->postalCode ) ? sanitize_text_field( $response->customer->addressList[0]->postalCode ) : '';
 			$billing_city       = isset( $response->customer->addressList[0]->postalPlace ) ? sanitize_text_field( $response->customer->addressList[0]->postalPlace ) : '';

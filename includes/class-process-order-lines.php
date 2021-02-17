@@ -42,7 +42,7 @@ class WC_AfterPay_Process_Order_Lines {
 		// Process order lines
 		if ( sizeof( $order->get_items() ) > 0 ) {
 			foreach ( $order->get_items() as $item_key => $item ) {
-				$_product = $order->get_product_from_item( $item );
+				$_product = $item->get_product();
 				if ( 0 == $order->get_line_tax( $item ) ) {
 					$vat = $order->get_line_tax( $item );
 				} else {
