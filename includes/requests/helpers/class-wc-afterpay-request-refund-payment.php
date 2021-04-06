@@ -26,10 +26,11 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 		$order              = wc_get_order( $order_id );
 		$order_number       = $order->get_order_number();
 		$this->request_path = '/api/v3/orders/' . $order_number . '/refunds';
-
-		$request_url = $this->base_url . $this->request_path;
+		$request_args       = $this->get_request_args( $order_id, $amount, $reason );
+		$request_url        = $this->base_url . $this->request_path;
 		WC_Gateway_AfterPay_Factory::log( 'Refund payment request sent to: ' . $request_url );
-		$request = wp_remote_request( $request_url, $this->get_request_args( $order_id, $amount, $reason ) );
+		WC_Gateway_AfterPay_Factory::log( 'Refund payment request args: ' . wp_json_encode( $request_args ) );
+		$request = wp_remote_request( $request_url, $request_args );
 		WC_Gateway_AfterPay_Factory::log( 'Refund payment response: ' . var_export( $request, true ) );
 
 		if ( ! is_wp_error( $request ) && 200 == $request['response']['code'] ) {
@@ -105,7 +106,6 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 				}
 				// Fees.
 				WC_Gateway_AfterPay_Factory::log( '$refund_order->get_fees(): ' . var_export( $refund_order->get_fees(), true ) );
-				WC_Gateway_AfterPay_Factory::log( '$refund_order: ' . var_export( $refund_order, true ) );
 				foreach ( $refund_order->get_fees() as $fee ) {
 					$formated_fee = self::get_fee( $fee );
 					array_push( $items, $formated_fee );
@@ -146,6 +146,8 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 			'productId'      => self::get_sku( $product, $product_id ),
 			'description'    => $product->get_name(),
 			'grossUnitPrice' => round( ( $item->get_total() + $item->get_total_tax() ) / $item['qty'], 2 ),
+			'netUnitPrice'   => round( ( $item->get_total() ) / $item['qty'], 2 ),
+			'vatAmount'      => round( ( $item->get_total_tax() ) / $item['qty'], 2 ),
 			'vatPercent'     => self::product_vat_rate( $item ),
 			'quantity'       => abs( $item['qty'] ),
 		);
@@ -164,6 +166,8 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 			'productId'      => 'shipping',
 			'description'    => $refund_order->get_shipping_method(),
 			'grossUnitPrice' => abs( round( $refund_order->get_shipping_total() + $refund_order->get_shipping_tax(), 2 ) ),
+			'netUnitPrice'   => abs( round( $refund_order->get_shipping_total(), 2 ) ),
+			'vatAmount'      => abs( round( $refund_order->get_shipping_tax(), 2 ) ),
 			'vatPercent'     => self::get_shipping_vat_rate( $refund_order ),
 			'quantity'       => 1,
 		);
@@ -188,6 +192,8 @@ class WC_AfterPay_Request_Refund_Payment extends WC_AfterPay_Request {
 			'description'    => $fee->get_name(),
 			'productId'      => $fee->get_id(),
 			'grossUnitPrice' => abs( round( $fee->get_total() + $fee->get_total_tax(), 2, PHP_ROUND_HALF_UP ) ),
+			'netUnitPrice'   => abs( round( $fee->get_total(), 2, PHP_ROUND_HALF_UP ) ),
+			'vatAmount'      => abs( round( $fee->get_total_tax(), 2, PHP_ROUND_HALF_UP ) ),
 			'vatPercent'     => $fee_vat_code,
 			'quantity'       => 1,
 		);
