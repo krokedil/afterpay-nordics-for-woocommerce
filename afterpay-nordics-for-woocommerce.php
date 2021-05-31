@@ -10,7 +10,7 @@
  * Plugin Name:     AfterPay Nordics for WooCommerce
  * Plugin URI:      https://krokedil.se/afterpay/
  * Description:     Provides an AfterPay v3 payment gateway for WooCommerce.
- * Version:         1.0.1
+ * Version:         1.0.3
  * Author:          Krokedil
  * Author URI:      https://krokedil.se/
  * Developer:       Krokedil
@@ -39,7 +39,7 @@ load_plugin_textdomain( 'afterpay-nordics-for-woocommerce', false, dirname( plug
 // Define plugin paths
 define( 'AFTERPAY_URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'AFTERPAY_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
-define( 'AFTERPAY_VERSION', '1.0.1' );
+define( 'AFTERPAY_VERSION', '1.0.3' );
 
 // Compatibility functions
 require_once AFTERPAY_PATH . '/includes/krokedil-compatibility-functions.php';
