@@ -44,7 +44,7 @@ class WC_AfterPay_Request_Authorize_Subscription_Payment extends WC_AfterPay_Req
 			'headers' => $this->request_header(),
 			'body'    => $this->get_request_body( $order_id, $payment_method_name, $profile_no ),
 			'timeout' => 15,
-			'method'  => $this->request_method
+			'method'  => $this->request_method,
 		);
 		WC_Gateway_AfterPay_Factory::log( 'Authorize subscription payment request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 
@@ -72,24 +72,24 @@ class WC_AfterPay_Request_Authorize_Subscription_Payment extends WC_AfterPay_Req
 		$formatted_request_body = array(
 			'payment'  => array( 'type' => $payment_method_name ),
 			'customer' => array(
-				'customerCategory'     => $customer_category,
-				'firstName'            => substr( krokedil_get_order_property( $order_id, 'billing_first_name' ), 0, 50),
-				'lastName'             => substr( krokedil_get_order_property( $order_id, 'billing_last_name' ), 0, 50),
-				'email'                => krokedil_get_order_property( $order_id, 'billing_email' ),
-				'mobilePhone'          => krokedil_get_order_property( $order_id, 'billing_phone' ),
-				'address'              => array(
+				'customerCategory' => $customer_category,
+				'firstName'        => substr( krokedil_get_order_property( $order_id, 'billing_first_name' ), 0, 50 ),
+				'lastName'         => substr( krokedil_get_order_property( $order_id, 'billing_last_name' ), 0, 50 ),
+				'email'            => krokedil_get_order_property( $order_id, 'billing_email' ),
+				'mobilePhone'      => krokedil_get_order_property( $order_id, 'billing_phone' ),
+				'address'          => array(
 					'street'      => krokedil_get_order_property( $order_id, 'billing_address_1' ),
 					'postalCode'  => krokedil_get_order_property( $order_id, 'billing_postcode' ),
 					'postalPlace' => krokedil_get_order_property( $order_id, 'billing_city' ),
 					'countryCode' => krokedil_get_order_property( $order_id, 'billing_country' ),
 				),
-				'customerNumber' => get_post_meta( $order_id, 'afterpay_customer_number', true ),
+				'customerNumber'   => get_post_meta( $order_id, 'afterpay_customer_number', true ),
 			),
 			'order'    => array(
 				'number'           => $order->get_order_number(),
 				'totalGrossAmount' => $order->get_total(),
 				'TotalNetAmount'   => $net_total_amount,
-				'currency'         => krokedil_get_order_property( $order_id, 'order_currency' ),
+				'currency'         => $order->get_currency(),
 				'items'            => $order_lines,
 			),
 		);
