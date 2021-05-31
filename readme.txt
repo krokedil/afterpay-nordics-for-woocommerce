@@ -2,10 +2,10 @@
 Contributors: krokedil, arvato, NiklasHogefjord, slobodanmanic
 Tags: ecommerce, e-commerce, woocommerce, afterpay, arvato
 Requires at least: 4.2
-Tested up to: 5.6.1
+Tested up to: 5.7.2
 Requires PHP: 5.6
 WC requires at least: 4.0.0
-WC tested up to: 5.0.0
+WC tested up to: 5.3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -39,6 +39,10 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+
+= 2021.05.31    - version 1.0.1 =
+* Tweak         - Update supported version number.
+
 = 2021.02.17    - version 1.0.0 =
 * Feature       - Adds support for invoice payments for Danish customers.
 * Tweak         - Adds totalNetAmount & order lines to capture payment request.
