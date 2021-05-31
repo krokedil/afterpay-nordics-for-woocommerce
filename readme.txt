@@ -39,17 +39,17 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
-= 2021.05.31    - 1.0.1 =
+= 2021.05.31    - version 1.0.1 =
 * Tweak         - Update supported version number.
 
-= 2021.02.17    - 1.0.0 =
+= 2021.02.17    - version 1.0.0 =
 * Feature       - Adds support for invoice payments for Danish customers.
 * Tweak         - Adds totalNetAmount & order lines to capture payment request.
 * Tweak         - Adds netUnitPrice & vatAmount to refund payment requests.
 * Fix           - WC deprecated notices & PHP notices fix.
 * Fix           - Do not overwrite the customer address in Woo order if company address isn't returned at all from AfterPay.
 
-= 2020.01.14    - 0.9.0 =
+= 2020.01.14    - version 0.9.0 =
 * Feature       - Add setting for display/hide Get Address field in checkout for Norwegian customers.
 * Feature       - Add setting for wether or not to display Get address field if AfterPay isn't the selected payment method.
 * Tweak         - Send vatAmount in requests to AfterPay.
