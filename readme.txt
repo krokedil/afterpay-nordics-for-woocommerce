@@ -39,6 +39,7 @@ If you get stuck, you can send a support ticket to support@krokedil.se. You can 
 
 
 == Changelog ==
+
 = 2021.05.31    - version 1.0.1 =
 * Tweak         - Update supported version number.
 
